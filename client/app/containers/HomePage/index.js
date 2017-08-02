@@ -12,6 +12,7 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
+import {DatePicker} from 'antd';
 
 export default class HomePage extends Component { //React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentWillMount() {
@@ -32,10 +33,15 @@ export default class HomePage extends Component { //React.PureComponent { // esl
   }
   render() {
     return (
-      <h1>
-        {/*<FormattedMessage {...messages.header} />*/}
-        {this.state.greeting}
-      </h1>
+      <div>
+        <h1>
+          {/*<FormattedMessage {...messages.header} />*/}
+          {this.state.greeting}
+        </h1>
+        <div>
+          <DatePicker/>
+        </div>
+      </div>
     );
   }
 }
