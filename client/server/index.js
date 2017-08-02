@@ -1,6 +1,7 @@
 /* eslint consistent-return:0 */
 
 const express = require('express');
+const proxy = require('express-http-proxy');
 const logger = require('./logger');
 
 const argv = require('minimist')(process.argv.slice(2));
@@ -12,6 +13,10 @@ const app = express();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
+
+const proxyHost = process.env.npm_config_proxyHost || 'localhost';
+const proxyPort = process.env.npm_config_proxyPort || '3005';
+app.use('/api', proxy(`${proxyHost}:${proxyPort}`));
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

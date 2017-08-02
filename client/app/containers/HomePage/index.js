@@ -9,15 +9,32 @@
  * the linting exception.
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 
-export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export default class HomePage extends Component { //React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  componentWillMount() {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    let myInit = {
+      method: 'GET',
+      headers: headers,
+    };
+    fetch('/api', myInit)
+      .then((resp) => {
+        return resp.json()
+      })
+      .then((data) => {
+        this.setState({greeting: data.greeting})
+      })
+  }
   render() {
     return (
       <h1>
-        <FormattedMessage {...messages.header} />
+        {/*<FormattedMessage {...messages.header} />*/}
+        {this.state.greeting}
       </h1>
     );
   }
