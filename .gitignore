@@ -117,3 +117,4 @@ typings/
 
 # dotenv environment variables file
 .idea/
+/build/

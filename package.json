@@ -281,6 +281,8 @@
     "image-webpack-loader": "2.0.0",
     "imports-loader": "0.6.5",
     "jest-cli": "18.0.0",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
     "lint-staged": "3.2.1",
     "ngrok": "2.2.4",
     "node-plop": "0.5.4",
