@@ -44,7 +44,6 @@
     "test": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "heroku-postbuild": "npm run build",
     "heroku-prebuild": "echo This runs before Heroku installs your dependencies."
   },
   "lint-staged": {
