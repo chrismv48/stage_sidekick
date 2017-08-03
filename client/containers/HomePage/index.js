@@ -11,8 +11,7 @@
 
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import {Layout, Menu, Breadcrumb, Icon} from 'antd';
-
+import {Layout, Breadcrumb, Icon, Menu} from 'antd';
 const {SubMenu} = Menu;
 const MenuItemGroup = Menu.ItemGroup;
 const {Header, Footer, Sider, Content} = Layout;

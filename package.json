@@ -50,7 +50,6 @@
   "lint-staged": {
     "*.js": "lint:eslint"
   },
-  "pre-commit": "lint:staged",
   "babel": {
     "presets": [
       [
@@ -71,8 +70,7 @@
         ],
         "plugins": [
           "transform-react-remove-prop-types",
-          "transform-react-constant-elements",
-          "transform-react-inline-elements"
+          "transform-react-constant-elements"
         ]
       },
       "test": {
