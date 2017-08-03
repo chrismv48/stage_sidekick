@@ -1,2 +1,2 @@
-web: cd client && npm run start:prod
-api: cd api && bundle exec rails s -p 3004
+web: npm run start:prod
+api: bundle exec rails s -p 3004
