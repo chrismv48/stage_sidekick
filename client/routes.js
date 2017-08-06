@@ -19,7 +19,7 @@ export default function createRoutes(store) {
   return [
     {
       path: '/',
-      name: 'home',
+      name: 'dashboard',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           import('containers/Dashboard'),
@@ -32,6 +32,14 @@ export default function createRoutes(store) {
         });
 
         importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/directory',
+      name: 'directory',
+      getComponent(location, cb) {
+        import('containers/Directory')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     }, {
       path: '*',
