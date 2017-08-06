@@ -36,7 +36,7 @@ export default class Dashboard extends Component { //React.PureComponent { // es
   render() {
     return (
       <Layout>
-          <Grid id="grid-layout">
+          <Grid id="content-grid">
             <Grid.Row>
               <Container fluid>
                 {this.state.greeting}

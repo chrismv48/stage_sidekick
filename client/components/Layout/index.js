@@ -29,6 +29,12 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
                 Directory
               </Menu.Item>
 
+              <Menu.Item as={Link} to='/characters' id="sidebar-button" name='characters' active={thisPage === 'characters'}
+                         onClick={this.handleItemClick}>
+                <Icon name='users'/>
+                Characters
+              </Menu.Item>
+
               <Menu.Item id="sidebar-button" name='scenes' active={thisPage === 'scenes'}
                          onClick={this.handleItemClick}>
                 <Icon name='film'/>
@@ -86,14 +92,7 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
             </Menu>
           </div>
         </div>
-        <div className="content">
-          <div className="top-nav-secondary">
-            <Menu pointing secondary borderless>
-              <Menu.Item name='home' active={thisPage === 'gallery'} onClick={this.handleItemClick}/>
-              <Menu.Item name='messages' active={thisPage === 'gallery'} onClick={this.handleItemClick}/>
-              <Menu.Item name='friends' active={thisPage === 'friends'} onClick={this.handleItemClick}/>
-            </Menu>
-          </div>
+        <div className="content-container">
           {this.props.children}
         </div>
       </div>
