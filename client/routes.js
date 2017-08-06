@@ -22,7 +22,7 @@ export default function createRoutes(store) {
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage'),
+          import('containers/Dashboard'),
         ]);
 
         const renderRoute = loadModule(cb);

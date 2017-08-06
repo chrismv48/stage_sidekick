@@ -27,6 +27,10 @@ module.exports = (options) => ({
       include: /node_modules/,
       loaders: ['style-loader', 'css-loader'],
     }, {
+      test: /\.scss$/,
+      exclude: /node_modules/,
+      loaders: ['style-loader', 'css-loader', 'sass-loader']
+    }, {
       test: /\.less$/,
       include: /node_modules/,
       use: [

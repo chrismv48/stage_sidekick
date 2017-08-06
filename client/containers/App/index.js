@@ -12,8 +12,6 @@
  */
 
 import React from 'react';
-import {LocaleProvider} from 'antd';
-import enUS from 'antd/lib/locale-provider/en_US';
 
 export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -23,11 +21,9 @@ export default class App extends React.PureComponent { // eslint-disable-line re
 
   render() {
     return (
-      <LocaleProvider locale={enUS}>
-        <div>
-          {React.Children.toArray(this.props.children)}
-        </div>
-      </LocaleProvider>
+      <div>
+        {React.Children.toArray(this.props.children)}
+      </div>
     );
   }
 }
