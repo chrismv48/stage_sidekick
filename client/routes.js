@@ -50,6 +50,14 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/scenes',
+      name: 'scenes',
+      getComponent(location, cb) {
+        import('containers/Scenes')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

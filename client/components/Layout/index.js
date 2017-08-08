@@ -35,7 +35,7 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
                 Characters
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='scenes' active={thisPage === 'scenes'}
+              <Menu.Item as={Link} to='/scenes' id="sidebar-button" name='scenes' active={thisPage === 'scenes'}
                          onClick={this.handleItemClick}>
                 <Icon name='film'/>
                 Scenes

@@ -1,0 +1,8 @@
+General
+- disable ESLint pre commit hook
+- Figure out menu item active state
+
+User Stories
+- Create new account (designer)
+- Create new account (theatre)
+- Create new show (designer / theatre)
