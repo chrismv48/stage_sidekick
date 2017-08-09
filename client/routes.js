@@ -37,7 +37,10 @@ export default function createRoutes(store) {
       path: '/directory',
       name: 'directory',
       getComponent(location, cb) {
-        import('containers/Directory')
+        const Directory = import('containers/Directory')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+        const Layout = import('components/Layout')
           .then(loadModule(cb))
           .catch(errorLoading);
       },

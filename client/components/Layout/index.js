@@ -1,18 +1,16 @@
 import React from 'react';
 import {Divider, Icon, Menu} from "semantic-ui-react";
-// import styled from 'styled-components';
 import './Layout.scss'
 import {Link} from "react-router";
+import {connect} from "react-redux";
+import setCurrentPage from '../../actions'
 
 class Layout extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  state = {
-    thisPage: null
-  };
 
-  handleItemClick = (e, { name }) => this.setState({ thisPage: name })
+  // handleItemClick = (e, { name }) => this.setState({ thisPage: name })
 
   render() {
-    const {thisPage} = this.state
+    const { thisPage } = this.props
     return (
       <div>
         <div className="sidebar-fixed">
@@ -23,38 +21,32 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
           <div className="sidebar-menu">
             <Menu icon='labeled' size='tiny' id="sidebar-menu" inverted vertical borderless fluid>
 
-              <Menu.Item as={Link} to="/directory" id="sidebar-button" name='directory' active={thisPage === 'directory'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item as={Link} to="/directory" id="sidebar-button" name='directory' active={thisPage === 'directory'}>
                 <Icon name='address book outline'/>
                 Directory
               </Menu.Item>
 
-              <Menu.Item as={Link} to='/characters' id="sidebar-button" name='characters' active={thisPage === 'characters'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item as={Link} to='/characters' id="sidebar-button" name='characters' active={thisPage === 'characters'}>
                 <Icon name='users'/>
                 Characters
               </Menu.Item>
 
-              <Menu.Item as={Link} to='/scenes' id="sidebar-button" name='scenes' active={thisPage === 'scenes'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item as={Link} to='/scenes' id="sidebar-button" name='scenes' active={thisPage === 'scenes'}>
                 <Icon name='film'/>
                 Scenes
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='budget' active={thisPage === 'budget'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item id="sidebar-button" name='budget' active={thisPage === 'budget'}>
                 <Icon name='dollar'/>
                 Budget
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='gallery' active={thisPage === 'gallery'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item id="sidebar-button" name='gallery' active={thisPage === 'gallery'}>
                 <Icon name='camera retro'/>
                 Gallery
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='costumes' active={thisPage === 'costumes'}
-                         onClick={this.handleItemClick}>
+              <Menu.Item id="sidebar-button" name='costumes' active={thisPage === 'costumes'}>
                 <Icon name='shopping bag'/>
                 Costumes
               </Menu.Item>
@@ -102,4 +94,4 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
 
 Layout.propTypes = {};
 
-export default Layout;
+export default Layout

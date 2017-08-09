@@ -15,7 +15,7 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
     const jobTitles = ['Costume Designer', 'Assistant Costume Designer', 'Sound Technician', 'Lighting Technician', 'Director', 'Art Director', 'Scene Design', 'Producer']
     const statuses = ['Full-time Staff', 'Contractor']
     return (
-      <Layout>
+      <Layout thisPage={this.props.route.name}>
         <div className="Directory">
           <Grid className="content-container">
             <Grid.Row>

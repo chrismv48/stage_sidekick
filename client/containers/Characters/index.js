@@ -12,7 +12,7 @@ export class Characters extends React.Component { // eslint-disable-line react/p
   render() {
     const foo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     return (
-      <Layout>
+      <Layout thisPage={this.props.route.name}>
         <div className="Characters">
           <Grid className="content-container">
             <Grid.Row>

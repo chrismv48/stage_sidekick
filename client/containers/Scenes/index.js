@@ -7,10 +7,19 @@ import {Grid, Header, Image, Item, Label} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
 import _ from 'lodash'
 
-export class Scenes extends React.Component { // eslint-disable-line react/prefer-stateless-function
+@connect(state => {
+  const { dispatch } = state
+  return {
+    dispatch,
+    scenes: state.get('scenes')
+  }
+})
+
+class Scenes extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
+    const { scenes } = this.props
     return (
-      <Layout>
+      <Layout thisPage={this.props.route.name}>
         <div className="Scenes">
           <Grid className="content-container">
             <Grid.Row>
@@ -23,21 +32,20 @@ export class Scenes extends React.Component { // eslint-disable-line react/prefe
             <Grid.Row>
               <Grid.Column>
                 <Item.Group>
-                  {_.times(11, (i) => {
-                      let imageStr = `${faker.image.imageUrl()}?${faker.random.number({min: 1, max: 1000})}`
-                      let characters = _.times(_.random(1, 10), () => <Image avatar src={faker.fake("{{image.avatar}}")}/>)
+                  {this.props.scenes.map((scene, i) => {
+                      let characters = scene.get('characterImageStrs').map(imageStr => <Image avatar src={imageStr}/>)
                       return (
                         <Item key={i} id="scene-item">
-                          <Item.Image src={imageStr}/>
+                          <Item.Image src={scene.get('imageStr')}/>
                           <Item.Content>
-                            <Item.Header>{faker.random.words()}</Item.Header>
+                            <Item.Header>{scene.get('title')}</Item.Header>
                             <Item.Meta>
-                              Scene {i + 1}
+                              Scene {scene.get('orderIndex') + 1}
                             </Item.Meta>
                             <Item.Description>
                               <Grid columns={2} divided>
                                 <Grid.Column>
-                                  {faker.lorem.sentence(12)}
+                                  {scene.get('description')}
                                 </Grid.Column>
                                 <Grid.Column>
                                   <h5>Characters</h5>
@@ -66,13 +74,13 @@ export class Scenes extends React.Component { // eslint-disable-line react/prefe
 
 Scenes.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  scenes: PropTypes.array
 };
 
+// function mapStateToProps(state) {
+//   // const scenes  = state.get('scenes')
+//   return {scenes: state.get('scenes')}
+// }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(null, mapDispatchToProps)(Scenes);
+// export default connect(mapStateToProps, null)(Scenes);
+export default Scenes
