@@ -4,7 +4,6 @@
 
 import { memoryHistory } from 'react-router';
 import { put } from 'redux-saga/effects';
-import { fromJS } from 'immutable';
 
 import configureStore from 'store';
 
@@ -16,7 +15,7 @@ import {
 
 // Fixtures
 
-const initialState = fromJS({ reduced: 'soon' });
+const initialState = { reduced: 'soon' };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -52,7 +51,7 @@ describe('asyncInjectors', () => {
       const actual = store.getState().get('test');
       const expected = initialState.merge({ reduced: 'yup' });
 
-      expect(actual.toJS()).toEqual(expected.toJS());
+      expect(actual).toEqual(expected);
     });
 
     it('should throw if passed invalid store shape', () => {
@@ -84,7 +83,7 @@ describe('asyncInjectors', () => {
         const actual = store.getState().get('test');
         const expected = initialState;
 
-        expect(actual.toJS()).toEqual(expected.toJS());
+        expect(actual).toEqual(expected);
       });
 
       it('should not assign reducer if already existing', () => {
@@ -146,7 +145,7 @@ describe('asyncInjectors', () => {
         const actual = store.getState().get('test');
         const expected = initialState.merge({ reduced: 'yup' });
 
-        expect(actual.toJS()).toEqual(expected.toJS());
+        expect(actual).toEqual(expected);
       });
 
       it('should throw if passed invalid saga', () => {

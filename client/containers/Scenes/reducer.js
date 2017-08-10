@@ -1,5 +1,4 @@
 import {random, times} from 'underscore'
-import {fromJS} from 'immutable';
 
 const faker = require('faker')
 
@@ -13,7 +12,7 @@ const scenesInitialState = times(11, (i) => {
   return scene
 })
 
-function scenesReducer(state = fromJS(scenesInitialState), action) {
+function scenesReducer(state = scenesInitialState, action) {
   switch (action.type) {
     default:
       return state
