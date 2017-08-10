@@ -3,9 +3,8 @@
  * If we were to do this in store.js, reducers wouldn't be hot reloadable.
  */
 
-import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import {combineReducers} from 'redux';
+import {routerReducer} from 'react-router-redux';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import scenesReducer from 'containers/Scenes/reducer'
 
