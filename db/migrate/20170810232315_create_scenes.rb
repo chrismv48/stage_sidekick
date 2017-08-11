@@ -7,7 +7,6 @@ class CreateScenes < ActiveRecord::Migration[5.0]
       t.integer :order_index
       t.integer :length_in_minutes
       t.string :setting, limit: 30
-
       t.timestamps
     end
   end

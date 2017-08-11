@@ -1,0 +1,2 @@
+class CostumesController < ApplicationController
+end
