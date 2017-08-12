@@ -1,16 +1,25 @@
 # == Schema Information
 #
-# Table name: users
+# Table name: roles
 #
 #  id            :integer          not null, primary key
-#  first_name    :string(50)       not null
-#  last_name     :string(50)       not null
-#  email         :string(255)      not null
-#  username      :string(20)       not null
-#  default_title :string(50)
+#  user_id       :integer          not null
+#  production_id :integer
+#  venue_id      :integer          not null
+#  title         :string
+#  department    :string
+#  status        :string
+#  role_type     :string
+#  start_date    :date
+#  end_date      :date
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  phone_number  :string(20)
+#
+# Indexes
+#
+#  index_roles_on_production_id  (production_id)
+#  index_roles_on_user_id        (user_id)
+#  index_roles_on_venue_id       (venue_id)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

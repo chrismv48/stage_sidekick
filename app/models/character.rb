@@ -19,8 +19,8 @@ class Character < ApplicationRecord
   has_many :characters_costumes
   has_many :costumes, through: :characters_costumes
 
-  has_many :members_characters
-  has_many :members, as: :actors, through: :members_characters
+  has_many :characters_roles
+  has_many :roles, through: :characters_roles
 
-  alias_attribute :actors, :members
+  alias_attribute :actors, :roles
 end

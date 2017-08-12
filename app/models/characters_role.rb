@@ -1,20 +1,20 @@
 # == Schema Information
 #
-# Table name: members_characters
+# Table name: characters_roles
 #
 #  id           :integer          not null, primary key
-#  member_id    :integer          not null
+#  role_id      :integer          not null
 #  character_id :integer          not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
 # Indexes
 #
-#  index_members_characters_on_character_id  (character_id)
-#  index_members_characters_on_member_id     (member_id)
+#  index_characters_roles_on_character_id  (character_id)
+#  index_characters_roles_on_role_id       (role_id)
 #
 
-class MembersCharacter < ApplicationRecord
-  belongs_to :member
+class CharactersRole < ApplicationRecord
+  belongs_to :role
   belongs_to :character
 end

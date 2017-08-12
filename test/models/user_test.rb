@@ -10,6 +10,7 @@
 #  default_title :string(50)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  phone_number  :string(20)
 #
 
 require 'test_helper'

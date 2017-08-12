@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170812173440) do
+ActiveRecord::Schema.define(version: 20170812204315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,15 @@ ActiveRecord::Schema.define(version: 20170812173440) do
     t.index ["costume_id"], name: "index_characters_costumes_on_costume_id", using: :btree
   end
 
+  create_table "characters_roles", force: :cascade do |t|
+    t.integer  "role_id",      null: false
+    t.integer  "character_id", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_characters_roles_on_character_id", using: :btree
+    t.index ["role_id"], name: "index_characters_roles_on_role_id", using: :btree
+  end
+
   create_table "characters_scenes", force: :cascade do |t|
     t.integer  "character_id", null: false
     t.integer  "scene_id",     null: false
@@ -51,25 +60,6 @@ ActiveRecord::Schema.define(version: 20170812173440) do
     t.index ["production_id"], name: "index_costumes_on_production_id", using: :btree
   end
 
-  create_table "members", force: :cascade do |t|
-    t.integer  "user_id",               null: false
-    t.integer  "venue_id",              null: false
-    t.string   "title",      limit: 50
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.index ["user_id"], name: "index_members_on_user_id", using: :btree
-    t.index ["venue_id"], name: "index_members_on_venue_id", using: :btree
-  end
-
-  create_table "members_characters", force: :cascade do |t|
-    t.integer  "member_id",    null: false
-    t.integer  "character_id", null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_members_characters_on_character_id", using: :btree
-    t.index ["member_id"], name: "index_members_characters_on_member_id", using: :btree
-  end
-
   create_table "productions", force: :cascade do |t|
     t.string   "title",      limit: 50, null: false
     t.integer  "venue_id",              null: false
@@ -79,6 +69,23 @@ ActiveRecord::Schema.define(version: 20170812173440) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.index ["venue_id"], name: "index_productions_on_venue_id", using: :btree
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.integer  "user_id",       null: false
+    t.integer  "production_id"
+    t.integer  "venue_id",      null: false
+    t.string   "title"
+    t.string   "department"
+    t.string   "status"
+    t.string   "role_type"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
+    t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
+    t.index ["venue_id"], name: "index_roles_on_venue_id", using: :btree
   end
 
   create_table "scenes", force: :cascade do |t|
@@ -101,6 +108,7 @@ ActiveRecord::Schema.define(version: 20170812173440) do
     t.string   "default_title", limit: 50
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.string   "phone_number",  limit: 20
   end
 
   create_table "venues", force: :cascade do |t|

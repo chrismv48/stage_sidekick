@@ -20,6 +20,8 @@ production = Production.create(
 
 job_titles = ['Producer', 'Director', 'Administration', 'Actor', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
 scene_settings = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Beach', 'Indoors']
+departments = ['Production', 'Lighting', 'Costumes', 'Acting', 'Administration']
+statuses = ['Full-time', 'Contractor', 'Part-time']
 
 users = User.create(20.times.collect {|i| {
   first_name: Faker::Name.first_name,
@@ -29,13 +31,20 @@ users = User.create(20.times.collect {|i| {
   default_title: job_titles.sample
 }})
 
-members = Member.create(users.map {|user| {
+roles = Role.create(users.map {|user| {
   user_id: user.id,
+  production_id: production.id,
   venue_id: venue.id,
-  title: user.default_title
+  title: user.default_title,
+  department: departments.sample,
+  role_type: statuses.sample
 }})
 
-c
+characters = Character.create(10.times.collect {|i| {
+  name: Faker::Name.first_name,
+  production_id: production.id,
+  actors: [roles.sample]
+}})
 
 scenes = Scene.create(8.times.collect {|i| {
   title: Faker::Movie.quote,
