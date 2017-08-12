@@ -15,4 +15,6 @@
 #
 
 class Costume < ApplicationRecord
+  has_many :characters_costumes
+  has_many :characters, through: :characters_costumes
 end

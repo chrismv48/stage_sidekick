@@ -18,4 +18,7 @@
 #
 
 class Scene < ApplicationRecord
+  has_many :characters_scenes
+  has_many :characters, through: :characters_scenes
+
 end

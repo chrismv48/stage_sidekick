@@ -10,19 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170810232411) do
+ActiveRecord::Schema.define(version: 20170812173440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "characters", force: :cascade do |t|
-    t.string   "name",        limit: 50,   null: false
-    t.integer  "scene_id",                 null: false
-    t.string   "description", limit: 1000
-    t.string   "type",        limit: 20
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.index ["scene_id"], name: "index_characters_on_scene_id", using: :btree
+    t.string   "name",          limit: 50,   null: false
+    t.string   "description",   limit: 1000
+    t.string   "type",          limit: 20
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "production_id",              null: false
+  end
+
+  create_table "characters_costumes", force: :cascade do |t|
+    t.integer  "character_id", null: false
+    t.integer  "costume_id",   null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_characters_costumes_on_character_id", using: :btree
+    t.index ["costume_id"], name: "index_characters_costumes_on_costume_id", using: :btree
+  end
+
+  create_table "characters_scenes", force: :cascade do |t|
+    t.integer  "character_id", null: false
+    t.integer  "scene_id",     null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_characters_scenes_on_character_id", using: :btree
+    t.index ["scene_id"], name: "index_characters_scenes_on_scene_id", using: :btree
   end
 
   create_table "costumes", force: :cascade do |t|
@@ -32,6 +49,25 @@ ActiveRecord::Schema.define(version: 20170810232411) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.index ["production_id"], name: "index_costumes_on_production_id", using: :btree
+  end
+
+  create_table "members", force: :cascade do |t|
+    t.integer  "user_id",               null: false
+    t.integer  "venue_id",              null: false
+    t.string   "title",      limit: 50
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.index ["user_id"], name: "index_members_on_user_id", using: :btree
+    t.index ["venue_id"], name: "index_members_on_venue_id", using: :btree
+  end
+
+  create_table "members_characters", force: :cascade do |t|
+    t.integer  "member_id",    null: false
+    t.integer  "character_id", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_members_characters_on_character_id", using: :btree
+    t.index ["member_id"], name: "index_members_characters_on_member_id", using: :btree
   end
 
   create_table "productions", force: :cascade do |t|
