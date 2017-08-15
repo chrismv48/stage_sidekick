@@ -5,15 +5,8 @@ export function setCurrentPage(action) {
   }
 }
 
-
-
-
-function step(state = 1, action) {
-  switch (action.type) {
-    case "UPDATE_STEP":
-      return action.step
-
-    default:
-      return state
+export const fetchDirectory = () => {
+  return {
+    type: 'FETCH_DIRECTORY'
   }
 }

@@ -1,19 +1,28 @@
 const faker = require('faker');
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
+import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
 import Layout from "../../components/Layout/index";
 import {Button, Grid, Header, Icon, Image, Search, Table} from "semantic-ui-react";
 import './Directory.scss'
+import {fetchDirectory} from '../../actions'
+
+@connect(state => {
+  const {dispatch, directory: {staff, loading}} = state
+  return {
+    dispatch,
+    staff,
+    loading
+  }
+})
 
 export class Directory extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  componentWillMount() {
+    this.props.dispatch(fetchDirectory())
+  }
+
   render() {
-    console.log(faker.fake("{{name.lastName}}, {{name.firstName}} {{name.suffix}}"));
-    const foo = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7]
-    const departments = ['Costumes', 'Sound', 'Lighting', 'Production', 'Administration']
-    const jobTitles = ['Costume Designer', 'Assistant Costume Designer', 'Sound Technician', 'Lighting Technician', 'Director', 'Art Director', 'Scene Design', 'Producer']
-    const statuses = ['Full-time Staff', 'Contractor']
+    const {staff, loading} = this.props
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Directory">
@@ -59,24 +68,24 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
                   </Table.Header>
 
                   <Table.Body>
-                    {foo.map((_, i) => {
+                    {!loading && staff.map((member, i) => {
                         return (
                           <Table.Row key={i}>
                             <Table.Cell>
                               <Header as='h4' image>
                                 <Image src={faker.fake("{{image.avatar}}")}/>
                                 <Header.Content>
-                                  {faker.fake("{{name.firstName}} {{name.lastName}}")}
-                                  <Header.Subheader>{faker.random.arrayElement(jobTitles)}</Header.Subheader>
+                                  {`${member.first_name} ${member.last_name}`}
+                                  <Header.Subheader>{member.title}</Header.Subheader>
                                 </Header.Content>
                               </Header>
                             </Table.Cell>
-                            <Table.Cell>{faker.random.arrayElement(departments)}</Table.Cell>
+                            <Table.Cell>{member.department}</Table.Cell>
                             <Table.Cell>
-                              {faker.random.arrayElement(statuses)}
+                              {member.role_type}
                             </Table.Cell>
-                            <Table.Cell>{faker.fake("{{internet.email}}")}</Table.Cell>
-                            <Table.Cell>{faker.fake("{{phone.phoneNumberFormat}}")}</Table.Cell>
+                            <Table.Cell>{member.email}</Table.Cell>
+                            <Table.Cell>{member.phone_number}</Table.Cell>
                           </Table.Row>
                         )
                       }
@@ -96,11 +105,4 @@ Directory.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-export default connect(null, mapDispatchToProps)(Directory);
+export default Directory

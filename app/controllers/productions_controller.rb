@@ -1,5 +1,5 @@
 class ProductionsController < ApplicationController
-  before_action :set_production, only: [:show, :update, :destroy]
+  before_action :set_production, only: [:show, :update, :destroy, :directory]
 
   # GET /productions
   def index
@@ -36,6 +36,26 @@ class ProductionsController < ApplicationController
   # DELETE /productions/1
   def destroy
     @production.destroy
+  end
+
+  def directory
+    directory = Role.includes(:user).where(venue_id: @production.venue.id).map do |role|
+      user = role.user
+      {
+        user_id: user.id,
+        role_id: role.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role_type: role.role_type,
+        title: role.title,
+        department: role.department,
+        staff: role.production_id.nil?,
+        start_date: role.start_date
+      }
+    end
+    render json: directory
   end
 
   private

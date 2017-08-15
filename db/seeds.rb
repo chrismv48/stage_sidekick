@@ -27,6 +27,7 @@ users = User.create(20.times.collect {|i| {
   first_name: Faker::Name.first_name,
   last_name: Faker::Name.last_name,
   email: Faker::Internet.email,
+  phone_number: Faker::PhoneNumber.cell_phone,
   username: Faker::Internet.user_name,
   default_title: job_titles.sample
 }})
@@ -37,7 +38,8 @@ roles = Role.create(users.map {|user| {
   venue_id: venue.id,
   title: user.default_title,
   department: departments.sample,
-  role_type: statuses.sample
+  role_type: statuses.sample,
+  start_date: Faker::Date.between(2.years.ago, Date.today)
 }})
 
 characters = Character.create(10.times.collect {|i| {

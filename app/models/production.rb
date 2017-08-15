@@ -17,4 +17,7 @@
 #
 
 class Production < ApplicationRecord
+  belongs_to :venue
+  has_many :roles
+
 end
