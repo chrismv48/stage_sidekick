@@ -5,7 +5,7 @@ class ScenesController < ApplicationController
   def index
     @scenes = Scene.all
 
-    render json: @scenes
+    render json: @scenes, include: :characters
   end
 
   # GET /scenes/1

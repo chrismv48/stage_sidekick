@@ -3,6 +3,9 @@
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
 import {getAsyncInjectors} from 'utils/asyncInjectors';
+import scenesSaga from 'containers/Scenes/sagas'
+import characterSaga from 'containers/Character/sagas'
+import charactersSaga from 'containers/Characters/sagas'
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -15,6 +18,8 @@ const loadModule = (cb) => (componentModule) => {
 export default function createRoutes(store) {
   // Create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store); // eslint-disable-line no-unused-vars
+
+  injectSagas(scenesSaga, characterSaga, charactersSaga)
 
   return [
     {
@@ -57,17 +62,57 @@ export default function createRoutes(store) {
       path: '/characters',
       name: 'characters',
       getComponent(location, cb) {
-        import('containers/Characters')
-          .then(loadModule(cb))
-          .catch(errorLoading);
+        const importModules = Promise.all([
+          import('containers/Characters/reducer'),
+          import('containers/Characters/sagas'),
+          import('containers/Characters'),
+        ]);
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('characters', reducer.default);
+          injectSagas(sagas.default); // Inject the saga
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
       },
     }, {
       path: '/scenes',
       name: 'scenes',
       getComponent(location, cb) {
-        import('containers/Scenes')
-          .then(loadModule(cb))
-          .catch(errorLoading);
+        const importModules = Promise.all([
+          import('containers/Scenes/reducer'),
+          import('containers/Scenes'),
+        ]);
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, component]) => {
+          injectReducer('scenes', reducer.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/characters/:characterId',
+      name: 'characters',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Character/reducer'),
+          import('containers/Character/sagas'),
+          import('containers/Character'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('character', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
       },
     }, {
       path: '*',

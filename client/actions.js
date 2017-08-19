@@ -10,3 +10,23 @@ export const fetchDirectory = () => {
     type: 'FETCH_DIRECTORY'
   }
 }
+
+export const fetchCharacters = () => {
+  return {
+    type: 'FETCH_CHARACTERS'
+  }
+}
+
+export const fetchScenes = () => {
+  return {
+    type: 'FETCH_SCENES'
+  }
+}
+
+export const fetchCharacter = (characterId) => {
+  return {
+    type: 'FETCH_CHARACTER',
+    characterId
+  }
+}
+

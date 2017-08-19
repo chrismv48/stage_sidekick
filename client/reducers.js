@@ -8,6 +8,9 @@ import {routerReducer} from 'react-router-redux';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import scenesReducer from 'containers/Scenes/reducer'
 import directoryReducer from 'containers/Directory/reducer'
+import charactersReducer from 'containers/Characters/reducer'
+import characterReducer from "./containers/Character/reducer";
+import characterFormReducer from "./containers/CharacterForm/reducer";
 
 /**
  * Creates the main reducer with the asynchronously loaded ones
@@ -18,6 +21,9 @@ export default function createReducer(asyncReducers) {
     language: languageProviderReducer,
     scenes: scenesReducer,
     directory: directoryReducer,
+    characters: charactersReducer,
+    character: characterReducer,
+    characterForm: characterFormReducer,
     ...asyncReducers,
   });
 }

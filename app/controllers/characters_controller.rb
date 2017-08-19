@@ -3,14 +3,15 @@ class CharactersController < ApplicationController
 
   # GET /characters
   def index
-    @characters = Character.all
+    @characters = Character.where(nil)
+    @characters = @characters.where(production_id: params[:production_id]) if params[:production_id]
 
-    render json: @characters
+    render json: @characters, include: [:roles, :scenes]
   end
 
   # GET /characters/1
   def show
-    render json: @character
+    render json: @character, include: [:roles, :scenes]
   end
 
   # POST /characters
@@ -46,6 +47,6 @@ class CharactersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def character_params
-      params.fetch(:character, {})
+      params.fetch(:character, {}).permit(:id, :name, :description, scene_ids: [])
     end
 end

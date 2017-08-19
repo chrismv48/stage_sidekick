@@ -34,6 +34,8 @@ users = User.create(20.times.collect {|i| {
 
 roles = Role.create(users.map {|user| {
   user_id: user.id,
+  first_name: user.first_name,
+  last_name: user.last_name,
   production_id: production.id,
   venue_id: venue.id,
   title: user.default_title,
@@ -44,6 +46,7 @@ roles = Role.create(users.map {|user| {
 
 characters = Character.create(10.times.collect {|i| {
   name: Faker::Name.first_name,
+  description: Faker::ChuckNorris.fact,
   production_id: production.id,
   actors: [roles.sample]
 }})

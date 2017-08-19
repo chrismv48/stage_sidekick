@@ -1,19 +1,9 @@
-import {random, times} from 'underscore'
-
-const faker = require('faker')
-
-const scenesInitialState = times(11, (i) => {
-  let scene = {}
-  scene.orderIndex = i
-  scene.title = faker.random.words()
-  scene.description = faker.lorem.sentence(12)
-  scene.imageStr = `${faker.image.imageUrl()}?${faker.random.number({min: 1, max: 1000})}`
-  scene.characterImageStrs = times(random(1, 10), () => faker.fake("{{image.avatar}}"))
-  return scene
-})
-
-function scenesReducer(state = scenesInitialState, action) {
+function scenesReducer(state = {loading: true, scenes: []}, action) {
   switch (action.type) {
+    case 'FETCH_SCENES_SUCCESS':
+      return { loading: false, scenes: action.scenes }
+    case 'FETCH_SCENES_FAILED':
+      return {loading: false, error: true, ...state}
     default:
       return state
   }

@@ -4,18 +4,27 @@ import './Scenes.scss'
 
 import {Grid, Header, Image, Item, Label} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
+import {fetchScenes} from "../../actions";
+
+const faker = require('faker')
 
 @connect(state => {
-  const { dispatch } = state
+  const { dispatch, scenes: {scenes, loading} } = state
   return {
     dispatch,
-    scenes: state.scenes
+    scenes,
+    loading
   }
 })
 
 class Scenes extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+  componentWillMount() {
+    this.props.dispatch(fetchScenes())
+  }
+
   render() {
-    const { scenes } = this.props
+    const { scenes, loading } = this.props
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Scenes">
@@ -30,15 +39,16 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
             <Grid.Row>
               <Grid.Column>
                 <Item.Group>
-                  {this.props.scenes.map((scene, i) => {
-                      let characters = scene.characterImageStrs.map(imageStr => <Image avatar src={imageStr}/>)
+                  {!loading && scenes.map((scene, i) => {
+                      let character_avatars = scene.characters.map(imageStr => <Image avatar src={faker.fake("{{image.avatar}}")}/>)
+                      let imageStr = `${faker.image.people()}?${faker.random.number({min: 1, max: 1000})}`
                       return (
                         <Item key={i} id="scene-item">
-                          <Item.Image src={scene.imageStr}/>
+                          <Item.Image src={imageStr}/>
                           <Item.Content>
                             <Item.Header>{scene.title}</Item.Header>
                             <Item.Meta>
-                              Scene {scene.orderIndex + 1}
+                              Scene {scene.order_index + 1}
                             </Item.Meta>
                             <Item.Description>
                               <Grid columns={2} divided>
@@ -47,7 +57,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                                 </Grid.Column>
                                 <Grid.Column>
                                   <h5>Characters</h5>
-                                  {characters}
+                                  {character_avatars}
                                 </Grid.Column>
                               </Grid>
                             </Item.Description>

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :members
   resources :productions do
     get 'directory', on: :member
+    get 'characters', on: :member
   end
   resources :costumes
   resources :users

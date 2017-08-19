@@ -9,6 +9,7 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  production_id :integer          not null
+#  order_index   :integer
 #
 
 require 'test_helper'

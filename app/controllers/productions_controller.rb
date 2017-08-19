@@ -1,5 +1,5 @@
 class ProductionsController < ApplicationController
-  before_action :set_production, only: [:show, :update, :destroy, :directory]
+  before_action :set_production, only: [:show, :update, :destroy, :directory, :characters]
 
   # GET /productions
   def index
@@ -56,6 +56,11 @@ class ProductionsController < ApplicationController
       }
     end
     render json: directory
+  end
+
+  def characters
+    characters = Character.where(production_id: @production.id).all
+    render json: characters, include: [:scenes, :roles]
   end
 
   private
