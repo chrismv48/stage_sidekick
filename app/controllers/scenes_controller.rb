@@ -1,16 +1,18 @@
 class ScenesController < ApplicationController
   before_action :set_scene, only: [:show, :update, :destroy]
 
+  ASSOCIATIONS_TO_INCLUDE = [:characters]
+
   # GET /scenes
   def index
     @scenes = Scene.all
 
-    render json: @scenes, include: :characters
+    render json: build_json_response(@scenes)
   end
 
   # GET /scenes/1
   def show
-    render json: @scene
+    render json: build_json_response(@scene)
   end
 
   # POST /scenes
@@ -18,7 +20,7 @@ class ScenesController < ApplicationController
     @scene = Scene.new(scene_params)
 
     if @scene.save
-      render json: @scene, status: :created, location: @scene
+      render json: build_json_response(@scene), status: :created, location: @scene
     else
       render json: @scene.errors, status: :unprocessable_entity
     end
@@ -27,7 +29,7 @@ class ScenesController < ApplicationController
   # PATCH/PUT /scenes/1
   def update
     if @scene.update(scene_params)
-      render json: @scene
+      render json: build_json_response(@scene)
     else
       render json: @scene.errors, status: :unprocessable_entity
     end
@@ -47,5 +49,14 @@ class ScenesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def scene_params
       params.require(:scene).permit(:member, :production, :user, :venue)
+    end
+
+    def build_json_response(entity)
+      {
+        resource: 'scenes',
+        relationships: ASSOCIATIONS_TO_INCLUDE,
+        result: entity.as_json(include: ASSOCIATIONS_TO_INCLUDE)
+      }
+
     end
 end

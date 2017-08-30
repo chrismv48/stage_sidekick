@@ -1,17 +1,19 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
 
+  ASSOCIATIONS_TO_INCLUDE = [:roles, :scenes]
+
   # GET /characters
   def index
     @characters = Character.where(nil)
     @characters = @characters.where(production_id: params[:production_id]) if params[:production_id]
 
-    render json: @characters, include: [:roles, :scenes]
+    render json: build_json_response(@characters)
   end
 
   # GET /characters/1
   def show
-    render json: @character, include: [:roles, :scenes]
+    render json: build_json_response(@character)
   end
 
   # POST /characters
@@ -19,7 +21,7 @@ class CharactersController < ApplicationController
     @character = Character.new(character_params)
 
     if @character.save
-      render json: @character, status: :created, location: @character
+      render json: build_json_response(@character), status: :created, location: @character
     else
       render json: @character.errors, status: :unprocessable_entity
     end
@@ -28,7 +30,7 @@ class CharactersController < ApplicationController
   # PATCH/PUT /characters/1
   def update
     if @character.update(character_params)
-      render json: @character
+      render json: build_json_response(@character), include: [:roles, :scenes]
     else
       render json: @character.errors, status: :unprocessable_entity
     end
@@ -36,7 +38,11 @@ class CharactersController < ApplicationController
 
   # DELETE /characters/1
   def destroy
-    @character.destroy
+    if @character.destroy
+      render json: {success: true}
+    else
+      render json: @character.errors, status: :unprocessable_entity
+    end
   end
 
   private
@@ -47,6 +53,15 @@ class CharactersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def character_params
-      params.fetch(:character, {}).permit(:id, :name, :description, scene_ids: [])
+      params.fetch(:character, {}).permit(:id, :name, :description, :production_id, scene_ids: [])
     end
+
+    def build_json_response(entity)
+        {
+          resource: 'characters',
+          relationships: ASSOCIATIONS_TO_INCLUDE,
+          result: entity.as_json(include: ASSOCIATIONS_TO_INCLUDE)
+        }
+    end
+
 end

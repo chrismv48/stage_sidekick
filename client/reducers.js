@@ -5,12 +5,8 @@
 
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
-import languageProviderReducer from 'containers/LanguageProvider/reducer';
-import scenesReducer from 'containers/Scenes/reducer'
-import directoryReducer from 'containers/Directory/reducer'
-import charactersReducer from 'containers/Characters/reducer'
-import characterReducer from "./containers/Character/reducer";
-import characterFormReducer from "./containers/CharacterForm/reducer";
+import apiReducer from "./api/reducer";
+import rootModal from "./containers/Modals/reducer";
 
 /**
  * Creates the main reducer with the asynchronously loaded ones
@@ -18,12 +14,8 @@ import characterFormReducer from "./containers/CharacterForm/reducer";
 export default function createReducer(asyncReducers) {
   return combineReducers({
     routing: routerReducer,
-    language: languageProviderReducer,
-    scenes: scenesReducer,
-    directory: directoryReducer,
-    characters: charactersReducer,
-    character: characterReducer,
-    characterForm: characterFormReducer,
+    entities: apiReducer,
+    modal: rootModal,
     ...asyncReducers,
   });
 }

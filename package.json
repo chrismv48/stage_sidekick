@@ -287,6 +287,7 @@
     "ngrok": "2.2.4",
     "node-plop": "0.5.4",
     "node-sass": "^4.5.3",
+    "normalizr": "^3.2.3",
     "null-loader": "0.1.1",
     "offline-plugin": "4.5.2",
     "plop": "1.7.3",

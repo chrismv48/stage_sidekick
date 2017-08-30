@@ -9,13 +9,11 @@ import {connect} from 'react-redux';
 import {CharacterForm} from "../CharacterForm/index";
 import {Button} from "semantic-ui-react";
 import _ from 'lodash'
-import {submitCharacterForm, updateCharacterForm} from "../CharacterForm/actions";
 
 @connect(state => {
   const {
     dispatch,
-    character: {character, loading},
-    characterForm: {formFields}
+    character: {character, loading, formFields = {}},
   } = state
   return {
     dispatch,
@@ -31,10 +29,6 @@ export class Character extends React.Component { // eslint-disable-line react/pr
     // this.props.dispatch(fetchScenes())
   }
 
-  handleCharacterSubmit = () => {
-    this.props.dispatch(updateCharacterForm('id', this.props.params.characterId))
-    this.props.dispatch(submitCharacterForm())
-  }
 
   render() {
     const {formFields} = this.props

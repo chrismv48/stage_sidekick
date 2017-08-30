@@ -6,40 +6,47 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchCharacter, fetchScenes} from "../../actions";
 import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
-import {updateCharacterForm} from "./actions";
 import './CharacterForm.scss'
 import * as _ from "lodash";
+import {fetchResource, updateResourceFields} from "../../api/actions";
 
-@connect(state => {
+@connect((state, ownProps) => {
+  const {dispatch} = state
+  const {characterId} = ownProps
   const {
-    dispatch,
-    character: {character, loading},
-    scenes: {scenes},
-    characterForm: {formFields}
-  } = state
+    scenes: {byId: scenesById = {}, allIds: scenesAllIds = []} = {},
+    characters = {}
+  } = state.entities
+
+  const character = _.get(characters, `byId.${characterId}`, {})
+  const characterStaging = _.get(characters, `staging.${characterId}`, {})
+  const loading = characters.loading
+
   return {
     dispatch,
     character,
+    characterStaging,
     loading,
-    scenes,
-    formFields
+    scenesById,
+    scenesAllIds
   }
 })
 
 export class CharacterForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
-  componentWillMount() {
+  componentDidMount() {
     const {characterId} = this.props
     if (characterId) {
-      this.props.dispatch(fetchCharacter(characterId))
+      this.props.dispatch(fetchResource('characters', `characters/${characterId}`))
     }
-    this.props.dispatch(fetchScenes())
+    this.props.dispatch(fetchResource('scenes', 'scenes'))
   }
 
-  generateSceneOptions = (scenes) => {
-    return scenes.map(scene => {
+  generateSceneOptions = () => {
+    const {scenesById, scenesAllIds} = this.props
+    return scenesAllIds.map(sceneId => {
+      const scene = scenesById[sceneId]
       return {
         key: scene.id,
         text: scene.title,
@@ -49,12 +56,11 @@ export class CharacterForm extends React.Component { // eslint-disable-line reac
   }
 
   handleSceneSelection = (event, data) => {
-    this.props.dispatch(updateCharacterForm('scene_ids', data.value))
+    this.props.dispatch(updateResourceFields('characters', 'scene_ids', data.value, this.props.characterId))
   }
 
   render() {
-    const {loading, character, scenes, formFields, dispatch} = this.props
-    const character_scene_ids = _.isEmpty(character) ? [] : character.scenes.map(scene => scene.id)
+    const {characterStaging, character, dispatch, loading, characterId} = this.props
     return (
       <Segment basic>
         <Dimmer active={loading} inverted>
@@ -64,21 +70,21 @@ export class CharacterForm extends React.Component { // eslint-disable-line reac
           <Form.Field>
             <label>Name</label>
             <input
-              value={formFields['name'] || character.name}
-              onChange={(e) => dispatch(updateCharacterForm('name', e.target.value))}/>
+              value={_.isUndefined(characterStaging['name']) ? character.name : characterStaging['name'] || ""}
+              onChange={(e) => dispatch(updateResourceFields('characters', 'name', e.target.value, characterId))}/>
           </Form.Field>
           <Form.Field>
             <label>Description</label>
             <textarea
-              value={formFields['description'] || character.description}
-              onChange={(e) => dispatch(updateCharacterForm('description', e.target.value))}
+              value={_.isUndefined(characterStaging['description']) ? character.name : characterStaging['description'] || ""}
+              onChange={(e) => dispatch(updateResourceFields('characters', 'description', e.target.value, characterId))}
             />
           </Form.Field>
           <Form.Field>
             <label>Character Scenes</label>
             <Dropdown placeholder='Character Scenes' fluid multiple selection
-                      options={this.generateSceneOptions(scenes)}
-                      value={formFields['scene_ids'] || character_scene_ids}
+                      options={this.generateSceneOptions()}
+                      value={characterStaging['scene_ids'] || character.scenes || []}
                       onChange={(event, data) => this.handleSceneSelection(event, data)}
             />
           </Form.Field>

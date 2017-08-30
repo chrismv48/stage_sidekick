@@ -3,9 +3,7 @@
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
 import {getAsyncInjectors} from 'utils/asyncInjectors';
-import scenesSaga from 'containers/Scenes/sagas'
-import characterSaga from 'containers/Character/sagas'
-import charactersSaga from 'containers/Characters/sagas'
+import apiSaga from 'api/sagas'
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -19,7 +17,7 @@ export default function createRoutes(store) {
   // Create reusable async injectors using getAsyncInjectors factory
   const { injectReducer, injectSagas } = getAsyncInjectors(store); // eslint-disable-line no-unused-vars
 
-  injectSagas(scenesSaga, characterSaga, charactersSaga)
+  injectSagas(apiSaga)
 
   return [
     {
@@ -43,15 +41,11 @@ export default function createRoutes(store) {
       name: 'directory',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          import('containers/Directory/reducer'),
-          import('containers/Directory/sagas'),
           import('containers/Directory'),
         ]);
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('directory', reducer.default);
-          injectSagas(sagas.default); // Inject the saga
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -63,15 +57,11 @@ export default function createRoutes(store) {
       name: 'characters',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          import('containers/Characters/reducer'),
-          import('containers/Characters/sagas'),
-          import('containers/Characters'),
+          import('containers/Characters/Characters'),
         ]);
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('characters', reducer.default);
-          injectSagas(sagas.default); // Inject the saga
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -82,15 +72,13 @@ export default function createRoutes(store) {
       name: 'scenes',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          import('containers/Scenes/reducer'),
           import('containers/Scenes'),
         ]);
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, component]) => {
-          injectReducer('scenes', reducer.default);
+        importModules.then(([component]) => {
           renderRoute(component);
-        });
+        });;
 
         importModules.catch(errorLoading);
       },
@@ -99,16 +87,12 @@ export default function createRoutes(store) {
       name: 'characters',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/Character/reducer'),
-          import('containers/Character/sagas'),
           import('containers/Character'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('character', reducer.default);
-          injectSagas(sagas.default);
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
