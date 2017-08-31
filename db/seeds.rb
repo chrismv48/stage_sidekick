@@ -41,14 +41,16 @@ roles = Role.create(users.map {|user| {
   title: user.default_title,
   department: departments.sample,
   role_type: statuses.sample,
-  start_date: Faker::Date.between(2.years.ago, Date.today)
+  start_date: Faker::Date.between(2.years.ago, Date.today),
+  remote_avatar_url: Faker::LoremPixel.image("50x50", false, 'people')
 }})
 
 characters = Character.create(10.times.collect {|i| {
   name: Faker::Name.first_name,
   description: Faker::ChuckNorris.fact,
   production_id: production.id,
-  actors: [roles.sample]
+  actors: [roles.sample],
+  remote_display_image_url: Faker::LoremPixel.image("250x200", false, 'people')
 }})
 
 scenes = Scene.create(8.times.collect {|i| {

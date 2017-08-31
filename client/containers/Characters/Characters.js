@@ -9,6 +9,8 @@ import * as _ from "lodash";
 import {arrayMove} from 'react-sortable-hoc'
 import {showModal} from "../Modals/actions";
 
+// import img from '../../images/people.jpeg'
+
 const faker = require('faker');
 
 // const SortableCard = SortableElement(({children, ...rest}) => {
@@ -28,11 +30,13 @@ const faker = require('faker');
 @connect(state => {
   const {dispatch} = state
   const {
-    characters = {}
+    characters = {},
+    roles: {byId: rolesById} = {}
   } = state.entities
   return {
     dispatch,
-    characters
+    characters,
+    rolesById
   }
 })
 
@@ -48,22 +52,6 @@ export class Characters extends React.Component {
     this.props.dispatch(fetchResource('characters', 'characters'))
   }
 
-  componentWillReceiveProps(nextProps) {
-    // If characters change, indicates that it was modified/created
-    // if (this.props.character.success && this.props.character.formFields) {
-    //   this.setState({showModal: false})
-    //   this.props.dispatch(fetchResource('characters', 'characters'))
-    // }
-  }
-
-  showCreateCharacterModal = () => {
-    this.setState({selectedCharacterId: null, showModal: true})
-  }
-
-  showEditCharacterModal = (characterId) => {
-    this.setState({selectedCharacterId: characterId, showModal: true})
-  }
-
   handleDestroyCharacter = (characterId) => {
     this.props.dispatch(deleteResource('character', `characters/${characterId}`))
     this.props.dispatch(fetchResource('characters', 'characters'))
@@ -77,7 +65,7 @@ export class Characters extends React.Component {
 
   render() {
     const {loading, byId: charactersById = {}, allIds: charactersAllIds = []} = this.props.characters
-    const { dispatch } = this.props
+    const {dispatch, rolesById} = this.props
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Characters">
@@ -105,8 +93,10 @@ export class Characters extends React.Component {
                   </Dimmer>
                   <Card.Group itemsPerRow={4}>
                     {charactersAllIds.map((characterId, i) => {
-                        let imageStr = `${faker.image.people()}?${faker.random.number({min: 1, max: 1000})}`
-                        let character = charactersById[characterId]
+                      let character = charactersById[characterId]
+                      const characterImageUrl = character.display_image.url
+                      const characterImage = characterImageUrl ? require(`../../../public${characterImageUrl}`) : null
+                      const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
                         return (
                           <Card raised key={i} className="character-card">
                             <div className="card-edit-panel">
@@ -124,7 +114,8 @@ export class Characters extends React.Component {
                                 </Dropdown>
                               </div>
                             </div>
-                            <Image src={imageStr}/>
+                            <Image src={characterImage} height={200} />
+                            {/*<Image src='/build/images/people.jpeg'/>*/}
                             <Card.Content>
                               <div className={this.state.flipped ? "card-effect" : ""}>
                                 <div className="card-front">
@@ -134,10 +125,10 @@ export class Characters extends React.Component {
                                   </Card.Meta>
                                   <Card.Description>
                                     <div className="card-description">
-                                      {!_.isEmpty(character.roles) &&
+                                      {characterRole &&
                                       <Header as="h5">
                                         Played by <a
-                                        href="#">{`${character.roles[0].first_name} ${character.roles[0].last_name}`}</a>
+                                        href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
                                       </Header>
                                       }
                                       {character.description}

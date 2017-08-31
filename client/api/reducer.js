@@ -43,7 +43,8 @@ function apiReducer(state = {}, action) {
     case ACTION_RESOURCE_SUCCEEDED('put', entity):
     case ACTION_RESOURCE_SUCCEEDED('post', entity):
     case ACTION_RESOURCE_SUCCEEDED('delete', entity):
-      let newState = _.mergeWith({}, state, response, customizer)
+      let newState = _.mergeWith(customizer, state, response)
+      // if (action.type === 'GET_SCENES_SUCCEEDED') { debugger }
       newState[entity].loading = false
       newState[entity].success = true
       newState[entity].error = null
@@ -69,8 +70,8 @@ function apiReducer(state = {}, action) {
 
 export default apiReducer
 
-function customizer(objValue, srcValue) {
-  if (_.isArray(objValue)) {
-    return _.uniq(objValue.concat(srcValue));
+function customizer(srcValue, objValue) {
+  if (_.isArray(srcValue)) {
+    return _.uniq(srcValue.concat(objValue));
   }
 }

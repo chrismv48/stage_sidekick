@@ -2,8 +2,6 @@ import React from 'react';
 import {Divider, Icon, Menu} from "semantic-ui-react";
 import './Layout.scss'
 import {Link} from "react-router";
-import {connect} from "react-redux";
-import setCurrentPage from '../../actions'
 
 class Layout extends React.Component { // eslint-disable-line react/prefer-stateless-function
 

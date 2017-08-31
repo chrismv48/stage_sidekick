@@ -10,9 +10,12 @@
 #  updated_at    :datetime         not null
 #  production_id :integer          not null
 #  order_index   :integer
+#  display_image :string
 #
 
 class Character < ApplicationRecord
+
+  mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}.#{Time.zone.now.to_i}" }
 
   has_many :characters_scenes
   has_many :scenes, through: :characters_scenes

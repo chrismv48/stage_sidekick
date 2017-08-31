@@ -53,7 +53,15 @@ class CharactersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def character_params
-      params.fetch(:character, {}).permit(:id, :name, :description, :production_id, scene_ids: [])
+      params.permit(
+        :id,
+        :name,
+        :description,
+        :production_id,
+        :display_image,
+        scene_ids: [],
+        role_ids: []
+      )
     end
 
     def build_json_response(entity)

@@ -9,11 +9,13 @@ import {fetchScenes} from "../../actions";
 const faker = require('faker')
 
 @connect(state => {
-  const { dispatch, scenes: {scenes, loading} } = state
+  const {
+    dispatch,
+    scenes
+  } = state
   return {
     dispatch,
-    scenes,
-    loading
+    scenes
   }
 })
 
@@ -24,7 +26,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
   }
 
   render() {
-    const { scenes, loading } = this.props
+    const {byId: scenesById, allIds: scenesAllIds} = this.props.scenes
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Scenes">
@@ -39,9 +41,11 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
             <Grid.Row>
               <Grid.Column>
                 <Item.Group>
-                  {!loading && scenes.map((scene, i) => {
-                      let character_avatars = scene.characters.map(imageStr => <Image avatar src={faker.fake("{{image.avatar}}")}/>)
-                      let imageStr = `${faker.image.people()}?${faker.random.number({min: 1, max: 1000})}`
+                  {scenesAllIds.map((sceneId, i) => {
+                    const scene = scenesById[sceneId]
+                    let character_avatars = scene.characters.map(character => <Image avatar
+                                                                                    src={character.display_image.url}/>)
+                    let imageStr = `${faker.image.people()}?${faker.random.number({min: 1, max: 1000})}`
                       return (
                         <Item key={i} id="scene-item">
                           <Item.Image src={imageStr}/>

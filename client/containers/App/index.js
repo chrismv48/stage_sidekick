@@ -13,6 +13,7 @@
 
 import React from 'react';
 import RootModal from '../Modals/RootModal'
+import DetailSidebar from "../DetailSidebar/DetailSidebar";
 
 export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -24,7 +25,9 @@ export default class App extends React.PureComponent { // eslint-disable-line re
     return (
       <div>
         <RootModal />
-        {React.Children.toArray(this.props.children)}
+        <DetailSidebar>
+          {React.Children.toArray(this.props.children)}
+        </DetailSidebar>
       </div>
     );
   }

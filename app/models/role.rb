@@ -16,6 +16,7 @@
 #  updated_at    :datetime         not null
 #  first_name    :string
 #  last_name     :string
+#  avatar        :string
 #
 # Indexes
 #
@@ -25,6 +26,8 @@
 #
 
 class Role < ApplicationRecord
+  mount_uploader :avatar, AvatarUploader
+
   belongs_to :user
   belongs_to :production
   belongs_to :venue

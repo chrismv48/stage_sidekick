@@ -72,7 +72,7 @@ export default function createRoutes(store) {
       name: 'scenes',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          import('containers/Scenes'),
+          import('containers/Scenes/Scenes'),
         ]);
         const renderRoute = loadModule(cb);
 

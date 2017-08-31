@@ -10,6 +10,7 @@
 #  updated_at    :datetime         not null
 #  production_id :integer          not null
 #  order_index   :integer
+#  display_image :string
 #
 
 require 'test_helper'

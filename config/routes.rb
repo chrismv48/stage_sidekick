@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :roles
   resources :members
   resources :productions do
     get 'directory', on: :member
