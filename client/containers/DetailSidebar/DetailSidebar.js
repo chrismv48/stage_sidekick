@@ -13,7 +13,7 @@ class DetailSidebar extends Component {
 
 
   render() {
-    // if (!this.props.sidebarType) { return null }
+    if (!this.props.sidebarType) { return null }
     return (
       <div>
         <Sidebar.Pushable as={Segment}>

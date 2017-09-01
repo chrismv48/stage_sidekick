@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830135232) do
+ActiveRecord::Schema.define(version: 20170831124620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 20170830135232) do
     t.string   "setting",           limit: 30
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.string   "display_image"
     t.index ["production_id"], name: "index_scenes_on_production_id", using: :btree
   end
 

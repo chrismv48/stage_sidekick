@@ -17,6 +17,7 @@ const app = express();
 const proxyHost = process.env.npm_config_proxyHost || 'localhost';
 const proxyPort = process.env.npm_config_proxyPort || '3005';
 app.use('/api', proxy(`${proxyHost}:${proxyPort}`));
+app.use(express.static('public'))
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

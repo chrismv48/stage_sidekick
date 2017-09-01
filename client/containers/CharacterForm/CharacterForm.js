@@ -83,14 +83,14 @@ export class CharacterForm extends React.Component { // eslint-disable-line reac
 
   render() {
     const {characterStaging, character, dispatch, loading, characterId} = this.props
-    const characterImage = character.display_image.url ? require(`../../../public${character.display_image.url}`) : characterStaging['display_image']
+    const characterImageUrl = characterStaging['display_image'] || _.get(character, 'display_image.url')
     return (
       <Segment basic>
         <Dimmer active={loading} inverted>
           <Loader inverted>Loading</Loader>
         </Dimmer>
         <Form>
-          <ImageUpload currentImage={characterImage}
+          <ImageUpload currentImage={characterImageUrl}
                        handleImageChange={(imageUrl) => dispatch(updateResourceFields('characters', 'display_image', imageUrl, characterId))} />
           <Form.Field>
             <label>Name</label>

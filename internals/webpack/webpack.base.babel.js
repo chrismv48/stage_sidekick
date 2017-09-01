@@ -81,7 +81,11 @@ module.exports = (options) => ({
     new webpack.NamedModulesPlugin(),
   ]),
   resolve: {
-    modules: ['client', 'node_modules'],
+    modules: [
+      'client',
+      'node_modules',
+      // 'static'
+    ],
     extensions: [
       '.js',
       '.jsx',
@@ -97,3 +101,4 @@ module.exports = (options) => ({
   target: 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
 });
+

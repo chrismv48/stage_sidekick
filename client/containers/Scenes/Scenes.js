@@ -1,32 +1,37 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import './Scenes.scss'
 
-import {Grid, Header, Image, Item, Label} from 'semantic-ui-react'
+import {Button, Grid, Header, Icon, Image, Item, Label} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
-import {fetchScenes} from "../../actions";
+import {fetchResource} from "../../api/actions";
+import {showModal} from "../Modals/actions";
+import * as _ from "lodash";
 
 const faker = require('faker')
 
 @connect(state => {
   const {
     dispatch,
-    scenes
-  } = state
+    scenes = {},
+    characters: {byId: charactersById} = {},
+  } = state.entities
   return {
     dispatch,
-    scenes
+    scenes,
+    charactersById,
   }
 })
 
 class Scenes extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
-    this.props.dispatch(fetchScenes())
+    this.props.dispatch(fetchResource('scenes', 'scenes'))
   }
 
   render() {
-    const {byId: scenesById, allIds: scenesAllIds} = this.props.scenes
+    const {byId: scenesById, allIds: scenesAllIds = []} = this.props.scenes
+    const {charactersById, dispatch} = this.props
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Scenes">
@@ -40,15 +45,29 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
+                <Button onClick={() => dispatch(showModal('SCENE_MODAL', {sceneId: null}))} primary>
+                  <Icon name='add user'/>
+                  Add Scene
+                </Button>
                 <Item.Group>
                   {scenesAllIds.map((sceneId, i) => {
                     const scene = scenesById[sceneId]
-                    let character_avatars = scene.characters.map(character => <Image avatar
-                                                                                    src={character.display_image.url}/>)
-                    let imageStr = `${faker.image.people()}?${faker.random.number({min: 1, max: 1000})}`
+                    let character_avatars = scene.characters.map((characterId, i) => {
+                      const characterImageUrl = _.get(charactersById, `${characterId}.display_image.url`, null)
                       return (
-                        <Item key={i} id="scene-item">
-                          <Item.Image src={imageStr}/>
+                        <Image key={i} avatar src={characterImageUrl}/>
+                      )
+                    })
+                    const sceneImageUrl = _.get(scene, 'display_image.url', null)
+                    return (
+                      <Item key={i} id="scene-item" style={{position: 'relative'}}>
+                        <Icon
+                          name="edit"
+                          color="grey"
+                          style={{position: 'absolute', top: 0, right: 0, margin: 5, cursor: 'pointer'}}
+                          onClick={() => dispatch(showModal('SCENE_MODAL', {sceneId}))}
+                        />
+                        <Item.Image src={sceneImageUrl}/>
                           <Item.Content>
                             <Item.Header>{scene.title}</Item.Header>
                             <Item.Meta>
@@ -83,10 +102,5 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
     );
   }
 }
-
-Scenes.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  scenes: PropTypes.array
-};
 
 export default Scenes

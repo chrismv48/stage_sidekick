@@ -1,9 +1,12 @@
 import {connect} from "react-redux";
-import CharacterModal from "./CharacterModal";
 import * as React from "react";
+
+import CharacterModal from "./CharacterModal";
+import SceneModal from "./SceneModal";
 
 const MODAL_COMPONENTS = {
   'CHARACTER_MODAL': CharacterModal,
+  'SCENE_MODAL': SceneModal,
   /* other modals */
 }
 

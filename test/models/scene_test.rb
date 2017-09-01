@@ -11,6 +11,7 @@
 #  setting           :string(30)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  display_image     :string
 #
 # Indexes
 #

@@ -60,7 +60,8 @@ scenes = Scene.create(8.times.collect {|i| {
   order_index: i,
   length_in_minutes: rand(5..30),
   setting: scene_settings.sample,
-  characters: characters.shuffle[1..rand(1..5)]
+  characters: characters.shuffle[1..rand(1..5)],
+  remote_display_image_url: Faker::LoremPixel.image("400x200", false, 'fashion')
 }})
 
 costumes = Costume.create(characters.map {|character| {

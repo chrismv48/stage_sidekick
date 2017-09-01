@@ -1,6 +1,6 @@
 import {hideModal} from "./actions";
 import {Button, Header, Modal} from "semantic-ui-react";
-import {CharacterForm} from "../CharacterForm/index";
+import {CharacterForm} from "../CharacterForm/CharacterForm";
 import * as React from "react";
 import * as _ from "lodash";
 import {connect} from "react-redux";
@@ -23,8 +23,8 @@ import {createResource, modifyResource} from "../../api/actions";
 export default class CharacterModal extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const {success, dispatch, newCharacterStaged} = nextProps
-    const { characterStaged } = this.props
+    const {characterStaged: newCharacterStaged} = nextProps
+    const { characterStaged, success, dispatch } = this.props
     if (success && !_.isEmpty(characterStaged) && _.isEmpty(newCharacterStaged)) { dispatch(hideModal()) }
   }
 

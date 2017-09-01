@@ -8,9 +8,7 @@ import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import {arrayMove} from 'react-sortable-hoc'
 import {showModal} from "../Modals/actions";
-
 // import img from '../../images/people.jpeg'
-
 const faker = require('faker');
 
 // const SortableCard = SortableElement(({children, ...rest}) => {
@@ -94,8 +92,7 @@ export class Characters extends React.Component {
                   <Card.Group itemsPerRow={4}>
                     {charactersAllIds.map((characterId, i) => {
                       let character = charactersById[characterId]
-                      const characterImageUrl = character.display_image.url
-                      const characterImage = characterImageUrl ? require(`../../../public${characterImageUrl}`) : null
+                      const characterImageUrl = character.display_image ? character.display_image.url : null
                       const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
                         return (
                           <Card raised key={i} className="character-card">
@@ -114,8 +111,7 @@ export class Characters extends React.Component {
                                 </Dropdown>
                               </div>
                             </div>
-                            <Image src={characterImage} height={200} />
-                            {/*<Image src='/build/images/people.jpeg'/>*/}
+                            <Image src={characterImageUrl} height={200} />
                             <Card.Content>
                               <div className={this.state.flipped ? "card-effect" : ""}>
                                 <div className="card-front">

@@ -48,7 +48,17 @@ class ScenesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def scene_params
-      params.require(:scene).permit(:member, :production, :user, :venue)
+      params.permit(
+        :id,
+        :production_id,
+        :title,
+        :description,
+        :order_index,
+        :length_in_minutes,
+        :setting,
+        :display_image,
+        character_ids: []
+      )
     end
 
     def build_json_response(entity)
