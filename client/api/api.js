@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import {pluralizeResource} from "../helpers";
 
 const Api = (endpoint, method = 'get', payload = null) => {
   const fetchOptions = {
@@ -38,8 +39,9 @@ function normalize(response) {
     resourceNormalized['byId'][item.id] = item
     resourceNormalized['allIds'].push(item.id)
     for (let relationship of relationships) {
-      normalizedResult[relationship] = normalizedResult[relationship] || {byId: {}, allIds: new Set()}
-      let relationshipNormalized = normalizedResult[relationship]
+      const pluralizedRelationship = pluralizeResource(relationship)
+      normalizedResult[pluralizedRelationship] = normalizedResult[pluralizedRelationship] || {byId: {}, allIds: new Set()}
+      let relationshipNormalized = normalizedResult[pluralizedRelationship]
       let relationshipIds = []
       let relationshipItems = _.isArray(item[relationship]) ? item[relationship] : [item[relationship]]
       for (let relationshipItem of relationshipItems) {
@@ -52,14 +54,6 @@ function normalize(response) {
   }
   for (let key of Object.keys(normalizedResult)) {
     normalizedResult[key].allIds = Array.from(normalizedResult[key].allIds)
-    if (key in RELATIONSHIP_MAPPING) {
-      normalizedResult[RELATIONSHIP_MAPPING[key]] = normalizedResult[key]
-      delete normalizedResult[key]
-    }
   }
   return normalizedResult
-}
-
-const RELATIONSHIP_MAPPING = {
-  'user': 'users'
 }

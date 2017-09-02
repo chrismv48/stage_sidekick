@@ -30,7 +30,7 @@ const faker = require('faker');
   const {
     characters = {},
     roles: {byId: rolesById} = {}
-  } = state.entities
+  } = state.resources
   return {
     dispatch,
     characters,
@@ -77,7 +77,7 @@ export class Characters extends React.Component {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
-                <Button onClick={() => dispatch(showModal('CHARACTER_MODAL', {characterId: null}))} primary>
+                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'characters', resourceId: null}))} primary>
                   <Icon name='add user'/>
                   Add Character
                 </Button>
@@ -101,7 +101,7 @@ export class Characters extends React.Component {
                               <div className="card-edit-dropdown">
                                 <Dropdown icon="ellipsis vertical">
                                   <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => dispatch(showModal('CHARACTER_MODAL', {characterId}))}
+                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'characters', resourceId: characterId}))}
                                                    icon="edit"
                                                    text="Edit Character"/>
                                     <Dropdown.Item onClick={() => this.handleDestroyCharacter(characterId)}

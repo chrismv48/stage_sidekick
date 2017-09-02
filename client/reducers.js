@@ -15,7 +15,7 @@ import detailSidebar from "./containers/DetailSidebar/reducer";
 export default function createReducer(asyncReducers) {
   return combineReducers({
     routing: routerReducer,
-    entities: apiReducer,
+    resources: apiReducer,
     modal: rootModal,
     sidebar: detailSidebar,
     ...asyncReducers,

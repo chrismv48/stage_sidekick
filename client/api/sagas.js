@@ -10,14 +10,14 @@ function* fetchResource(action) {
   const {entity, endpoint} = action
   const method = 'GET'
   console.log(`Fetching entity: ${endpoint}`)
-  try {
+  // try {
     yield put({type: ACTION_RESOURCE_INITIATED(method, entity), entity});
     const response = yield call(() => Api(endpoint, method));
     yield put({type: ACTION_RESOURCE_SUCCEEDED(method, entity), entity, response});
     yield put({type: ACTION_RESOURCE_COMPLETED(method, entity), entity});
-  } catch (error) {
-    yield put({type: ACTION_RESOURCE_FAILED(method, entity), entity, error});
-  }
+  // } catch (error) {
+  //   yield put({type: ACTION_RESOURCE_FAILED(method, entity), entity, error});
+  // }
 }
 
 function* postResource(action) {

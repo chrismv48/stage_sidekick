@@ -14,7 +14,7 @@ const faker = require('faker');
     dispatch,
     roles = {},
     users: {byId: usersById} = {}
-  } = state.entities
+  } = state.resources
   return {
     dispatch,
     roles,
@@ -45,7 +45,7 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
             <Grid.Row columns={2}>
               <Grid.Column floated="left">
                 <div>
-                  <Button onClick={() => dispatch(showModal('ROLE_MODAL', {roleId: null}))} primary>
+                  <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'roles', resourceId: null}))} primary>
                     <Icon name="add user"/>
                     Add User
                   </Button>

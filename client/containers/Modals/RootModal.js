@@ -1,14 +1,10 @@
 import {connect} from "react-redux";
 import * as React from "react";
 
-import CharacterModal from "./CharacterModal";
-import SceneModal from "./SceneModal";
-import RoleModal from "./RoleModal";
+import ResourceModal from "./ResourceModal";
 
 const MODAL_COMPONENTS = {
-  'CHARACTER_MODAL': CharacterModal,
-  'SCENE_MODAL': SceneModal,
-  'ROLE_MODAL': RoleModal,
+  'RESOURCE_MODAL' : ResourceModal
   /* other modals */
 }
 

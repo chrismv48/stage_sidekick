@@ -15,7 +15,7 @@
 
 class Character < ApplicationRecord
 
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}.#{Time.zone.now.to_i}" }
+  mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}_#{Time.zone.now.to_i}" }
 
   has_many :characters_scenes
   has_many :scenes, through: :characters_scenes

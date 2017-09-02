@@ -9,8 +9,8 @@ import {connect} from 'react-redux';
 import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
 import './SceneForm.scss'
 import * as _ from "lodash";
-import {fetchResource, updateResourceFields} from "../../api/actions";
-import ImageUpload from "../../components/ImageUpload/ImageUpload";
+import {fetchResource, updateResourceFields} from "api/actions";
+import ImageUpload from "components/ImageUpload/ImageUpload";
 
 @connect((state, ownProps) => {
   const {dispatch} = state
@@ -18,7 +18,7 @@ import ImageUpload from "../../components/ImageUpload/ImageUpload";
   const {
     characters: {byId: charactersById = {}, allIds: charactersAllIds = []} = {},
     scenes = {}
-  } = state.entities
+  } = state.resources
 
   const scene = _.get(scenes, `byId.${sceneId}`, {})
   const sceneStaging = _.get(scenes, `staging.${sceneId}`, {})

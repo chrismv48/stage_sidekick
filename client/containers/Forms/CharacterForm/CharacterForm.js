@@ -9,8 +9,8 @@ import {connect} from 'react-redux';
 import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
 import './CharacterForm.scss'
 import * as _ from "lodash";
-import {fetchResource, updateResourceFields} from "../../api/actions";
-import ImageUpload from "../../components/ImageUpload/ImageUpload";
+import {fetchResource, updateResourceFields} from "api/actions";
+import ImageUpload from "components/ImageUpload/ImageUpload";
 
 @connect((state, ownProps) => {
   const {dispatch} = state
@@ -19,7 +19,7 @@ import ImageUpload from "../../components/ImageUpload/ImageUpload";
     scenes: {byId: scenesById = {}, allIds: scenesAllIds = []} = {},
     roles: {byId: rolesById = {}, allIds: rolesAllIds = []} = {},
     characters = {}
-  } = state.entities
+  } = state.resources
 
   const character = _.get(characters, `byId.${characterId}`, {})
   const characterStaging = _.get(characters, `staging.${characterId}`, {})
@@ -40,12 +40,12 @@ import ImageUpload from "../../components/ImageUpload/ImageUpload";
 export class CharacterForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
-    const {characterId} = this.props
+    const {characterId, dispatch} = this.props
     if (characterId) {
-      this.props.dispatch(fetchResource('characters', `characters/${characterId}`))
+      dispatch(fetchResource('characters', `characters/${characterId}`))
     }
-    this.props.dispatch(fetchResource('scenes', 'scenes'))
-    this.props.dispatch(fetchResource('roles', 'roles'))
+    dispatch(fetchResource('scenes', 'scenes'))
+    dispatch(fetchResource('roles', 'roles'))
   }
 
   generateSceneOptions = () => {

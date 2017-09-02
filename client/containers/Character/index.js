@@ -6,7 +6,7 @@
 
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {CharacterForm} from "../CharacterForm/CharacterForm";
+import {CharacterForm} from "../Forms/CharacterForm/CharacterForm";
 import {Button} from "semantic-ui-react";
 import _ from 'lodash'
 

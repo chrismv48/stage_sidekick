@@ -82,8 +82,8 @@ module.exports = (options) => ({
   ]),
   resolve: {
     modules: [
-      'client',
-      'node_modules',
+      path.resolve('./client'),
+      path.resolve('./node_modules'),
       // 'static'
     ],
     extensions: [

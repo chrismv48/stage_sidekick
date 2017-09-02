@@ -9,8 +9,8 @@ import {connect} from 'react-redux';
 import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
 import './RoleForm.scss'
 import * as _ from "lodash";
-import {fetchResource, updateResourceFields} from "../../api/actions";
-import ImageUpload from "../../components/ImageUpload/ImageUpload";
+import {fetchResource, updateResourceFields} from "api/actions";
+import ImageUpload from "components/ImageUpload/ImageUpload";
 
 const employmentTypes = [
   {
@@ -32,7 +32,7 @@ const employmentTypes = [
   const {roleId} = ownProps
   const {
     roles = {},
-  } = state.entities
+  } = state.resources
 
   const role = _.get(roles, `byId.${roleId}`, {})
   const roleStaging = _.get(roles, `staging.${roleId}`, {})
