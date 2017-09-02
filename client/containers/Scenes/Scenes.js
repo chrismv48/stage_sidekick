@@ -8,8 +8,6 @@ import {fetchResource} from "../../api/actions";
 import {showModal} from "../Modals/actions";
 import * as _ from "lodash";
 
-const faker = require('faker')
-
 @connect(state => {
   const {
     dispatch,
@@ -30,7 +28,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
   }
 
   render() {
-    const {byId: scenesById, allIds: scenesAllIds = []} = this.props.scenes
+    const {byId: scenesById = {}, allIds: scenesAllIds = []} = this.props.scenes
     const {charactersById, dispatch} = this.props
     return (
       <Layout thisPage={this.props.route.name}>
@@ -52,7 +50,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                 <Item.Group>
                   {scenesAllIds.map((sceneId, i) => {
                     const scene = scenesById[sceneId]
-                    let character_avatars = scene.characters.map((characterId, i) => {
+                    let character_avatars = _.get(scene, 'characters', []).map((characterId, i) => {
                       const characterImageUrl = _.get(charactersById, `${characterId}.display_image.url`, null)
                       return (
                         <Image key={i} avatar src={characterImageUrl}/>

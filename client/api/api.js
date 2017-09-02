@@ -52,6 +52,14 @@ function normalize(response) {
   }
   for (let key of Object.keys(normalizedResult)) {
     normalizedResult[key].allIds = Array.from(normalizedResult[key].allIds)
+    if (key in RELATIONSHIP_MAPPING) {
+      normalizedResult[RELATIONSHIP_MAPPING[key]] = normalizedResult[key]
+      delete normalizedResult[key]
+    }
   }
   return normalizedResult
+}
+
+const RELATIONSHIP_MAPPING = {
+  'user': 'users'
 }

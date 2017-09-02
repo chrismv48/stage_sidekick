@@ -1,28 +1,36 @@
-const faker = require('faker');
+import {fetchResource} from "../../api/actions";
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Layout from "../../components/Layout/index";
 import {Button, Grid, Header, Icon, Image, Search, Table} from "semantic-ui-react";
 import './Directory.scss'
 import {fetchDirectory} from '../../actions'
+import {showModal} from "../Modals/actions";
+
+const faker = require('faker');
 
 @connect(state => {
-  const {dispatch, directory: {staff, loading}} = state
+  const {
+    dispatch,
+    roles = {},
+    users: {byId: usersById} = {}
+  } = state.entities
   return {
     dispatch,
-    staff,
-    loading
+    roles,
+    usersById
   }
 })
 
 export class Directory extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
-    this.props.dispatch(fetchDirectory())
+    this.props.dispatch(fetchResource('roles', 'roles'))
   }
 
   render() {
-    const {staff, loading} = this.props
+    const {byId: rolesById = {}, allIds: rolesAllIds = []} = this.props.roles
+    const {usersById = {}, dispatch} = this.props
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Directory">
@@ -37,7 +45,7 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
             <Grid.Row columns={2}>
               <Grid.Column floated="left">
                 <div>
-                  <Button primary>
+                  <Button onClick={() => dispatch(showModal('ROLE_MODAL', {roleId: null}))} primary>
                     <Icon name="add user"/>
                     Add User
                   </Button>
@@ -68,24 +76,26 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
                   </Table.Header>
 
                   <Table.Body>
-                    {!loading && staff.map((member, i) => {
+                    {rolesAllIds.map((roleId, i) => {
+                      const role = rolesById[roleId]
+                      const user = usersById[role.user_id] || {}
                         return (
                           <Table.Row key={i}>
                             <Table.Cell>
                               <Header as='h4' image>
-                                <Image src={faker.fake("{{image.avatar}}")}/>
+                                <Image src={role.avatar.url}/>
                                 <Header.Content>
-                                  {`${member.first_name} ${member.last_name}`}
-                                  <Header.Subheader>{member.title}</Header.Subheader>
+                                  {`${role.first_name} ${role.last_name}`}
+                                  <Header.Subheader>{role.title}</Header.Subheader>
                                 </Header.Content>
                               </Header>
                             </Table.Cell>
-                            <Table.Cell>{member.department}</Table.Cell>
+                            <Table.Cell>{role.department}</Table.Cell>
                             <Table.Cell>
-                              {member.role_type}
+                              {role.role_type}
                             </Table.Cell>
-                            <Table.Cell>{member.email}</Table.Cell>
-                            <Table.Cell>{member.phone_number}</Table.Cell>
+                            <Table.Cell>{user.email}</Table.Cell>
+                            <Table.Cell>{user.phone_number}</Table.Cell>
                           </Table.Row>
                         )
                       }

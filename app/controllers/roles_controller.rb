@@ -1,7 +1,7 @@
 class RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = []
+  ASSOCIATIONS_TO_INCLUDE = ['user']
 
   # GET /roles
   def index
@@ -18,6 +18,10 @@ class RolesController < ApplicationController
   # POST /roles
   def create
     @role = Role.new(role_params)
+
+    # TODO: temporary workaround to get role form working
+    @role.venue_id = 1
+    @role.user = User.first
 
     if @role.save
       render json: build_json_response(@role), status: :created, location: @role
@@ -48,8 +52,9 @@ class RolesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def role_params
-    params.fetch(:role, {}).permit(
+    params.permit(
       :id,
+      :production_id,
       :user_id,
       :venue_id,
       :title,

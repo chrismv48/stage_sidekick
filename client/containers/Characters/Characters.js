@@ -140,7 +140,7 @@ export class Characters extends React.Component {
                               <div style={{textAlign: 'center'}}>
                                 <span
                                   onClick={() => this.setState({flipped: !this.state.flipped})}>
-                                  {character.scenes.length} Scenes
+                                  {character.scenes && character.scenes.length} Scenes
                                 </span>
                               </div>
                             </Card.Content>

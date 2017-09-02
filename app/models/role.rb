@@ -17,6 +17,7 @@
 #  first_name    :string
 #  last_name     :string
 #  avatar        :string
+#  display_image :string
 #
 # Indexes
 #
@@ -26,7 +27,8 @@
 #
 
 class Role < ApplicationRecord
-  mount_uploader :avatar, AvatarUploader
+  mount_base64_uploader :display_image, ImageUploader, file_name: -> (role) { "#{role.id}.#{Time.zone.now.to_i}" }
+  mount_base64_uploader :avatar, ImageUploader, file_name: -> (role) { "#{role.id}.#{Time.zone.now.to_i}" }
 
   belongs_to :user
   belongs_to :production

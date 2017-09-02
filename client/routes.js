@@ -41,7 +41,7 @@ export default function createRoutes(store) {
       name: 'directory',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          import('containers/Directory'),
+          import('containers/Directory/Directory'),
         ]);
         const renderRoute = loadModule(cb);
 
