@@ -17,4 +17,6 @@
 class CharactersScene < ApplicationRecord
   belongs_to :character
   belongs_to :scene
+  has_many :costumes_characters_scenes, dependent: :destroy
+
 end

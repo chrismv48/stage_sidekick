@@ -44,7 +44,7 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
                 Gallery
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='costumes' active={thisPage === 'costumes'}>
+              <Menu.Item as={Link} to='/costumes' id="sidebar-button" name='costumes' active={thisPage === 'costumes'}>
                 <Icon name='shopping bag'/>
                 Costumes
               </Menu.Item>

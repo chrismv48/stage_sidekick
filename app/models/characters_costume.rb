@@ -19,5 +19,8 @@
 class CharactersCostume < ApplicationRecord
   belongs_to :costume
   belongs_to :character
-  belongs_to :scene
+  belongs_to :scene, optional: true
+
+  validates_uniqueness_of :costume_id, :scope => [:character_id, :scene_id]
+
 end

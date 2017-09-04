@@ -24,7 +24,7 @@ import {
   ACTION_RESOURCE_COMPLETED,
   ACTION_RESOURCE_FAILED,
   ACTION_RESOURCE_INITIATED,
-  ACTION_RESOURCE_SUCCEEDED
+  ACTION_RESOURCE_SUCCEEDED,
 } from "./sagas"
 
 const _ = require('lodash/fp');
@@ -44,7 +44,6 @@ function apiReducer(state = {}, action) {
     case ACTION_RESOURCE_SUCCEEDED('post', entity):
     case ACTION_RESOURCE_SUCCEEDED('delete', entity):
       let newState = _.mergeWith(customizer, state, response)
-      // if (action.type === 'GET_SCENES_SUCCEEDED') { debugger }
       newState[entity].loading = false
       newState[entity].success = true
       newState[entity].error = null
@@ -70,8 +69,13 @@ function apiReducer(state = {}, action) {
 
 export default apiReducer
 
-function customizer(srcValue, objValue) {
+function customizer(srcValue, objValue, key) {
   if (_.isArray(srcValue)) {
-    return _.uniq(srcValue.concat(objValue));
+    if (key === 'allIds') {
+      return _.uniq(srcValue.concat(objValue));
+    }
+    else {
+      return objValue
+    }
   }
 }

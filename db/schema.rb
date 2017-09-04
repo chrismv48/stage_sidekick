@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170902140539) do
+ActiveRecord::Schema.define(version: 20170903123515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,7 +61,19 @@ ActiveRecord::Schema.define(version: 20170902140539) do
     t.integer  "production_id",              null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "display_image"
     t.index ["production_id"], name: "index_costumes_on_production_id", using: :btree
+  end
+
+  create_table "costumes_characters_scenes", force: :cascade do |t|
+    t.integer  "costume_id",          null: false
+    t.integer  "characters_scene_id"
+    t.integer  "character_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["character_id"], name: "index_costumes_characters_scenes_on_character_id", using: :btree
+    t.index ["characters_scene_id"], name: "index_costumes_characters_scenes_on_characters_scene_id", using: :btree
+    t.index ["costume_id"], name: "index_costumes_characters_scenes_on_costume_id", using: :btree
   end
 
   create_table "productions", force: :cascade do |t|

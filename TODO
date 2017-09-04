@@ -1,11 +1,10 @@
 General
 - disable ESLint pre commit hook
-- Model CRUD forms/modals can be DRY'd up
 - Update normalize method to have resource id field on relationships
 - Create views for individual resources
 - Create proper dashboard / landing page
-- Create costumes view
 - Add loaders/dimmers to all views
+- Make image uploader look nicer
 
 User Stories
 - Create new account (designer)

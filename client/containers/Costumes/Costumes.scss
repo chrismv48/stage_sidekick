@@ -1,0 +1,49 @@
+.Costumes {
+
+  #content-grid {
+    margin: 0;
+  }
+
+  .content-container {
+    margin: 10px 25px;
+  }
+
+  .card-edit-panel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 2px 0;
+    background-color: #efefef;
+    color: #a8a8af;
+    border-bottom: 1px solid rgba(34, 36, 38, .1);
+  }
+
+  .card-edit-dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .card-front,
+  .card-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+  }
+
+  .card-back {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+  }
+
+  .card-effect .card-front {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+  }
+
+  .card-effect .card-back  {
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+  }
+}

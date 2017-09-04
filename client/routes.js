@@ -99,6 +99,14 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/costumes',
+      name: 'costumes',
+      getComponent(location, cb) {
+        import('containers/Costumes/Costumes')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

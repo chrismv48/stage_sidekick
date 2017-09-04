@@ -8,11 +8,13 @@ import CharacterForm from "../Forms/CharacterForm/CharacterForm";
 import SceneForm from "../Forms/SceneForm/SceneForm";
 import RoleForm from "../Forms/RoleForm/RoleForm";
 import {swapPlurality} from "../../helpers";
+import CostumeForm from "../Forms/CostumeForm/CostumeForm";
 
 const RESOURCE_FORM_COMPONENTS = {
   'characters': CharacterForm,
   'scenes': SceneForm,
   'roles': RoleForm,
+  'costumes': CostumeForm
 }
 
 @connect((state, ownProps) => {

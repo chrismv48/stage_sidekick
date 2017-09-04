@@ -17,13 +17,15 @@ class Character < ApplicationRecord
 
   mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}_#{Time.zone.now.to_i}" }
 
-  has_many :characters_scenes
+  has_many :costumes_characters_scenes, dependent: :destroy
+
+  has_many :characters_scenes, dependent: :destroy
   has_many :scenes, through: :characters_scenes
 
-  has_many :characters_costumes
-  has_many :costumes, through: :characters_costumes
+  # has_many :characters_costumes, dependent: :destroy
+  # has_many :costumes, through: :characters_costumes
 
-  has_many :characters_roles
+  has_many :characters_roles, dependent: :destroy
   has_many :roles, through: :characters_roles
 
   alias_attribute :actors, :roles

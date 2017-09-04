@@ -42,7 +42,7 @@ roles = Role.create(users.map {|user| {
   department: departments.sample,
   role_type: statuses.sample,
   start_date: Faker::Date.between(2.years.ago, Date.today),
-  remote_avatar_url: Faker::LoremPixel.image("50x50", false, 'people')
+  remote_avatar_url: "https://source.unsplash.com/category/people?face&sig=#{rand(1..1000)}"
 }})
 
 characters = Character.create(10.times.collect {|i| {
@@ -50,7 +50,7 @@ characters = Character.create(10.times.collect {|i| {
   description: Faker::ChuckNorris.fact,
   production_id: production.id,
   actors: [roles.sample],
-  remote_display_image_url: Faker::LoremPixel.image("250x200", false, 'people')
+  remote_display_image_url: "https://source.unsplash.com/category/people?face&sig=#{rand(1..1000)}"
 }})
 
 scenes = Scene.create(8.times.collect {|i| {
@@ -61,15 +61,19 @@ scenes = Scene.create(8.times.collect {|i| {
   length_in_minutes: rand(5..30),
   setting: scene_settings.sample,
   characters: characters.shuffle[1..rand(1..5)],
-  remote_display_image_url: Faker::LoremPixel.image("400x200", false, 'fashion')
+  remote_display_image_url: Faker::LoremPixel.image("400x400", false, 'city')
 }})
 
 costumes = Costume.create(characters.map {|character| {
   title: "#{character.name} costume",
   description: Faker::Hipster.sentences(rand(1..3)).join(' '),
-  production_id: production.id
-
+  production_id: production.id,
+  remote_display_image_url: "https://source.unsplash.com/collection/268237&sig=#{rand(1..1000)}"
 }})
+
+costumes.each do |costume|
+  costume.characters_scenes = CharactersScene.order("RANDOM()").limit(rand(1..3))
+end
 
 
 
