@@ -1,7 +1,7 @@
 class CostumesController < ApplicationController
   before_action :set_costume, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = [:characters, :scenes, :costumes_characters_scenes]
+  ASSOCIATIONS_TO_INCLUDE = [:characters, :scenes, :costumes_characters_scenes, :costume_items]
 
   # GET /costumes
   def index

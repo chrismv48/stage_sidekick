@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get 'characters', on: :member
   end
   resources :costumes
+  resources :costume_items
   resources :users
   resources :scenes
   resources :characters

@@ -22,6 +22,7 @@ job_titles = ['Producer', 'Director', 'Administration', 'Actor', 'Costume Design
 scene_settings = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Beach', 'Indoors']
 departments = ['Production', 'Lighting', 'Costumes', 'Acting', 'Administration']
 statuses = ['Full-time', 'Contractor', 'Part-time']
+costume_item_types = ['Jeans', 'Shirt', 'Skirt', 'Dress', 'Shoes', 'Belt', 'Hat']
 
 users = User.create(20.times.collect {|i| {
   first_name: Faker::Name.first_name,
@@ -42,7 +43,7 @@ roles = Role.create(users.map {|user| {
   department: departments.sample,
   role_type: statuses.sample,
   start_date: Faker::Date.between(2.years.ago, Date.today),
-  remote_avatar_url: "https://source.unsplash.com/category/people?face&sig=#{rand(1..1000)}"
+  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
 
 characters = Character.create(10.times.collect {|i| {
@@ -50,7 +51,7 @@ characters = Character.create(10.times.collect {|i| {
   description: Faker::ChuckNorris.fact,
   production_id: production.id,
   actors: [roles.sample],
-  remote_display_image_url: "https://source.unsplash.com/category/people?face&sig=#{rand(1..1000)}"
+  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
 
 scenes = Scene.create(8.times.collect {|i| {
@@ -61,7 +62,7 @@ scenes = Scene.create(8.times.collect {|i| {
   length_in_minutes: rand(5..30),
   setting: scene_settings.sample,
   characters: characters.shuffle[1..rand(1..5)],
-  remote_display_image_url: Faker::LoremPixel.image("400x400", false, 'city')
+  remote_display_image_url: "https://source.unsplash.com/collection/139346&sig=#{rand(1..1000)}"
 }})
 
 costumes = Costume.create(characters.map {|character| {
@@ -73,6 +74,14 @@ costumes = Costume.create(characters.map {|character| {
 
 costumes.each do |costume|
   costume.characters_scenes = CharactersScene.order("RANDOM()").limit(rand(1..3))
+  CostumeItem.create(rand(3..5).times.collect {|i| {
+    title: "#{costume.title} #{costume_item_types.sample}",
+    description: Faker::Hipster.sentences(rand(1..3)).join(' '),
+    costume_id: costume.id,
+    item_type: costume_item_types.sample,
+    remote_display_image_url: "https://source.unsplash.com/collection/1051&sig=#{rand(1..1000)}"
+  }}
+  )
 end
 
 

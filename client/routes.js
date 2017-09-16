@@ -78,7 +78,7 @@ export default function createRoutes(store) {
 
         importModules.then(([component]) => {
           renderRoute(component);
-        });;
+        });
 
         importModules.catch(errorLoading);
       },
@@ -103,6 +103,14 @@ export default function createRoutes(store) {
       name: 'costumes',
       getComponent(location, cb) {
         import('containers/Costumes/Costumes')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/costumes/:costumeId',
+      name: 'costume',
+      getComponent(location, cb) {
+        import('containers/Costume/Costume')
           .then(loadModule(cb))
           .catch(errorLoading);
       },

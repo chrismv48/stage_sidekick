@@ -5,7 +5,8 @@ const PLURALITY_RESOURCE_MAPPING = {
   'character': 'characters',
   'scene': 'scenes',
   'role': 'roles',
-  'costume': 'costumes'
+  'costume': 'costumes',
+  'costume_item': 'costume_items'
 }
 
 export function swapPlurality(resource) {

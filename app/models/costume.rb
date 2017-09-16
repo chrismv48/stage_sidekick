@@ -22,6 +22,7 @@ class Costume < ApplicationRecord
   has_many :characters_scenes, through: :costumes_characters_scenes
   has_many :characters, through: :costumes_characters_scenes
   has_many :scenes, through: :characters_scenes
+  has_many :costume_items
 
   # accepts_nested_attributes_for :characters_costumes, allow_destroy: true
 end

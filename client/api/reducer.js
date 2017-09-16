@@ -31,37 +31,41 @@ const _ = require('lodash/fp');
 
 function apiReducer(state = {}, action) {
   console.log(`Reducer received action: ${action.type}`)
-  let {entity, response, error} = action
-  entity = entity || 'entity'
+  let {resource, response, error} = action
+  resource = resource || 'resource'
   switch (action.type) {
-    case ACTION_RESOURCE_INITIATED('get', entity):
-    case ACTION_RESOURCE_INITIATED('put', entity):
-    case ACTION_RESOURCE_INITIATED('post', entity):
-    case ACTION_RESOURCE_INITIATED('delete', entity):
-      return _.set(`${entity}.loading`, true, state)
-    case ACTION_RESOURCE_SUCCEEDED('get', entity):
-    case ACTION_RESOURCE_SUCCEEDED('put', entity):
-    case ACTION_RESOURCE_SUCCEEDED('post', entity):
-    case ACTION_RESOURCE_SUCCEEDED('delete', entity):
+    case ACTION_RESOURCE_INITIATED('get', resource):
+    case ACTION_RESOURCE_INITIATED('put', resource):
+    case ACTION_RESOURCE_INITIATED('post', resource):
+    case ACTION_RESOURCE_INITIATED('delete', resource):
+      return _.set(`${resource}.loading`, true, state)
+    case ACTION_RESOURCE_SUCCEEDED('get', resource):
+    case ACTION_RESOURCE_SUCCEEDED('put', resource):
+    case ACTION_RESOURCE_SUCCEEDED('post', resource):
+    case ACTION_RESOURCE_SUCCEEDED('delete', resource):
       let newState = _.mergeWith(customizer, state, response)
-      newState[entity].loading = false
-      newState[entity].success = true
-      newState[entity].error = null
+      newState[resource].loading = false
+      newState[resource].success = true
+      newState[resource].error = null
       return newState
-    case ACTION_RESOURCE_FAILED('get', entity):
-    case ACTION_RESOURCE_FAILED('put', entity):
-    case ACTION_RESOURCE_FAILED('post', entity):
-    case ACTION_RESOURCE_FAILED('delete', entity):
-      return {...state, [entity]: {loading: false, error: error}}
-    case ACTION_RESOURCE_COMPLETED('get', entity):
-    case ACTION_RESOURCE_COMPLETED('put', entity):
-    case ACTION_RESOURCE_COMPLETED('post', entity):
-    case ACTION_RESOURCE_COMPLETED('delete', entity):
+    case ACTION_RESOURCE_FAILED('get', resource):
+    case ACTION_RESOURCE_FAILED('put', resource):
+    case ACTION_RESOURCE_FAILED('post', resource):
+    case ACTION_RESOURCE_FAILED('delete', resource):
+      return {...state, [resource]: {loading: false, error: error}}
+    case ACTION_RESOURCE_COMPLETED('get', resource):
+    case ACTION_RESOURCE_COMPLETED('put', resource):
+    case ACTION_RESOURCE_COMPLETED('post', resource):
+    case ACTION_RESOURCE_COMPLETED('delete', resource):
       // TODO: right now this deletes staging entirely. If we ever want to stage multiple objects, we'll need to refine this.
-      return _.omit([`${entity}.success`, `${entity}.staging`], state)
-    case `UPDATE_${entity.toUpperCase()}_FORM_FIELDS`:
-      const {resourceId, field, value} = action
-      return _.set(`${entity}.staging.${resourceId || null}.${field}`, value, state)
+      return _.omit([`${resource}.success`, `${resource}.staging`], state)
+    case `UPDATE_${resource.toUpperCase()}_FORM_FIELDS`:
+      let {resourceId, field, value} = action
+      return _.set(`${resource}.staging.${resourceId || null}.${field}`, value, state)
+    case `SORT_${resource.toUpperCase()}`:
+      const resourceByIds = _.get(`${resource}.byId`, state, {})
+      const sortedResource = _.orderBy([action.field], action.direction, Object.values(resourceByIds))
+      return _.set(`${resource}.allIds`, _.map('id', sortedResource), state)
     default:
       return state
   }

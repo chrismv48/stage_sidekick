@@ -2,7 +2,7 @@ import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
 import React from 'react';
 import {connect} from 'react-redux';
 import './Costumes.scss'
-import {Button, Card, Dimmer, Dropdown, Grid, Header, Image, Input, Loader, Segment} from 'semantic-ui-react'
+import {Button, Card, Dimmer, Dropdown, Grid, Header, Image, Input, Loader, Popup, Segment} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
 import {deleteResource, fetchResource} from "../../api/actions"
 import {showModal} from "../Modals/actions";
@@ -13,14 +13,12 @@ import {showModal} from "../Modals/actions";
     costumes = {},
     characters = {},
     scenes = {},
-    costumes_costumes: costumeCostumes = {}
   } = state.resources
   return {
     dispatch,
     costumes,
     characters,
-    scenes,
-    costumeCostumes
+    scenes
   }
 })
 
@@ -62,9 +60,13 @@ export class Costumes extends React.Component {
                   <Icon name='add user'/>
                   Add Costume
                 </Button>
-                <Input type="range" min="1" max="8" step="1" value={cardsPerRow}
-                       onChange={(e) => this.setState({cardsPerRow: e.target.value})} />
-                <span>{cardsPerRow}</span>
+                <Popup
+                  trigger={<a>{cardsPerRow} per page</a>}
+                  content={<Input type="range" min="1" max="8" step="1" value={cardsPerRow}
+                                  onChange={(e) => this.setState({cardsPerRow: e.target.value})}/>}
+                  on='click'
+                  position='top right'
+                />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row>
@@ -74,13 +76,13 @@ export class Costumes extends React.Component {
                     <Loader inverted>Loading</Loader>
                   </Dimmer>
                   <Card.Group itemsPerRow={cardsPerRow}>
-                    {costumesAllIds.map((costumeId, i) => {
+                    {costumesAllIds.map((costumeId) => {
                       let costume = costumesById[costumeId]
                       const costumeImageUrl = costume.display_image ? costume.display_image.url : null
                       // const costumeRole = _.isEmpty(costume.roles) ? null : rolesById[costume.roles[0]]
                         return (
-                          <Card raised key={i} className="costume-card">
-                            <div className="card-edit-panel">
+                          <Card raised key={costumeId} className="costume-card" href={`/costumes/${costumeId}`}>
+                            <div key={costumeId} className="card-edit-panel">
                               <Icon style={{height: "initial"}} name="move"/>
                               <div className="card-edit-dropdown">
                                 <Dropdown icon="ellipsis vertical">

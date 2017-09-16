@@ -1,48 +1,57 @@
-export const fetchResource = (entity, endpoint) => {
-  console.log(`FETCH_${entity.toUpperCase()}`)
+export const fetchResource = (resource, endpoint) => {
+  console.log(`FETCH_${resource.toUpperCase()}`)
   return {
-    type: `FETCH_${entity.toUpperCase()}`,
-    entity,
+    type: `FETCH_${resource.toUpperCase()}`,
+    resource,
     endpoint
   }
 }
 
-export const createResource = (entity, endpoint, payload) => {
-  console.log(`CREATE_${entity.toUpperCase()}`)
+export const createResource = (resource, endpoint, payload) => {
+  console.log(`CREATE_${resource.toUpperCase()}`)
   return {
-    type: `CREATE_${entity.toUpperCase()}`,
-    entity,
+    type: `CREATE_${resource.toUpperCase()}`,
+    resource,
     endpoint,
     payload
   }
 }
 
-export const modifyResource = (entity, endpoint, payload) => {
-  console.log(`MODIFY_${entity.toUpperCase()}`)
+export const modifyResource = (resource, endpoint, payload) => {
+  console.log(`MODIFY_${resource.toUpperCase()}`)
   return {
-    type: `MODIFY_${entity.toUpperCase()}`,
-    entity,
+    type: `MODIFY_${resource.toUpperCase()}`,
+    resource,
     endpoint,
     payload
   }
 }
 
-export const deleteResource = (entity, endpoint) => {
-  console.log(`DESTROY${entity.toUpperCase()}`)
+export const deleteResource = (resource, endpoint) => {
+  console.log(`DESTROY${resource.toUpperCase()}`)
   return {
-    type: `DESTROY_${entity.toUpperCase()}`,
-    entity,
+    type: `DESTROY_${resource.toUpperCase()}`,
+    resource,
     endpoint
   }
 }
 
-export const updateResourceFields = (entity, field, value, resourceId=null) => {
-  console.log(`UPDATE_${entity.toUpperCase()}_FORM_FIELDS`)
+export const updateResourceFields = (resource, field, value, resourceId=null) => {
+  console.log(`UPDATE_${resource.toUpperCase()}_FORM_FIELDS`)
   return {
-    type: `UPDATE_${entity.toUpperCase()}_FORM_FIELDS`,
-    entity,
+    type: `UPDATE_${resource.toUpperCase()}_FORM_FIELDS`,
+    resource,
     field,
     value,
     resourceId
+  }
+}
+
+export const sortResource = (resource, field, direction) => {
+  return {
+    type: `SORT_${resource.toUpperCase()}`,
+    resource,
+    field,
+    direction
   }
 }

@@ -9,12 +9,14 @@ import SceneForm from "../Forms/SceneForm/SceneForm";
 import RoleForm from "../Forms/RoleForm/RoleForm";
 import {swapPlurality} from "../../helpers";
 import CostumeForm from "../Forms/CostumeForm/CostumeForm";
+import CostumeItemForm from "../Forms/CostumeItemForm/CostumeItemForm";
 
 const RESOURCE_FORM_COMPONENTS = {
   'characters': CharacterForm,
   'scenes': SceneForm,
   'roles': RoleForm,
-  'costumes': CostumeForm
+  'costumes': CostumeForm,
+  'costume_items': CostumeItemForm
 }
 
 @connect((state, ownProps) => {
@@ -55,12 +57,12 @@ export default class ResourceModal extends React.Component {
     const singularizedResource = swapPlurality(resourceType)
 
     let iconName = 'add user'
-    let modalHeading = `Add ${singularizedResource}`
+    let modalHeading = `Add ${singularizedResource.replace('_', ' ')}`
     if (resourceId) {
       iconName = 'edit'
-      modalHeading = `Edit ${singularizedResource}`
+      modalHeading = `Edit ${singularizedResource.replace('_', ' ')}`
     }
-    otherProps[`${singularizedResource}Id`] = resourceId
+    otherProps[`${_.camelCase(singularizedResource)}Id`] = resourceId
 
     const ResourceForm = RESOURCE_FORM_COMPONENTS[resourceType]
     return (

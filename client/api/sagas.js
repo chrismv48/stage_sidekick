@@ -1,65 +1,65 @@
 import {call, put, takeEvery} from 'redux-saga/effects';
 import Api from "./api";
 
-export const ACTION_RESOURCE_INITIATED = (action, entity) => `${action.toUpperCase()}_${entity.toUpperCase()}_INITIATED`
-export const ACTION_RESOURCE_SUCCEEDED = (action, entity) => `${action.toUpperCase()}_${entity.toUpperCase()}_SUCCEEDED`
-export const ACTION_RESOURCE_FAILED = (action, entity) => `${action.toUpperCase()}_${entity.toUpperCase()}_FAILED`
-export const ACTION_RESOURCE_COMPLETED = (action, entity) => `${action.toUpperCase()}_${entity.toUpperCase()}_COMPLETED`
+export const ACTION_RESOURCE_INITIATED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_INITIATED`
+export const ACTION_RESOURCE_SUCCEEDED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_SUCCEEDED`
+export const ACTION_RESOURCE_FAILED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_FAILED`
+export const ACTION_RESOURCE_COMPLETED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_COMPLETED`
 
 function* fetchResource(action) {
-  const {entity, endpoint} = action
+  const {resource, endpoint} = action
   const method = 'GET'
-  console.log(`Fetching entity: ${endpoint}`)
+  console.log(`Fetching resource: ${endpoint}`)
   // try {
-    yield put({type: ACTION_RESOURCE_INITIATED(method, entity), entity});
+    yield put({type: ACTION_RESOURCE_INITIATED(method, resource), resource});
     const response = yield call(() => Api(endpoint, method));
-    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, entity), entity, response});
-    yield put({type: ACTION_RESOURCE_COMPLETED(method, entity), entity});
+    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, resource), resource, response});
+    yield put({type: ACTION_RESOURCE_COMPLETED(method, resource), resource});
   // } catch (error) {
-  //   yield put({type: ACTION_RESOURCE_FAILED(method, entity), entity, error});
+  //   yield put({type: ACTION_RESOURCE_FAILED(method, resource), resource, error});
   // }
 }
 
 function* postResource(action) {
-  const {entity, endpoint, payload} = action
+  const {resource, endpoint, payload} = action
   const method = 'POST'
-  console.log(`Posting entity: ${endpoint}`)
+  console.log(`Posting resource: ${endpoint}`)
   try {
-    yield put({type: ACTION_RESOURCE_INITIATED(method, entity)});
+    yield put({type: ACTION_RESOURCE_INITIATED(method, resource)});
     const response = yield call(() => Api(endpoint, method, payload));
-    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, entity), entity, response});
-    yield put({type: ACTION_RESOURCE_COMPLETED(method, entity), entity});
+    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, resource), resource, response});
+    yield put({type: ACTION_RESOURCE_COMPLETED(method, resource), resource});
   } catch (error) {
-    yield put({type: ACTION_RESOURCE_FAILED(method, entity), entity, error});
+    yield put({type: ACTION_RESOURCE_FAILED(method, resource), resource, error});
   }
 }
 
 function* putResource(action) {
-  const {entity, endpoint, payload} = action
+  const {resource, endpoint, payload} = action
   const method = 'PUT'
-  console.log(`Putting entity: ${endpoint}`)
+  console.log(`Putting resource: ${endpoint}`)
   try {
-    yield put({type: ACTION_RESOURCE_INITIATED(method, entity)});
+    yield put({type: ACTION_RESOURCE_INITIATED(method, resource)});
     const response = yield call(() => Api(endpoint, method, payload));
-    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, entity), entity, response});
-    yield put({type: ACTION_RESOURCE_COMPLETED(method, entity), entity});
+    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, resource), resource, response});
+    yield put({type: ACTION_RESOURCE_COMPLETED(method, resource), resource});
   } catch (error) {
-    yield put({type: ACTION_RESOURCE_FAILED(method, entity), error});
+    yield put({type: ACTION_RESOURCE_FAILED(method, resource), error});
   }
 }
 
 function* deleteResource(action) {
-  const {entity, endpoint} = action
+  const {resource, endpoint} = action
   const method = 'DELETE'
-  console.log(`Deleting entity: ${endpoint}`)
+  console.log(`Deleting resource: ${endpoint}`)
   try {
-    yield put({type: ACTION_RESOURCE_INITIATED(method, entity)});
+    yield put({type: ACTION_RESOURCE_INITIATED(method, resource)});
     const response = yield call(() => Api(endpoint, method));
-    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, entity)});
-    yield put({type: ACTION_RESOURCE_COMPLETED(method, entity)});
+    yield put({type: ACTION_RESOURCE_SUCCEEDED(method, resource)});
+    yield put({type: ACTION_RESOURCE_COMPLETED(method, resource)});
   } catch (error) {
     debugger
-    yield put({type: ACTION_RESOURCE_FAILED(method, entity), error});
+    yield put({type: ACTION_RESOURCE_FAILED(method, resource), error});
   }
 }
 
