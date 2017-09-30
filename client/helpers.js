@@ -20,3 +20,13 @@ export function pluralizeResource(resource) {
 export function singularizeResource(resource) {
   return _.invert(PLURALITY_RESOURCE_MAPPING)[resource] || resource
 }
+
+export function addIdToResource(resource) {
+  const singularizedResource = singularizeResource(resource)
+  if (singularizedResource === resource) {
+    return singularizedResource + '_id'
+  }
+  else {
+    return singularizedResource + '_ids'
+  }
+}

@@ -58,7 +58,6 @@ function* deleteResource(action) {
     yield put({type: ACTION_RESOURCE_SUCCEEDED(method, resource)});
     yield put({type: ACTION_RESOURCE_COMPLETED(method, resource)});
   } catch (error) {
-    debugger
     yield put({type: ACTION_RESOURCE_FAILED(method, resource), error});
   }
 }

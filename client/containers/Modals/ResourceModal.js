@@ -4,25 +4,22 @@ import * as React from "react";
 import * as _ from "lodash";
 import {connect} from "react-redux";
 import {createResource, modifyResource} from "../../api/actions";
-import CharacterForm from "../Forms/CharacterForm/CharacterForm";
-import SceneForm from "../Forms/SceneForm/SceneForm";
-import RoleForm from "../Forms/RoleForm/RoleForm";
 import {swapPlurality} from "../../helpers";
 import CostumeForm from "../Forms/CostumeForm/CostumeForm";
-import CostumeItemForm from "../Forms/CostumeItemForm/CostumeItemForm";
+import ResourceForm from "../Forms/ResourceForm/ResourceForm";
 
 const RESOURCE_FORM_COMPONENTS = {
-  'characters': CharacterForm,
-  'scenes': SceneForm,
-  'roles': RoleForm,
+  'characters': ResourceForm,
+  'scenes': ResourceForm,
+  'roles': ResourceForm,
   'costumes': CostumeForm,
-  'costume_items': CostumeItemForm
+  'costume_items': ResourceForm
 }
 
 @connect((state, ownProps) => {
-  const { resourceType, resourceId } = ownProps
+  const { resourceName, resourceId } = ownProps
   const { dispatch } = state
-  const resource = _.get(state, `resources.${resourceType}`, {})
+  const resource = _.get(state, `resources.${resourceName}`, {})
   const resourceStaged = _.get(resource, `staging.${resourceId}`, {})
   const { success: resourceSuccess } = resource
 
@@ -42,19 +39,19 @@ export default class ResourceModal extends React.Component {
   }
 
   handleResourceSubmit = () => {
-    const { resourceStaged, resourceId, resourceType, dispatch } = this.props
+    const { resourceStaged, resourceId, resourceName, dispatch } = this.props
     if (resourceId) {
-      dispatch(modifyResource(resourceType, `${resourceType}/${resourceId}`, resourceStaged))
+      dispatch(modifyResource(resourceName, `${resourceName}/${resourceId}`, resourceStaged))
     }
     else {
-      dispatch(createResource(resourceType, resourceType, resourceStaged))
+      dispatch(createResource(resourceName, resourceName, resourceStaged))
     }
   }
 
   render() {
-    let {resourceStaged, resourceType, dispatch, resourceId, ...otherProps } = this.props
+    let {resourceStaged, resourceName, dispatch, resourceId, ...otherProps } = this.props
 
-    const singularizedResource = swapPlurality(resourceType)
+    const singularizedResource = swapPlurality(resourceName)
 
     let iconName = 'add user'
     let modalHeading = `Add ${singularizedResource.replace('_', ' ')}`
@@ -64,7 +61,7 @@ export default class ResourceModal extends React.Component {
     }
     otherProps[`${_.camelCase(singularizedResource)}Id`] = resourceId
 
-    const ResourceForm = RESOURCE_FORM_COMPONENTS[resourceType]
+    const ResourceForm = RESOURCE_FORM_COMPONENTS[resourceName]
     return (
       <Modal
         open={true}
@@ -72,7 +69,7 @@ export default class ResourceModal extends React.Component {
         closeIcon='close'>
         <Header icon={iconName} content={modalHeading}/>
         <Modal.Content>
-          <ResourceForm {...otherProps} />
+          <ResourceForm {...otherProps} resourceId={resourceId} resourceName={resourceName} />
         </Modal.Content>
         <Modal.Actions>
           <Button primary

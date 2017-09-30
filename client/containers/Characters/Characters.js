@@ -77,7 +77,7 @@ export class Characters extends React.Component {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
-                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'characters', resourceId: null}))} primary>
+                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'characters', resourceId: null}))} primary>
                   <Icon name='add user'/>
                   Add Character
                 </Button>
@@ -94,14 +94,14 @@ export class Characters extends React.Component {
                       let character = charactersById[characterId]
                       const characterImageUrl = character.display_image ? character.display_image.url : null
                       const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
-                        return (
+                      return (
                           <Card raised key={i} className="character-card">
                             <div className="card-edit-panel">
                               <Icon style={{height: "initial"}} name="move"/>
                               <div className="card-edit-dropdown">
                                 <Dropdown icon="ellipsis vertical">
                                   <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'characters', resourceId: characterId}))}
+                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'characters', resourceId: characterId}))}
                                                    icon="edit"
                                                    text="Edit Character"/>
                                     <Dropdown.Item onClick={() => this.handleDestroyCharacter(characterId)}

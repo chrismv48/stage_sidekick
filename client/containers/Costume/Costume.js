@@ -103,7 +103,7 @@ export class Costume extends React.Component {
                             <Dropdown icon="ellipsis vertical">
                               <Dropdown.Menu>
                                 <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {
-                                  resourceType: 'costume_items',
+                                  resourceName: 'costume_items',
                                   resourceId: costumeItemId,
                                 }))}
                                                icon="edit"

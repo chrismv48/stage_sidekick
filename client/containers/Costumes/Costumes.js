@@ -56,7 +56,7 @@ export class Costumes extends React.Component {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
-                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'costumes', resourceId: null}))} primary>
+                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'costumes', resourceId: null}))} primary>
                   <Icon name='add user'/>
                   Add Costume
                 </Button>
@@ -87,7 +87,7 @@ export class Costumes extends React.Component {
                               <div className="card-edit-dropdown">
                                 <Dropdown icon="ellipsis vertical">
                                   <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'costumes', resourceId: costumeId}))}
+                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'costumes', resourceId: costumeId}))}
                                                    icon="edit"
                                                    text="Edit Costume"/>
                                     <Dropdown.Item onClick={() => this.handleDestroyCostume(costumeId)}

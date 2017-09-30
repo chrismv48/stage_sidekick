@@ -43,7 +43,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
-                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'scenes', resourceId: null}))} primary>
+                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: null}))} primary>
                   <Icon name='add user'/>
                   Add Scene
                 </Button>
@@ -63,7 +63,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                           name="edit"
                           color="grey"
                           style={{position: 'absolute', top: 0, right: 0, margin: 5, cursor: 'pointer'}}
-                          onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceType: 'scenes', resourceId: null}))}
+                          onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: sceneId}))}
                         />
                         <Item.Image src={sceneImageUrl}/>
                           <Item.Content>
