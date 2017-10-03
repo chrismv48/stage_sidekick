@@ -2,10 +2,12 @@ import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
 import React from 'react';
 import {connect} from 'react-redux';
 import './Costumes.scss'
-import {Button, Card, Dimmer, Dropdown, Grid, Header, Image, Input, Loader, Popup, Segment} from 'semantic-ui-react'
+import {Button, Dimmer, Grid, Header, Input, Loader, Popup, Segment} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
 import {deleteResource, fetchResource} from "../../api/actions"
 import {showModal} from "../Modals/actions";
+import CardGroup from "../../components/CardGroup/CardGroup";
+import DisplayCard from "../../components/DisplayCard/DisplayCard";
 
 @connect(state => {
   const {dispatch} = state
@@ -32,6 +34,12 @@ export class Costumes extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchResource('costumes', 'costumes'))
   }
+
+  handleEditCostume = (event, costumeId) => {
+    event.preventDefault()
+    this.props.dispatch(showModal('RESOURCE_MODAL', {resourceName: 'costumes', resourceId: costumeId}))
+  }
+
 
   handleDestroyCostume = (costumeId) => {
     this.props.dispatch(deleteResource('costume', `costumes/${costumeId}`))
@@ -75,58 +83,29 @@ export class Costumes extends React.Component {
                   <Dimmer active={loading} inverted>
                     <Loader inverted>Loading</Loader>
                   </Dimmer>
-                  <Card.Group itemsPerRow={cardsPerRow}>
-                    {costumesAllIds.map((costumeId) => {
+                  <CardGroup itemsPerRow={cardsPerRow} resource={'costumes'}>
+                    {costumesAllIds.map((costumeId, i) => {
                       let costume = costumesById[costumeId]
                       const costumeImageUrl = costume.display_image ? costume.display_image.url : null
-                      // const costumeRole = _.isEmpty(costume.roles) ? null : rolesById[costume.roles[0]]
                         return (
-                          <Card raised key={costumeId} className="costume-card" href={`/costumes/${costumeId}`}>
-                            <div key={costumeId} className="card-edit-panel">
-                              <Icon style={{height: "initial"}} name="move"/>
-                              <div className="card-edit-dropdown">
-                                <Dropdown icon="ellipsis vertical">
-                                  <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'costumes', resourceId: costumeId}))}
-                                                   icon="edit"
-                                                   text="Edit Costume"/>
-                                    <Dropdown.Item onClick={() => this.handleDestroyCostume(costumeId)}
-                                                   icon="trash"
-                                                   text="Delete Costume"/>
-                                  </Dropdown.Menu>
-                                </Dropdown>
-                              </div>
-                            </div>
-                            <Image src={costumeImageUrl} height={200} />
-                            <Card.Content>
-                              <div className={this.state.flipped ? "card-effect" : ""}>
-                                <div className="card-front">
-                                  <Card.Header>{costume.title}</Card.Header>
-                                  <Card.Meta>
-                                    Some meta for ya
-                                  </Card.Meta>
-                                  <Card.Description>
-                                      {costume.description}
-                                  </Card.Description>
-                                </div>
-                                <div className="card-back">
-                                  Card back
-                                </div>
-                              </div>
-                            </Card.Content>
-                            <Card.Content extra>
-                              <div style={{textAlign: 'center'}}>
-                                <span
-                                  onClick={() => this.setState({flipped: !this.state.flipped})}>
-                                  {costume.scenes && costume.scenes.length} Scenes
-                                </span>
-                              </div>
-                            </Card.Content>
-                          </Card>
+                          <DisplayCard
+                            cardImage={costumeImageUrl}
+                            showEditBar
+                            header={costume.title}
+                            meta='Wut should go here?'
+                            frontDescription={costume.description}
+                            extra={'idk yet'}
+                            onEditCallback={(event) => this.handleEditCostume(event, costumeId)}
+                            onDeleteCallback={(event) => this.handleDestroyCostume(event, costumeId)}
+                            label='Costume'
+                            key={`index-${i}`}
+                            link={`costumes/${costumeId}`}
+                            sortable={false}
+                          />
                         )
                       }
                     )}
-                  </Card.Group>
+                  </CardGroup>
                 </Segment>
               </Grid.Column>
             </Grid.Row>

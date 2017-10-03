@@ -22,10 +22,10 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
   }
 
   renderEditBar = () => {
-    const {onEditCallback, onDeleteCallback, label} = this.props
+    const {onEditCallback, onDeleteCallback, label, sortable = true} = this.props
     return (
       <div className={'card-edit-panel'}>
-        <DragHandle/>
+        {sortable && <DragHandle/>}
         <div className="card-edit-icons">
           <Icon name="edit" size='large' onClick={onEditCallback} className="card-edit-icon"/>
           <Icon name="trash" size='large' onClick={onDeleteCallback} className="card-edit-icon"/>
@@ -35,12 +35,13 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
   }
 
   render() {
-    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped, index} = this.props
+    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped, index, sortable} = this.props
     const {showHoverState} = this.state
     return (
       <SortableCard
         raised
         index={index}
+        disabled={!sortable}
         className={classNames("DisplayCard", {'hover': showHoverState})}
         href={link}
         onMouseEnter={() => this.setState({showHoverState: true})}

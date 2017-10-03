@@ -2,11 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import './Scenes.scss'
 
-import {Button, Grid, Header, Icon, Image, Item, Label} from 'semantic-ui-react'
+import {Button, Grid, Header, Icon} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
-import {fetchResource} from "../../api/actions";
+import {deleteResource, fetchResource} from "../../api/actions";
 import {showModal} from "../Modals/actions";
-import * as _ from "lodash";
+import CardGroup from "../../components/CardGroup/CardGroup";
+import DisplayCard from "../../components/DisplayCard/DisplayCard";
 
 @connect(state => {
   const {
@@ -25,6 +26,24 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
 
   componentWillMount() {
     this.props.dispatch(fetchResource('scenes', 'scenes'))
+  }
+
+  handleDestroyScene = (event, sceneId) => {
+    event.preventDefault()
+    this.props.dispatch(deleteResource('scene', `scenes/${sceneId}`))
+    this.props.dispatch(fetchResource('scenes', 'scenes'))
+  }
+
+  handleEditScene = (event, sceneId) => {
+    event.preventDefault()
+    this.props.dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: sceneId}))
+  }
+
+  generateCardExtra = (scene) => {
+    return (
+      <p
+         style={{textAlign: 'center'}}>{`${scene.character_ids && scene.character_ids.length} Characters`}</p>
+    )
   }
 
   render() {
@@ -47,51 +66,30 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                   <Icon name='add user'/>
                   Add Scene
                 </Button>
-                <Item.Group>
+                <CardGroup itemsPerRow={4} resource='characters'>
                   {scenesAllIds.map((sceneId, i) => {
-                    const scene = scenesById[sceneId]
-                    let character_avatars = _.get(scene, 'characters', []).map((characterId, i) => {
-                      const characterImageUrl = _.get(charactersById, `${characterId}.display_image.url`, null)
-                      return (
-                        <Image key={i} avatar src={characterImageUrl}/>
-                      )
-                    })
-                    const sceneImageUrl = _.get(scene, 'display_image.url', null)
+                    let scene = scenesById[sceneId]
+                    const sceneImageUrl = scene.display_image ? scene.display_image.url : null
                     return (
-                      <Item key={i} id="scene-item" style={{position: 'relative'}}>
-                        <Icon
-                          name="edit"
-                          color="grey"
-                          style={{position: 'absolute', top: 0, right: 0, margin: 5, cursor: 'pointer'}}
-                          onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: sceneId}))}
-                        />
-                        <Item.Image src={sceneImageUrl}/>
-                          <Item.Content>
-                            <Item.Header>{scene.title}</Item.Header>
-                            <Item.Meta>
-                              Scene {scene.order_index + 1}
-                            </Item.Meta>
-                            <Item.Description>
-                              <Grid columns={2} divided>
-                                <Grid.Column>
-                                  {scene.description}
-                                </Grid.Column>
-                                <Grid.Column>
-                                  <h5>Characters</h5>
-                                  {character_avatars}
-                                </Grid.Column>
-                              </Grid>
-                            </Item.Description>
-                            <Item.Extra>
-                              <Label>IMAX</Label>
-                              <Label icon='globe' content='Additional Languages'/>
-                            </Item.Extra>
-                          </Item.Content>
-                        </Item>
-                      )
-                    }
-                  )}
-                </Item.Group>
+                      <DisplayCard
+                        cardImage={sceneImageUrl}
+                        showEditBar
+                        header={scene.title}
+                        meta={scene.setting}
+                        frontDescription={scene.description}
+                        extra={this.generateCardExtra(scene)}
+                        onEditCallback={(event) => this.handleEditScene(event, sceneId)}
+                        onDeleteCallback={(event) => this.handleDestroyScene(event, sceneId)}
+                        label='Scene'
+                        key={`index-${i}`}
+                        index={scene.order_index}
+                        link={`scenes/${sceneId}`}
+                        flipped={false}
+                      />
+                    )
+
+                  })}
+                </CardGroup>
               </Grid.Column>
             </Grid.Row>
           </Grid>
