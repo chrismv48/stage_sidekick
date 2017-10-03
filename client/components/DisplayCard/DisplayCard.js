@@ -2,6 +2,18 @@ import React from 'react';
 import {Card, Icon, Image} from "semantic-ui-react";
 import './DisplayCard.scss'
 import classNames from 'classnames'
+import {SortableElement, SortableHandle} from "react-sortable-hoc";
+
+const SortableCard = SortableElement(({children, ...rest}) => {
+  return (
+    <Card {...rest}>
+      {children}
+    </Card>
+  )
+})
+
+const DragHandle = SortableHandle(() => <Icon size='large' style={{height: 'initial', cursor: 'move'}} name="move"
+                                              className="card-edit-icon"/>)
 
 class DisplayCard extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -13,7 +25,7 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
     const {onEditCallback, onDeleteCallback, label} = this.props
     return (
       <div className={'card-edit-panel'}>
-        {this.props.renderDragHandle()}
+        <DragHandle/>
         <div className="card-edit-icons">
           <Icon name="edit" size='large' onClick={onEditCallback} className="card-edit-icon"/>
           <Icon name="trash" size='large' onClick={onDeleteCallback} className="card-edit-icon"/>
@@ -23,14 +35,16 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
   }
 
   render() {
-    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped} = this.props
+    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped, index} = this.props
     const {showHoverState} = this.state
     return (
-      <Card raised
-            className={classNames("DisplayCard", {'hover': showHoverState})}
-            href={link}
-            onMouseEnter={() => this.setState({showHoverState: true})}
-            onMouseLeave={() => this.setState({showHoverState: false})}
+      <SortableCard
+        raised
+        index={index}
+        className={classNames("DisplayCard", {'hover': showHoverState})}
+        href={link}
+        onMouseEnter={() => this.setState({showHoverState: true})}
+        onMouseLeave={() => this.setState({showHoverState: false})}
       >
         <div className="overlay">
           {this.renderEditBar()}
@@ -56,7 +70,7 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
           {extra}
         </Card.Content>
 
-      </Card>
+      </SortableCard>
     );
   }
 }

@@ -2,32 +2,15 @@ import Icon from "semantic-ui-react/dist/es/elements/Icon/Icon";
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import './Characters.scss'
-import {Button, Card, Dimmer, Grid, Header, Image, List, Loader, Segment} from 'semantic-ui-react'
+import {Button, Dimmer, Grid, Header, Image, List, Loader, Segment} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
-import {deleteResource, fetchResource, swapResourceOrderIndex,} from "../../api/actions"
+import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
-import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc'
 import {showModal} from "../Modals/actions";
 import DisplayCard from "../../components/DisplayCard/DisplayCard";
+import CardGroup from "../../components/CardGroup/CardGroup";
 
 const faker = require('faker');
-
-const DragHandle = SortableHandle(() => <Icon size='large' style={{height: 'initial', cursor: 'move'}} name="move"
-                                              className="card-edit-icon"/>)
-
-const SortableCard = SortableElement(props => {
-  return (
-    <DisplayCard {...props} />
-  )
-})
-
-const SortableCardGroup = SortableContainer(({children, ...rest}) => {
-  return (
-      <Card.Group {...rest}>
-        {children}
-      </Card.Group>
-  )
-})
 
 @connect(state => {
   const {dispatch} = state
@@ -71,12 +54,6 @@ export class Characters extends React.Component {
     this.props.dispatch(showModal('RESOURCE_MODAL', {resourceName: 'characters', resourceId: characterId}))
   }
 
-  handleOnSortEnd = ({oldIndex, newIndex}) => {
-    // const { allIds } = this.props.characters
-    // console.log(arrayMove(allIds, oldIndex, newIndex))
-    // this.props.dispatch(updateResourceOrderIndex('characters', arrayMove(allIds, oldIndex, newIndex)))
-    this.props.dispatch(swapResourceOrderIndex('characters', oldIndex, newIndex))
-  }
 
   generateCardExtra = (character) => {
     return (
@@ -139,7 +116,7 @@ export class Characters extends React.Component {
   render() {
     const {loading, byId: charactersById = {}, allIds: charactersAllIds = []} = this.props.characters
     const {dispatch, rolesById} = this.props
-    const {flippedCards, cardOrder = []} = this.state
+    const {flippedCards} = this.state
     return (
       <Layout thisPage={this.props.route.name}>
         <div className="Characters">
@@ -165,13 +142,13 @@ export class Characters extends React.Component {
                   <Dimmer active={loading} inverted>
                     <Loader inverted>Loading</Loader>
                   </Dimmer>
-                  <SortableCardGroup itemsPerRow={4} onSortEnd={this.handleOnSortEnd} axis='xy' useDragHandle={true}>
+                  <CardGroup itemsPerRow={4} resource='characters'>
                     {charactersAllIds.map((characterId, i) => {
                       let character = charactersById[characterId]
                       const characterImageUrl = character.display_image ? character.display_image.url : null
                       const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
                       return (
-                        <SortableCard
+                        <DisplayCard
                           cardImage={characterImageUrl}
                           showEditBar
                           header={character.name}
@@ -185,12 +162,11 @@ export class Characters extends React.Component {
                           index={character.order_index}
                           link={`characters/${characterId}`}
                           flipped={flippedCards.has(characterId)}
-                          renderDragHandle={() => (<DragHandle/>)}
                         />
                         )
                       }
                     )}
-                  </SortableCardGroup>
+                  </CardGroup>
                 </Segment>
               </Grid.Column>
             </Grid.Row>
