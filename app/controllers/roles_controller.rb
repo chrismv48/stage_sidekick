@@ -1,18 +1,18 @@
 class RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = ['user']
+  ASSOCIATIONS_TO_INCLUDE = ['user_id']
 
   # GET /roles
   def index
     @roles = Role.all
 
-    render json: build_json_response(@roles)
+    render json: build_json_response(@roles, ASSOCIATIONS_TO_INCLUDE)
   end
 
   # GET /roles/1
   def show
-    render json: build_json_response(@role)
+    render json: build_json_response(@role, ASSOCIATIONS_TO_INCLUDE)
   end
 
   # POST /roles
@@ -24,7 +24,7 @@ class RolesController < ApplicationController
     @role.user = User.first
 
     if @role.save
-      render json: build_json_response(@role), status: :created, location: @role
+      render json: build_json_response(@role, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @role
     else
       render json: @role.errors, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class RolesController < ApplicationController
   # PATCH/PUT /roles/1
   def update
     if @role.update(role_params)
-      render json: build_json_response(@role)
+      render json: build_json_response(@role, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @role.errors, status: :unprocessable_entity
     end
@@ -67,14 +67,6 @@ class RolesController < ApplicationController
       :last_name,
       :avatar
     )
-  end
-
-  def build_json_response(entity)
-    {
-      resource: 'roles',
-      relationships: ASSOCIATIONS_TO_INCLUDE,
-      result: entity.as_json(include: ASSOCIATIONS_TO_INCLUDE)
-    }
   end
 
 end

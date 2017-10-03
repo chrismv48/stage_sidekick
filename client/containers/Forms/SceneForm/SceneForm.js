@@ -89,7 +89,7 @@ export class SceneForm extends React.Component { // eslint-disable-line react/pr
             <label>Characters</label>
             <Dropdown placeholder='Characters' fluid multiple selection
                       options={this.generateCharacterOptions()}
-                      value={sceneStaging['character_ids'] || scene.characters || []}
+                      value={sceneStaging['character_ids'] || scene.character_ids || []}
                       onChange={(event, data) => this.handleCharacterSelection(event, data)}
             />
           </Form.Field>

@@ -8,26 +8,6 @@
     margin: 10px 25px;
   }
 
-  .card-description {
-  margin-top: 15px;
-  }
-
-  .card-edit-panel {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    padding: 2px 0;
-    background-color: #efefef;
-    color: #a8a8af;
-    border-bottom: 1px solid rgba(34, 36, 38, .1);
-  }
-
-  .card-edit-dropdown {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
   .card-front,
   .card-back {
     -webkit-backface-visibility: hidden;

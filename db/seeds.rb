@@ -51,6 +51,7 @@ characters = Character.create(10.times.collect {|i| {
   description: Faker::ChuckNorris.fact,
   production_id: production.id,
   actors: [roles.sample],
+  order_index: i,
   remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
 

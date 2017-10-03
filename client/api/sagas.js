@@ -1,5 +1,6 @@
 import {call, put, takeEvery} from 'redux-saga/effects';
 import Api from "./api";
+import {updateResourceOrderIndex} from "./actions";
 
 export const ACTION_RESOURCE_INITIATED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_INITIATED`
 export const ACTION_RESOURCE_SUCCEEDED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_SUCCEEDED`
@@ -62,11 +63,21 @@ function* deleteResource(action) {
   }
 }
 
+function* swapResourceOrderIndex(action) {
+  // console.log('swap resource saga')
+  const {resource = 'resource', oldIndex, newIndex} = action
+  yield put(updateResourceOrderIndex(resource, oldIndex, newIndex))
+  const payload = {order_index_swap: [oldIndex, newIndex]}
+  yield call(() => Api(resource, 'POST', payload))
+}
+
 function* apiSaga() {
   yield takeEvery((action) => action.type.startsWith("FETCH"), fetchResource);
   yield takeEvery((action) => action.type.startsWith("CREATE"), postResource);
   yield takeEvery((action) => action.type.startsWith("MODIFY"), putResource);
   yield takeEvery((action) => action.type.startsWith("DESTROY"), deleteResource);
+
+  yield takeEvery('SWAP_RESOURCE_ORDER_INDEX', swapResourceOrderIndex);
 }
 
 export default [

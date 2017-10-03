@@ -29,4 +29,8 @@ class Character < ApplicationRecord
   has_many :roles, through: :characters_roles
 
   alias_attribute :actors, :roles
+
+  after_create do |character|
+    self.order_index = self.id
+  end
 end

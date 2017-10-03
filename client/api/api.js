@@ -16,7 +16,7 @@ const Api = (endpoint, method = 'get', payload = null) => {
   return fetch(`http://localhost:3005/${endpoint}`, fetchOptions)
     .then(response => {
       return response.json()
-        .then(data => normalize(data))
+        // .then(data => normalize(data))
     })
     .catch(error => {
       throw error;
@@ -33,6 +33,7 @@ function normalize(response) {
   let normalizedResult = {}
   let {relationships, result, resource} = response
   result = _.isArray(result) ? result : [result]
+  debugger
   for (let item of result) {
     normalizedResult[resource] = normalizedResult[resource] || {byId: {}, allIds: []}
     let resourceNormalized = normalizedResult[resource]

@@ -1,10 +1,12 @@
 General
 - disable ESLint pre commit hook
-- Update normalize method to have resource id field on relationships
+- Get rid of normalize method in favor of using the API to provide necessary data / front-loading all data at once
 - Create views for individual resources
 - Create proper dashboard / landing page
 - Add loaders/dimmers to all views
 - Make image uploader look nicer
+- Make card component
+
 
 User Stories
 - Create new account (designer)

@@ -55,3 +55,21 @@ export const sortResource = (resource, field, direction) => {
     direction
   }
 }
+
+export const updateResourceOrderIndex = (resource, oldIndex, newIndex) => {
+  return {
+    type: `UPDATE_${resource.toUpperCase()}_ORDER_INDEX`,
+    resource,
+    oldIndex,
+    newIndex
+  }
+}
+
+export const swapResourceOrderIndex = (resource, oldIndex, newIndex) => {
+  return {
+    type: `SWAP_RESOURCE_ORDER_INDEX`,
+    resource,
+    oldIndex,
+    newIndex
+  }
+}

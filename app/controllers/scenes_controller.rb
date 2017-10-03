@@ -1,18 +1,18 @@
 class ScenesController < ApplicationController
   before_action :set_scene, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = [:characters]
+  ASSOCIATIONS_TO_INCLUDE = [:character_ids]
 
   # GET /scenes
   def index
     @scenes = Scene.all
 
-    render json: build_json_response(@scenes)
+    render json: build_json_response(@scenes,  ASSOCIATIONS_TO_INCLUDE)
   end
 
   # GET /scenes/1
   def show
-    render json: build_json_response(@scene)
+    render json: build_json_response(@scene, ASSOCIATIONS_TO_INCLUDE)
   end
 
   # POST /scenes
@@ -20,7 +20,7 @@ class ScenesController < ApplicationController
     @scene = Scene.new(scene_params)
 
     if @scene.save
-      render json: build_json_response(@scene), status: :created, location: @scene
+      render json: build_json_response(@scene, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @scene
     else
       render json: @scene.errors, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class ScenesController < ApplicationController
   # PATCH/PUT /scenes/1
   def update
     if @scene.update(scene_params)
-      render json: build_json_response(@scene)
+      render json: build_json_response(@scene, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @scene.errors, status: :unprocessable_entity
     end
@@ -59,14 +59,5 @@ class ScenesController < ApplicationController
         :display_image,
         character_ids: []
       )
-    end
-
-    def build_json_response(entity)
-      {
-        resource: 'scenes',
-        relationships: ASSOCIATIONS_TO_INCLUDE,
-        result: entity.as_json(include: ASSOCIATIONS_TO_INCLUDE)
-      }
-
     end
 end

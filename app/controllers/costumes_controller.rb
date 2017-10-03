@@ -7,12 +7,12 @@ class CostumesController < ApplicationController
   def index
     @costumes = Costume.all
 
-    render json: build_json_response(@costumes)
+    render json: build_json_response(@costumes, ASSOCIATIONS_TO_INCLUDE)
   end
 
   # GET /costumes/1
   def show
-    render json: build_json_response(@costume)
+    render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE)
   end
 
   # POST /costumes
@@ -23,7 +23,7 @@ class CostumesController < ApplicationController
       unless costume_params[:grouped_costumes_characters_scenes].nil?
         costumes_characters_scenes = parse_character_scenes(params[:grouped_costumes_characters_scenes])
         @costume.costumes_characters_scenes.create(costumes_characters_scenes)
-        render json: build_json_response(@costume), status: :created, location: @costume
+        render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume
       end
     else
       render json: @costume.errors, status: :unprocessable_entity
@@ -38,7 +38,7 @@ class CostumesController < ApplicationController
         @costume.costumes_characters_scenes.destroy_all
         @costume.costumes_characters_scenes.create(costumes_characters_scenes)
       end
-      render json: build_json_response(@costume)
+      render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @costume.errors, status: :unprocessable_entity
     end
@@ -66,14 +66,6 @@ class CostumesController < ApplicationController
       costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
       return costume_params
     end
-
-  def build_json_response(entity)
-    {
-      resource: 'costumes',
-      relationships: ASSOCIATIONS_TO_INCLUDE,
-      result: entity.as_json(include: ASSOCIATIONS_TO_INCLUDE)
-    }
-  end
 
   def parse_character_scenes(grouped_costumes_characters_scenes)
     costumes_characters_scenes = []
