@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = [:role_ids, :scene_ids, :characters_scene_ids]
+  ASSOCIATIONS_TO_INCLUDE = [:role_ids, :scene_ids, :characters_scenes]
 
   # GET /characters
   def index

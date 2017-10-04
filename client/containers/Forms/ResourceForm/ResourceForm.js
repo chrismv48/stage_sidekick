@@ -5,13 +5,20 @@ import './ResourceForm.scss'
 import _ from "lodash";
 import {fetchResource, updateResourceFields} from "api/actions";
 import ImageUpload from "components/ImageUpload/ImageUpload";
-import {addIdToResource, pluralizeResource} from "../../../helpers";
+import {pluralizeResource} from "../../../helpers";
 
 const relationshipsByResource = {
   'scenes': ['characters'],
   'roles': [],
   'characters': ['scenes', 'roles'],
   'costume_items': ['costumes'],
+}
+
+const relationshipIdToLabel = {
+  'scene_ids': 'scenes',
+  'role_ids': 'roles',
+  'character_ids': 'characters',
+  'costume_ids': 'costumes'
 }
 
 const sceneFormFields = [
@@ -28,7 +35,7 @@ const sceneFormFields = [
     inputType: 'textarea',
   },
   {
-    fieldName: 'characters',
+    fieldName: 'character_ids',
     label: 'Characters',
     inputType: 'dropdown',
     dropdownText: 'name',
@@ -50,7 +57,7 @@ const employmentTypes = [
   },
 ]
 
-const departments = ['Production', 'Lighting', 'Costumes', 'Acting', 'Administration', 'Sound', 'Lighting']
+const departments = ['Production', 'Costumes', 'Acting', 'Administration', 'Sound', 'Lighting']
 
 const itemTypes = [
   'Shirt',
@@ -75,12 +82,13 @@ const characterFormFields = [
     inputType: 'textarea',
   },
   {
-    fieldName: 'scenes',
+    fieldName: 'scene_ids',
+    label: 'Scenes',
     inputType: 'dropdown',
     dropdownText: 'title',
   },
   {
-    fieldName: 'roles',
+    fieldName: 'role_ids',
     label: 'Played by',
     inputType: 'dropdown',
     dropdownText: (role) => `${role.first_name} ${role.last_name}`,
@@ -246,14 +254,14 @@ export class ResourceForm extends React.Component { // eslint-disable-line react
         )
       }
       if (inputType === 'dropdown') {
-        const resourceWithId = addIdToResource(fieldName)
         let dropdownOptions = {...inputOptions}
         if (_.isEmpty(dropdownOptions)) {
           const multiple = pluralizeResource(fieldName) === fieldName
-          const value = resourceStaging[resourceWithId] || (multiple ? resource[fieldName] : resource[resourceWithId]) || (multiple ? [] : '')
+          const value = resourceStaging[fieldName] || resource[fieldName] || (multiple ? [] : '')
+          const relationshipLabel = relationshipIdToLabel[fieldName] || fieldName
           dropdownOptions = {
             multiple,
-            options: this.generateRelationshipOptions(pluralizeResource(fieldName), dropdownText),
+            options: this.generateRelationshipOptions(relationshipLabel, dropdownText),
             value
           }
         }
@@ -267,7 +275,7 @@ export class ResourceForm extends React.Component { // eslint-disable-line react
               fluid
               selection
               placeholder={label}
-              onChange={(event, data) => dispatch(updateResourceFields(resourceName, resourceWithId, data.value, resource.id))}
+              onChange={(event, data) => dispatch(updateResourceFields(resourceName, fieldName, data.value, resource.id))}
               {...dropdownOptions}
             >
             </Dropdown>

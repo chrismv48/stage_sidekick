@@ -15,8 +15,6 @@ import {showModal} from "../Modals/actions";
     characters: {byId: charactersById} = {},
     roles: {byId: rolesById} = {},
     scenes: {byId: scenesById} = {},
-    costumes_characters_scenes: {byId: costumesCharactersScenesById = {}, allIds: costumesCharactersScenesAllIds = []} = {},
-    characters_scenes: {byId: charactersScenesById = {}, allIds: charactersScenesAllIds = []} = {},
     costume_items: {byId: costumeItemsById = {}, allIds: costumeItemsAllIds = []} = {},
   } = state.resources
   return {
@@ -25,10 +23,6 @@ import {showModal} from "../Modals/actions";
     charactersById,
     scenesById,
     rolesById,
-    costumesCharactersScenesAllIds,
-    costumesCharactersScenesById,
-    charactersScenesAllIds,
-    charactersScenesById,
     costumeItemsAllIds,
     costumeItemsById,
   }
@@ -39,15 +33,16 @@ export class Costume extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchResource('costumes', `costumes/${this.props.params.costumeId}`))
     // TODO: being lazy here and getting all characters/scenes even though we really only need some
-    this.props.dispatch(fetchResource('characters', `characters`))
-    this.props.dispatch(fetchResource('scenes', `scenes`))
+    this.props.dispatch(fetchResource('characters', 'characters'))
+    this.props.dispatch(fetchResource('scenes', 'scenes'))
+    this.props.dispatch(fetchResource('roles', 'roles'))
+    this.props.dispatch(fetchResource('costume_items', 'costume_items'))
   }
 
   groupCharacterScenes() {
-    const {costume, costumesCharactersScenesById} = this.props
+    const {costume} = this.props
     let groupedCharacterScenes = {}
-    for (const ccsId of costume.costumes_characters_scenes || []) {
-      const costumeCharacterScene = costumesCharactersScenesById[ccsId]
+    for (const costumeCharacterScene of costume.costumes_characters_scenes || []) {
       const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
       if (characterId in groupedCharacterScenes) {
         groupedCharacterScenes[characterId].push(characterSceneId)
@@ -60,10 +55,7 @@ export class Costume extends React.Component {
   }
 
   render() {
-    console.log(this.props)
-    const {
-      costume, charactersScenesById, charactersById, rolesById, scenesById, costumeItemsAllIds, costumeItemsById, dispatch
-    } = this.props
+    const { costume, charactersById, rolesById, scenesById, costumeItemsAllIds, costumeItemsById, dispatch } = this.props
     if (!charactersById || !rolesById || !scenesById) {
       return (
         <Dimmer active={true} inverted>
@@ -91,7 +83,7 @@ export class Costume extends React.Component {
                 Costume Items
               </Header>
               <Card.Group>
-                {costumeItemsAllIds.map((costumeItemId) => {
+                {costume.costume_item_ids.map((costumeItemId) => {
                     let costumeItem = costumeItemsById[costumeItemId]
                     const costumeItemImageUrl = costumeItem.display_image ? costumeItem.display_image.url : null
                     // const costumeRole = _.isEmpty(costume.roles) ? null : rolesById[costume.roles[0]]
@@ -137,7 +129,7 @@ export class Costume extends React.Component {
                 {Object.keys(groupedCharacterScenes).map(characterId => {
                   characterId = parseInt(characterId)
                   const character = charactersById[characterId]
-                  const characterRole = rolesById[character.roles[0]]
+                  const characterRole = rolesById[character.role_ids[0]]
                   const characterScenes = groupedCharacterScenes[characterId]
                   return (
                     <Item key={characterId}>
@@ -157,7 +149,7 @@ export class Costume extends React.Component {
                             <Grid.Column>
                               <h5>Scenes</h5>
                               {characterScenes.map(characterSceneId => {
-                                const sceneId = charactersScenesById[characterSceneId].scene_id
+                                const sceneId = _.find(costume.characters_scenes, {'id': characterSceneId}).scene_id
                                 const scene = scenesById[sceneId]
                                 return (
                                   <List key={characterSceneId}>

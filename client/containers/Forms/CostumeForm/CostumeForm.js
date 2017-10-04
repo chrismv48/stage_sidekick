@@ -12,8 +12,6 @@ import ImageUpload from "components/ImageUpload/ImageUpload";
   const {
     scenes: {byId: scenesById = {}, allIds: scenesAllIds = []} = {},
     characters: {byId: charactersById = {}, allIds: charactersAllIds = []} = {},
-    costumes_characters_scenes: {byId: costumesCharactersScenesById = {}, allIds: costumesCharactersScenesAllIds = []} = {},
-    characters_scenes: {byId: charactersScenesById = {}, allIds: charactersScenesAllIds = []} = {},
     costumes = {},
   } = state.resources
 
@@ -30,32 +28,22 @@ import ImageUpload from "components/ImageUpload/ImageUpload";
     scenesAllIds,
     charactersById,
     charactersAllIds,
-    costumesCharactersScenesAllIds,
-    costumesCharactersScenesById,
-    charactersScenesAllIds,
-    charactersScenesById,
   }
 })
 
 export class CostumeForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
-  state = {groupedCharacterScenes: {}}
-
   componentDidMount() {
     const {costumeId, dispatch} = this.props
-    if (costumeId) {
-      dispatch(fetchResource('costumes', `costumes/${costumeId}`))
-      this.setState({groupedCharacterScenes: this.groupCharacterScenes()})
-    }
+    if (costumeId) dispatch(fetchResource('costumes', `costumes/${costumeId}`))
     dispatch(fetchResource('scenes', 'scenes'))
     dispatch(fetchResource('characters', 'characters'))
   }
 
   groupCharacterScenes() {
-    const {costume, costumesCharactersScenesById} = this.props
+    const {costume} = this.props
     let groupedCharacterScenes = {}
-    for (const ccsId of costume.costumes_characters_scenes) {
-      const costumeCharacterScene = costumesCharactersScenesById[ccsId]
+    for (const costumeCharacterScene of costume.costumes_characters_scenes) {
       const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
       if (characterId in groupedCharacterScenes) {
         groupedCharacterScenes[characterId].push(characterSceneId)
@@ -67,26 +55,26 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
     return groupedCharacterScenes
   }
 
-  generateSceneOptions = (characterId) => {
-    const {charactersScenesById, charactersById, scenesById} = this.props
-    const character = charactersById[characterId]
-    const {characters_scenes: characterScenes = []} = character
-    return characterScenes.map(characterSceneId => {
-      const scene = scenesById[charactersScenesById[characterSceneId].scene_id]
-      return {
-        key: characterSceneId,
-        text: scene.title,
-        value: characterSceneId,
-      }
-    })
-  }
-
   getGroupedCharacterScenes = () => {
-    let {grouped_costumes_characters_scenes = {}} = this.props.costumeStaging
-    if (_.isEmpty(grouped_costumes_characters_scenes)) {
-      grouped_costumes_characters_scenes = {...this.state.groupedCharacterScenes}
+    let {grouped_costumes_characters_scenes} = this.props.costumeStaging
+    if (!grouped_costumes_characters_scenes) {
+      grouped_costumes_characters_scenes = this.groupCharacterScenes()
     }
     return grouped_costumes_characters_scenes
+  }
+
+  generateSceneOptions = (characterId) => {
+    const {charactersById, scenesById} = this.props
+    const character = charactersById[characterId]
+    const {characters_scenes: characterScenes = []} = character
+    return characterScenes.map(characterScene => {
+      const scene = scenesById[characterScene.scene_id]
+      return {
+        key: characterScene.id,
+        text: scene.title,
+        value: characterScene.id,
+      }
+    })
   }
 
   generateCharacterOptions = (characterId) => {
@@ -95,7 +83,9 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
     // I guess JavaScript converts all keys into strings?
     const groupedCostumesCharactersScenesIds = Object.keys(grouped_costumes_characters_scenes).map(id => parseInt(id))
     let characterOptions = _.pullAll(charactersAllIds, groupedCostumesCharactersScenesIds)
-    if (characterId) { characterOptions.push(characterId) }
+    if (characterId) {
+      characterOptions.push(characterId)
+    }
     return characterOptions.map(characterId => {
       const character = charactersById[characterId]
       return {
@@ -114,6 +104,7 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
   }
 
   handleCharacterSelection = (event, data, previousValue) => {
+    if (data.value === previousValue) return
     const grouped_costumes_characters_scenes = this.getGroupedCharacterScenes()
 
     delete grouped_costumes_characters_scenes[previousValue]
@@ -129,9 +120,8 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
   }
 
   render() {
-    const {costumeStaging = {}, charactersScenesById = {}, costume, dispatch, loading, costumeId, charactersById, scenesById} = this.props
+    const {costumeStaging = {}, costume, dispatch, loading, costumeId} = this.props
     const costumeImageUrl = costumeStaging['display_image'] || _.get(costume, 'display_image.url')
-    const {characters_costumes_attributes: characterScenes = []} = costumeStaging
     const groupedCharacterScenes = this.getGroupedCharacterScenes()
 
     return (
@@ -167,7 +157,6 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
                               options={this.generateCharacterOptions(characterId)}
                               value={characterId}
                               id={`character-dropdown-${characterId}`}
-                              onBlur={(event, data) => this.previousValue = event.target.value}
                               onChange={(event, data) => this.handleCharacterSelection(event, data, characterId)}
                     />
                   </Form.Field>

@@ -101,6 +101,7 @@ export class Costumes extends React.Component {
                             key={`index-${i}`}
                             link={`costumes/${costumeId}`}
                             sortable={false}
+                            index={i}
                           />
                         )
                       }
