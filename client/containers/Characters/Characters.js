@@ -142,7 +142,7 @@ export class Characters extends React.Component {
                   <Dimmer active={loading} inverted>
                     <Loader inverted>Loading</Loader>
                   </Dimmer>
-                  <CardGroup itemsPerRow={4} resource='characters'>
+                  <CardGroup sortable={true} itemsPerRow={4} resource='characters'>
                     {charactersAllIds.map((characterId, i) => {
                       let character = charactersById[characterId]
                       const characterImageUrl = character.display_image ? character.display_image.url : null
@@ -159,7 +159,7 @@ export class Characters extends React.Component {
                           onDeleteCallback={(event) => this.handleDestroyCharacter(event, characterId)}
                           label='Character'
                           key={`index-${i}`}
-                          index={character.order_index}
+                          index={i}
                           link={`characters/${characterId}`}
                           flipped={flippedCards.has(characterId)}
                         />

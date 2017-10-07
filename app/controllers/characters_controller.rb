@@ -18,14 +18,13 @@ class CharactersController < ApplicationController
 
   # POST /characters
   def create
-    if character_params[:order_index_swap]
-      old_index, new_index = character_params[:order_index_swap]
-      characterA = Character.find_by(order_index: old_index, production_id: character_params[:production_id])
-      characterB = Character.find_by(order_index: new_index, production_id: character_params[:production_id])
-      characterA.order_index, characterB.order_index = characterB.order_index, characterA.order_index
-      characterA.save!
-      characterB.save!
-      return render json: build_json_response([characterA, characterB], ASSOCIATIONS_TO_INCLUDE)
+    if params[:order_index_swap]
+      characters = Character.where(id: params[:order_index_swap])
+      characters.each_with_index do |character|
+        character.order_index = params[:order_index_swap].index(character.id)
+        character.save
+      end
+      return render json: build_json_response(characters, ASSOCIATIONS_TO_INCLUDE)
     end
 
     @character = Character.new(character_params)
@@ -56,23 +55,22 @@ class CharactersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_character
-      @character = Character.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_character
+    @character = Character.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def character_params
-      params.permit(
-        :id,
-        :name,
-        :description,
-        :production_id,
-        :display_image,
-        scene_ids: [],
-        role_ids: [],
-        order_index_swap: []
-      )
-    end
+  # Only allow a trusted parameter "white list" through.
+  def character_params
+    params.permit(
+      :id,
+      :name,
+      :description,
+      :production_id,
+      :display_image,
+      scene_ids: [],
+      role_ids: [],
+    )
+  end
 
 end

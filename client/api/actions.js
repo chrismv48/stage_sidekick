@@ -56,12 +56,11 @@ export const sortResource = (resource, field, direction) => {
   }
 }
 
-export const updateResourceOrderIndex = (resource, oldIndex, newIndex) => {
+export const updateResourceOrderIndex = (resource, newOrder) => {
   return {
     type: `UPDATE_${resource.toUpperCase()}_ORDER_INDEX`,
     resource,
-    oldIndex,
-    newIndex
+    newOrder
   }
 }
 

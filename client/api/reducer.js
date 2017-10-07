@@ -27,8 +27,6 @@ import {
   ACTION_RESOURCE_SUCCEEDED,
 } from "./sagas"
 
-import {arrayMove} from 'react-sortable-hoc'
-
 const _ = require('lodash/fp');
 
 function apiReducer(state = {}, action) {
@@ -66,9 +64,7 @@ function apiReducer(state = {}, action) {
       return _.set(`${resource}.staging.${resourceId || null}.${field}`, value, state)
     case `UPDATE_${resource.toUpperCase()}_ORDER_INDEX`:
       const allIds = _.get(`${resource}.allIds`, state)
-      return _.set(`${resource}.allIds`, arrayMove(allIds, action.oldIndex, action.newIndex), state)
-      // console.log(action.newOrder)
-      // return _.set(`${resource}.allIds`, action.newOrder, state)
+      return _.set(`${resource}.allIds`, action.newOrder, state)
     case `SORT_${resource.toUpperCase()}`:
       const resourceByIds = _.get(`${resource}.byId`, state, {})
       const sortedResource = _.orderBy([action.field], action.direction, Object.values(resourceByIds))

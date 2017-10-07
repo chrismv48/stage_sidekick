@@ -1,38 +1,56 @@
 import React from 'react';
 import {Card} from "semantic-ui-react";
 import './CardGroup.scss'
-import {SortableContainer} from 'react-sortable-hoc'
+import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {connect} from "react-redux";
 import {swapResourceOrderIndex} from "../../api/actions";
 
-
-const SortableCardGroup = SortableContainer(({children, ...rest}) => {
-  return (
-    <Card.Group {...rest}>
-      {children}
-    </Card.Group>
-  )
-})
+const SortableCard = SortableElement(({children}) => children)
+const SortableCardGroup = SortableContainer(({children}) => children)
 
 @connect(state => {
-  const { dispatch } = state
-  return { dispatch }
+  const {dispatch} = state
+  return {dispatch}
 })
 
 class CardGroup extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   handleOnSortEnd = ({oldIndex, newIndex}) => {
-    const { resource, dispatch } = this.props
+    if (oldIndex === newIndex) return
+    const {resource, dispatch} = this.props
     dispatch(swapResourceOrderIndex(resource, oldIndex, newIndex))
   }
 
+  renderSortableChildren = (children) => {
+    return React.Children.map(children, (child, i) => {
+      const sortableChild = React.cloneElement(child, {sortable: true})
+      return (
+        <SortableCard index={i}>
+          {sortableChild}
+        </SortableCard>
+      )
+    })
+  }
+
   render() {
-    const { children, ...rest } = this.props
-    return (
-      <SortableCardGroup {...rest} onSortEnd={this.handleOnSortEnd} axis='xy' useDragHandle={true}>
-        {children}
-      </SortableCardGroup>
-    );
+    const {children, sortable, ...rest} = this.props
+
+    if (sortable) {
+      return (
+        <SortableCardGroup onSortEnd={this.handleOnSortEnd} axis='xy' useDragHandle={true}>
+          <Card.Group {...rest}>
+            {this.renderSortableChildren(children)}
+          </Card.Group>
+        </SortableCardGroup>
+      )
+    }
+    else {
+      return (
+        <Card.Group {...rest}>
+          {children}
+        </Card.Group>
+      );
+    }
   }
 }
 

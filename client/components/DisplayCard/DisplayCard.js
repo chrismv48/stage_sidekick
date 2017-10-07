@@ -2,15 +2,8 @@ import React from 'react';
 import {Card, Icon, Image} from "semantic-ui-react";
 import './DisplayCard.scss'
 import classNames from 'classnames'
-import {SortableElement, SortableHandle} from "react-sortable-hoc";
+import {SortableHandle} from "react-sortable-hoc";
 
-const SortableCard = SortableElement(({children, ...rest}) => {
-  return (
-    <Card {...rest}>
-      {children}
-    </Card>
-  )
-})
 
 const DragHandle = SortableHandle(() => <Icon size='large' style={{height: 'initial', cursor: 'move'}} name="move"
                                               className="card-edit-icon"/>)
@@ -38,10 +31,8 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
     const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped, index, sortable} = this.props
     const {showHoverState} = this.state
     return (
-      <SortableCard
+      <Card
         raised
-        index={index}
-        disabled={!sortable}
         className={classNames("DisplayCard", {'hover': showHoverState})}
         href={link}
         onMouseEnter={() => this.setState({showHoverState: true})}
@@ -71,7 +62,7 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
           {extra}
         </Card.Content>
 
-      </SortableCard>
+      </Card>
     );
   }
 }

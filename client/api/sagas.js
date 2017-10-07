@@ -1,6 +1,9 @@
-import {call, put, takeEvery} from 'redux-saga/effects';
+import {call, put, select, takeEvery} from 'redux-saga/effects';
 import Api from "./api";
 import {updateResourceOrderIndex} from "./actions";
+import {arrayMove} from 'react-sortable-hoc'
+
+const _ = require('lodash/fp');
 
 export const ACTION_RESOURCE_INITIATED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_INITIATED`
 export const ACTION_RESOURCE_SUCCEEDED = (action, resource) => `${action.toUpperCase()}_${resource.toUpperCase()}_SUCCEEDED`
@@ -64,10 +67,14 @@ function* deleteResource(action) {
 }
 
 function* swapResourceOrderIndex(action) {
+
   // console.log('swap resource saga')
   const {resource = 'resource', oldIndex, newIndex} = action
-  yield put(updateResourceOrderIndex(resource, oldIndex, newIndex))
-  const payload = {order_index_swap: [oldIndex, newIndex]}
+  const state = yield select()
+  const resourceAllIds = _.get(`resources.${resource}.allIds`, state, [])
+  const newOrder = arrayMove(resourceAllIds, oldIndex, newIndex)
+  yield put(updateResourceOrderIndex(resource, newOrder))
+  const payload = {order_index_swap: newOrder}
   yield call(() => Api(resource, 'POST', payload))
 }
 
