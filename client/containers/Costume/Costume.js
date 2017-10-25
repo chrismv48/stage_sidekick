@@ -1,11 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import './Costume.scss'
-import {Card, Dimmer, Dropdown, Grid, Header, Icon, Image, Item, Label, List, Loader,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, Item, Label, List, Loader, Tab,} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
 import {fetchResource} from "../../api/actions"
 import * as _ from "lodash";
-import {showModal} from "../Modals/actions";
+import CardGroup from "../../components/CardGroup/CardGroup";
+import DisplayCard from "../../components/DisplayCard/DisplayCard";
+import ActivityFeed from "../../components/ActivityFeed/ActivityFeed";
+import CommentFeed from "../../components/CommentFeed/CommentFeed";
 
 @connect((state, ownProps) => {
   const {dispatch} = state
@@ -54,6 +57,17 @@ export class Costume extends React.Component {
     return groupedCharacterScenes
   }
 
+  renderActivitySection() {
+    const panes = [
+      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed/></Tab.Pane>},
+      {menuItem: 'Activity', render: () => <Tab.Pane><ActivityFeed/></Tab.Pane>},
+    ]
+
+    return (
+      <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+    )
+  }
+
   render() {
     const { costume, charactersById, rolesById, scenesById, costumeItemsAllIds, costumeItemsById, dispatch } = this.props
     if (!charactersById || !rolesById || !scenesById) {
@@ -69,7 +83,7 @@ export class Costume extends React.Component {
         <div className="Costume">
           <Grid className="content-container">
             <Grid.Column>
-              <Header as="h2">
+              <Header as="h1">
                 <Image shape='circular' src={_.get(costume, 'display_image.url')}/>
                 {costume.title}
               </Header>
@@ -82,46 +96,26 @@ export class Costume extends React.Component {
               <Header as='h3' dividing>
                 Costume Items
               </Header>
-              <Card.Group>
-                {costume.costume_item_ids.map((costumeItemId) => {
+
+              <CardGroup resource={'costume_items'}>
+                {costume.costume_item_ids.map((costumeItemId, i) => {
                     let costumeItem = costumeItemsById[costumeItemId]
                     const costumeItemImageUrl = costumeItem.display_image ? costumeItem.display_image.url : null
-                    // const costumeRole = _.isEmpty(costume.roles) ? null : rolesById[costume.roles[0]]
                     return (
-                      <Card raised key={costumeItemId} className="costume-card">
-                        <div key={costumeItemId} className="card-edit-panel">
-                          <Icon style={{height: "initial"}} name="move"/>
-                          <div className="card-edit-dropdown">
-                            <Dropdown icon="ellipsis vertical">
-                              <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => dispatch(showModal('RESOURCE_MODAL', {
-                                  resourceName: 'costume_items',
-                                  resourceId: costumeItemId,
-                                }))}
-                                               icon="edit"
-                                               text="Edit Costume Item"/>
-                                <Dropdown.Item onClick={() => this.handleDestroyCostume(costumeItemId)}
-                                               icon="trash"
-                                               text="Delete Costume Item"/>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </div>
-                        </div>
-                        <Image src={costumeItemImageUrl} height={200}/>
-                        <Card.Content>
-                          <Card.Header>{costumeItem.title}</Card.Header>
-                          <Card.Meta>
-                            {costumeItem.item_type}
-                          </Card.Meta>
-                          <Card.Description>
-                            {costumeItem.description}
-                          </Card.Description>
-                        </Card.Content>
-                      </Card>
+                      <DisplayCard
+                        cardImage={costumeItemImageUrl}
+                        header={costumeItem.title}
+                        meta={costumeItem.item_type}
+                        frontDescription={costumeItem.description}
+                        label='Costume Item'
+                        key={`index-${i}`}
+                        sortable={false}
+                        index={i}
+                      />
                     )
                   },
                 )}
-              </Card.Group>
+              </CardGroup>
               <Header as='h3' dividing>
                 Character Scenes
               </Header>
@@ -134,7 +128,6 @@ export class Costume extends React.Component {
                   return (
                     <Item key={characterId}>
                       <Item.Image src={_.get(character, 'display_image.url')}/>
-
                       <Item.Content>
                         <Item.Header as='a'>{character.name}</Item.Header>
                         <Item.Meta>
@@ -172,10 +165,14 @@ export class Costume extends React.Component {
                         </Item.Extra>
                       </Item.Content>
                     </Item>
-
                   )
                 })}
               </Item.Group>
+
+              <Header as='h3' dividing>
+                Activity
+              </Header>
+              {this.renderActivitySection()}
             </Grid.Column>
           </Grid>
         </div>

@@ -1,4 +1,4 @@
-.Costume {
+.Character {
 
   #content-grid {
     margin: 0;
@@ -8,4 +8,9 @@
     margin: 10px 25px;
   }
 
+  .card-edit-dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }

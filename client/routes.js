@@ -83,11 +83,19 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/scenes/:sceneId',
+      name: 'scene',
+      getComponent(location, cb) {
+        import('containers/Scene/Scene')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/characters/:characterId',
       name: 'characters',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/Character'),
+          import('containers/Character/Character'),
         ]);
 
         const renderRoute = loadModule(cb);

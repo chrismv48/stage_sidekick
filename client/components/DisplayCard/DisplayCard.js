@@ -38,9 +38,12 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
         onMouseEnter={() => this.setState({showHoverState: true})}
         onMouseLeave={() => this.setState({showHoverState: false})}
       >
-        <div className="overlay">
-          {this.renderEditBar()}
-        </div>
+        {
+          showEditBar &&
+          <div className="overlay">
+            {this.renderEditBar()}
+          </div>
+        }
         <Image src={cardImage} height={200}/>
         <Card.Content>
           <Card.Header>
@@ -58,9 +61,12 @@ class DisplayCard extends React.Component { // eslint-disable-line react/prefer-
             </div>
           </Card.Description>
         </Card.Content>
-        <Card.Content extra>
-          {extra}
-        </Card.Content>
+        {
+          extra &&
+          <Card.Content extra>
+            {extra}
+          </Card.Content>
+        }
 
       </Card>
     );
