@@ -1,14 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import './Scene.scss'
-import {Dimmer, Grid, Header, Image, Loader, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Icon, Image, Loader, Tab,} from 'semantic-ui-react'
 import Layout from "../../components/Layout/index";
-import {fetchResource} from "../../api/actions"
+import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
 import DisplayCard from "../../components/DisplayCard/DisplayCard";
 import ActivityFeed from "../../components/ActivityFeed/ActivityFeed";
 import CommentFeed from "../../components/CommentFeed/CommentFeed";
+import {showModal} from "../Modals/actions";
 
 @connect((state, ownProps) => {
   const {dispatch} = state
@@ -47,8 +48,8 @@ export class Scene extends React.Component {
   }
 
   render() {
-    const {scene, rolesById, charactersById} = this.props
-    if (!charactersById || !rolesById || !charactersById) {
+    const {scene, rolesById, charactersById, dispatch} = this.props
+    if (!charactersById || !rolesById || !scene) {
       return (
         <Dimmer active={true} inverted>
           <Loader inverted>Loading</Loader>
@@ -61,13 +62,34 @@ export class Scene extends React.Component {
         <div className="Scene">
           <Grid className="content-container">
             <Grid.Column>
-              <Header as="h1">
+              <div className="header-container">
+                <div className={"header"}>
+                  <Header as="h1">
                 <Image shape='circular' src={_.get(scene, 'display_image.url')}/>
                 {' '}{scene.title}
                 <Header.Subheader>
                   {scene.setting}, {scene.length_in_minutes}m runtime
                 </Header.Subheader>
-              </Header>
+                  </Header>
+                </div>
+                <div className="card-edit-icons">
+                  <Icon name="edit"
+                        color="blue"
+                        size='large'
+                        onClick={() => dispatch(showModal('RESOURCE_MODAL', {
+                          resourceName: 'scenes',
+                          resourceId: scene.id,
+                        }))}
+                        className='edit-icon'
+                  />
+                  <Icon name="trash"
+                        color="red"
+                        size='large'
+                        onClick={() => dispatch(deleteResource('scene', `scenes/${scene.id}`))}
+                        className='edit-icon'
+                  />
+                </div>
+              </div>
               <Header as='h3' dividing>
                 Description
               </Header>
