@@ -1,10 +1,23 @@
 General
-- disable ESLint pre commit hook
-- Create views for individual resources
 - Create proper dashboard / landing page
-- Add loaders/dimmers to all views
-- Make image uploader look nicer
+- Create gallery
+- Add site-wide search
+- Implement comments
+- Implement activity feed
 
+Items
+- Make components/layouts for multiple item view
+- Make components/layouts for single item view
+- Make fields editable in single item view
+- Add list layout to multiple item view
+- Add filtering/sorting to multiple item view
+- Make image uploader look nicer
+- Add Costume Item page
+
+Directory
+- Fix missing data
+- Add search capability
+- Add filter capability
 
 User Stories
 - Create new account (designer)
