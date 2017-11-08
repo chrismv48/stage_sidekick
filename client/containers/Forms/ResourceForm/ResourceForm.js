@@ -71,7 +71,7 @@ const itemTypes = [
 const characterFormFields = [
   {
     fieldName: 'display_image',
-    inputType: 'image',
+    inputType: 'image_upload',
   },
   {
     fieldName: 'name',
@@ -98,7 +98,7 @@ const characterFormFields = [
 const costumeItemFormFields = [
   {
     fieldName: 'display_image',
-    inputType: 'image',
+    inputType: 'image_upload',
   },
   {
     fieldName: 'title',
@@ -129,7 +129,7 @@ const costumeItemFormFields = [
 const roleFormFields = [
   {
     fieldName: 'display_image',
-    inputType: 'image',
+    inputType: 'image_upload',
   },
   {
     fieldName: 'first_name',

@@ -3,7 +3,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import './Characters.scss'
 import {Button, Dimmer, Grid, Header, Image, List, Loader, Segment} from 'semantic-ui-react'
-import Layout from "../../components/Layout/index";
 import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import {showModal} from "../Modals/actions";
@@ -118,61 +117,57 @@ export class Characters extends React.Component {
     const {dispatch, rolesById} = this.props
     const {flippedCards} = this.state
     return (
-      <Layout thisPage={this.props.route.name}>
-        <div className="Characters">
-          <Grid className="content-container">
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h2" dividing>
-                  Characters
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'characters', resourceId: null}))} primary>
-                  <Icon name='add user'/>
-                  Add Character
-                </Button>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Segment basic style={{padding: 0}}>
-                  <Dimmer active={loading} inverted>
-                    <Loader inverted>Loading</Loader>
-                  </Dimmer>
-                  <CardGroup sortable={true} itemsPerRow={4} resource='characters'>
-                    {charactersAllIds.map((characterId, i) => {
-                      let character = charactersById[characterId]
-                      const characterImageUrl = character.display_image ? character.display_image.url : null
-                      const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
-                      return (
-                        <DisplayCard
-                          cardImage={characterImageUrl}
-                          showEditBar
-                          header={character.name}
-                          meta={faker.random.arrayElement(['Leading Role', 'Primary Role', 'Supporting Role'])}
-                          frontDescription={this.generateCardFrontDescription(character, characterRole)}
-                          extra={this.generateCardExtra(character)}
-                          onEditCallback={(event) => this.handleEditCharacter(event, characterId)}
-                          onDeleteCallback={(event) => this.handleDestroyCharacter(event, characterId)}
-                          label='Character'
-                          key={`index-${i}`}
-                          index={i}
-                          link={`characters/${characterId}`}
-                          flipped={flippedCards.has(characterId)}
-                        />
-                        )
-                      }
-                    )}
-                  </CardGroup>
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </div>
-      </Layout>
+      <Grid className="characters">
+        <Grid.Row>
+          <Grid.Column>
+            <Header as="h2" dividing>
+              Characters
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'characters', resourceId: null}))} primary>
+              <Icon name='add user'/>
+              Add Character
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <Segment basic style={{padding: 0}}>
+              <Dimmer active={loading} inverted>
+                <Loader inverted>Loading</Loader>
+              </Dimmer>
+              <CardGroup sortable={true} itemsPerRow={4} resource='characters'>
+                {charactersAllIds.map((characterId, i) => {
+                  let character = charactersById[characterId]
+                  const characterImageUrl = character.display_image ? character.display_image.url : null
+                  const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
+                  return (
+                    <DisplayCard
+                      cardImage={characterImageUrl}
+                      showEditBar
+                      header={character.name}
+                      meta={faker.random.arrayElement(['Leading Role', 'Primary Role', 'Supporting Role'])}
+                      frontDescription={this.generateCardFrontDescription(character, characterRole)}
+                      extra={this.generateCardExtra(character)}
+                      onEditCallback={(event) => this.handleEditCharacter(event, characterId)}
+                      onDeleteCallback={(event) => this.handleDestroyCharacter(event, characterId)}
+                      label='Character'
+                      key={`index-${i}`}
+                      index={i}
+                      link={`characters/${characterId}`}
+                      flipped={flippedCards.has(characterId)}
+                    />
+                    )
+                  }
+                )}
+              </CardGroup>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import './Character.scss'
 import {Dimmer, Grid, Header, Image, Loader, Tab,} from 'semantic-ui-react'
-import Layout from "../../components/Layout/index";
 import {fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -60,55 +59,51 @@ export class Character extends React.Component {
     const characterRole = _.isEmpty(character.role_ids) ? {} : rolesById[character.role_ids[0]]
 
     return (
-      <Layout thisPage={this.props.route.name}>
-        <div className="Character">
-          <Grid className="content-container">
-            <Grid.Column>
-              <Header as="h1">
-                <Image shape='circular' src={_.get(character, 'display_image.url')}/>
-                {' '}{character.name}
-                <Header.Subheader>
-                  Played by <a href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
-                </Header.Subheader>
-              </Header>
-              <Header as='h3' dividing>
-                Description
-              </Header>
-              <p>
-                {character.description}
-              </p>
-              <Header as='h3' dividing>
-                Character Scenes
-              </Header>
+      <Grid className="character">
+        <Grid.Column className="character">
+          <Header as="h1">
+            <Image shape='circular' src={_.get(character, 'display_image.url')}/>
+            {' '}{character.name}
+            <Header.Subheader>
+              Played by <a href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+            </Header.Subheader>
+          </Header>
+          <Header as='h3' dividing>
+            Description
+          </Header>
+          <p>
+            {character.description}
+          </p>
+          <Header as='h3' dividing>
+            Character Scenes
+          </Header>
 
-              <CardGroup resource={'scenes'}>
-                {character.scene_ids.map((sceneId, i) => {
-                    let scene = scenesById[sceneId]
-                    const sceneImageUrl = scene.display_image ? scene.display_image.url : null
-                    return (
-                      <DisplayCard
-                        cardImage={sceneImageUrl}
-                        header={scene.title}
-                        meta={scene.setting}
-                        frontDescription={scene.description}
-                        label='Scene'
-                        key={`index-${i}`}
-                        sortable={false}
-                        index={i}
-                      />
-                    )
-                  },
-                )}
-              </CardGroup>
+          <CardGroup resource={'scenes'}>
+            {character.scene_ids.map((sceneId, i) => {
+                let scene = scenesById[sceneId]
+                const sceneImageUrl = scene.display_image ? scene.display_image.url : null
+                return (
+                  <DisplayCard
+                    cardImage={sceneImageUrl}
+                    header={scene.title}
+                    meta={scene.setting}
+                    frontDescription={scene.description}
+                    label='Scene'
+                    key={`index-${i}`}
+                    sortable={false}
+                    index={i}
+                  />
+                )
+              },
+            )}
+          </CardGroup>
 
-              <Header as='h3' dividing>
-                Activity
-              </Header>
-              {this.renderActivitySection()}
-            </Grid.Column>
-          </Grid>
-        </div>
-      </Layout>
+          <Header as='h3' dividing>
+            Activity
+          </Header>
+          {this.renderActivitySection()}
+        </Grid.Column>
+      </Grid>
     );
   }
 }

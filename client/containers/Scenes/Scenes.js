@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import './Scenes.scss'
 
 import {Button, Grid, Header, Icon} from 'semantic-ui-react'
-import Layout from "../../components/Layout/index";
 import {deleteResource, fetchResource} from "../../api/actions";
 import {showModal} from "../Modals/actions";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -50,51 +49,47 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
     const {byId: scenesById = {}, allIds: scenesAllIds = []} = this.props.scenes
     const {charactersById, dispatch} = this.props
     return (
-      <Layout thisPage={this.props.route.name}>
         <div className="Scenes">
-          <Grid className="content-container">
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h2" dividing>
-                  Scenes
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: null}))} primary>
-                  <Icon name='add user'/>
-                  Add Scene
-                </Button>
-                <CardGroup itemsPerRow={4} resource='characters'>
-                  {scenesAllIds.map((sceneId, i) => {
-                    let scene = scenesById[sceneId]
-                    const sceneImageUrl = scene.display_image ? scene.display_image.url : null
-                    return (
-                      <DisplayCard
-                        cardImage={sceneImageUrl}
-                        showEditBar
-                        header={scene.title}
-                        meta={scene.setting}
-                        frontDescription={scene.description}
-                        extra={this.generateCardExtra(scene)}
-                        onEditCallback={(event) => this.handleEditScene(event, sceneId)}
-                        onDeleteCallback={(event) => this.handleDestroyScene(event, sceneId)}
-                        label='Scene'
-                        key={`index-${i}`}
-                        index={scene.order_index}
-                        link={`scenes/${sceneId}`}
-                        flipped={false}
-                      />
-                    )
+          <Grid.Row>
+            <Grid.Column>
+              <Header as="h2" dividing>
+                Scenes
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Button onClick={() => dispatch(showModal('RESOURCE_MODAL', {resourceName: 'scenes', resourceId: null}))} primary>
+                <Icon name='add user'/>
+                Add Scene
+              </Button>
+              <CardGroup itemsPerRow={4} resource='characters'>
+                {scenesAllIds.map((sceneId, i) => {
+                  let scene = scenesById[sceneId]
+                  const sceneImageUrl = scene.display_image ? scene.display_image.url : null
+                  return (
+                    <DisplayCard
+                      cardImage={sceneImageUrl}
+                      showEditBar
+                      header={scene.title}
+                      meta={scene.setting}
+                      frontDescription={scene.description}
+                      extra={this.generateCardExtra(scene)}
+                      onEditCallback={(event) => this.handleEditScene(event, sceneId)}
+                      onDeleteCallback={(event) => this.handleDestroyScene(event, sceneId)}
+                      label='Scene'
+                      key={`index-${i}`}
+                      index={scene.order_index}
+                      link={`scenes/${sceneId}`}
+                      flipped={false}
+                    />
+                  )
 
-                  })}
-                </CardGroup>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+                })}
+              </CardGroup>
+            </Grid.Column>
+          </Grid.Row>
         </div>
-      </Layout>
     );
   }
 }

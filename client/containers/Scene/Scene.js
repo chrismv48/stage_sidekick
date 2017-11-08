@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import './Scene.scss'
 import {Dimmer, Grid, Header, Icon, Image, Loader, Tab,} from 'semantic-ui-react'
-import Layout from "../../components/Layout/index";
 import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -58,77 +57,71 @@ export class Scene extends React.Component {
     }
 
     return (
-      <Layout thisPage={this.props.route.name}>
-        <div className="Scene">
-          <Grid className="content-container">
-            <Grid.Column>
-              <div className="header-container">
-                <div className={"header"}>
-                  <Header as="h1">
-                <Image shape='circular' src={_.get(scene, 'display_image.url')}/>
-                {' '}{scene.title}
-                <Header.Subheader>
-                  {scene.setting}, {scene.length_in_minutes}m runtime
-                </Header.Subheader>
-                  </Header>
-                </div>
-                <div className="card-edit-icons">
-                  <Icon name="edit"
-                        color="blue"
-                        size='large'
-                        onClick={() => dispatch(showModal('RESOURCE_MODAL', {
-                          resourceName: 'scenes',
-                          resourceId: scene.id,
-                        }))}
-                        className='edit-icon'
-                  />
-                  <Icon name="trash"
-                        color="red"
-                        size='large'
-                        onClick={() => dispatch(deleteResource('scene', `scenes/${scene.id}`))}
-                        className='edit-icon'
-                  />
-                </div>
-              </div>
-              <Header as='h3' dividing>
-                Description
-              </Header>
-              <p>
-                {scene.description}
-              </p>
-              <Header as='h3' dividing>
-                Characters
-              </Header>
-
-              <CardGroup resource={'scenes'}>
-                {scene.character_ids.map((characterId, i) => {
-                    const character = charactersById[characterId]
-                    const characterRole = rolesById[character.role_ids[0]]
-                    const characterImageUrl = character.display_image ? character.display_image.url : null
-                    return (
-                      <DisplayCard
-                        cardImage={characterImageUrl}
-                        header={character.name}
-                        meta={`Played by ${characterRole.first_name} ${characterRole.last_name}`}
-                        frontDescription={character.description}
-                        label='Character'
-                        key={`index-${i}`}
-                        sortable={false}
-                        index={i}
-                      />
-                    )
-                  },
-                )}
-              </CardGroup>
-
-              <Header as='h3' dividing>
-                Activity
-              </Header>
-              {this.renderActivitySection()}
-            </Grid.Column>
-          </Grid>
+      <Grid.Column className="Scene">
+        <div className="header-container">
+          <div className={"header"}>
+            <Header as="h1">
+          <Image shape='circular' src={_.get(scene, 'display_image.url')}/>
+          {' '}{scene.title}
+          <Header.Subheader>
+            {scene.setting}, {scene.length_in_minutes}m runtime
+          </Header.Subheader>
+            </Header>
+          </div>
+          <div className="card-edit-icons">
+            <Icon name="edit"
+                  color="blue"
+                  size='large'
+                  onClick={() => dispatch(showModal('RESOURCE_MODAL', {
+                    resourceName: 'scenes',
+                    resourceId: scene.id,
+                  }))}
+                  className='edit-icon'
+            />
+            <Icon name="trash"
+                  color="red"
+                  size='large'
+                  onClick={() => dispatch(deleteResource('scene', `scenes/${scene.id}`))}
+                  className='edit-icon'
+            />
+          </div>
         </div>
-      </Layout>
+        <Header as='h3' dividing>
+          Description
+        </Header>
+        <p>
+          {scene.description}
+        </p>
+        <Header as='h3' dividing>
+          Characters
+        </Header>
+
+        <CardGroup resource={'scenes'}>
+          {scene.character_ids.map((characterId, i) => {
+              const character = charactersById[characterId]
+              const characterRole = rolesById[character.role_ids[0]]
+              const characterImageUrl = character.display_image ? character.display_image.url : null
+              return (
+                <DisplayCard
+                  cardImage={characterImageUrl}
+                  header={character.name}
+                  meta={`Played by ${characterRole.first_name} ${characterRole.last_name}`}
+                  frontDescription={character.description}
+                  label='Character'
+                  key={`index-${i}`}
+                  sortable={false}
+                  index={i}
+                />
+              )
+            },
+          )}
+        </CardGroup>
+
+        <Header as='h3' dividing>
+          Activity
+        </Header>
+        {this.renderActivitySection()}
+      </Grid.Column>
     );
   }
 }

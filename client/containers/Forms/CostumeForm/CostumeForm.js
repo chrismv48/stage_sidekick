@@ -42,6 +42,7 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
 
   groupCharacterScenes() {
     const {costume} = this.props
+    if (_.isEmpty(costume)) return {}
     let groupedCharacterScenes = {}
     for (const costumeCharacterScene of costume.costumes_characters_scenes) {
       const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene

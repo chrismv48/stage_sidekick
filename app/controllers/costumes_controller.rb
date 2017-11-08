@@ -20,7 +20,7 @@ class CostumesController < ApplicationController
     @costume = Costume.new(costume_params)
 
     if @costume.save
-      unless costume_params[:grouped_costumes_characters_scenes].nil?
+      unless params[:grouped_costumes_characters_scenes].nil?
         costumes_characters_scenes = parse_character_scenes(params[:grouped_costumes_characters_scenes])
         @costume.costumes_characters_scenes.create(costumes_characters_scenes)
         render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume
@@ -63,7 +63,7 @@ class CostumesController < ApplicationController
         :description,
         :production_id
       )
-      costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
+      # costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
       return costume_params
     end
 

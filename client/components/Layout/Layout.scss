@@ -1,5 +1,10 @@
-$sidebar-width: 100px;
-$top-nav-height: 45px;
+$sidebar-width-value: 100;
+$sidebar-width: $sidebar-width-value + 0px;
+$top-nav-height-value: 45;
+$top-nav-height: $top-nav-height-value + 0px;
+
+$content-horizontal-margin: 25px;
+$content-vertical-margin: 20px;
 
 .sidebar-fixed {
   position: fixed;
@@ -17,11 +22,23 @@ $top-nav-height: 45px;
 }
 
 .content-container {
-  margin-left: $sidebar-width;
-  margin-top: $top-nav-height;
+  margin-top: $top-nav-height-value + $content-vertical-margin;
+  margin-bottom: $content-vertical-margin;
+  margin-left: $sidebar-width-value + $content-horizontal-margin;
+  margin-right: $content-horizontal-margin;
   width: auto;
   position: relative;
 }
+
+//#grid-container {
+//  margin: 0
+//}
+//
+//#grid-container > div:first-child {
+//  margin: 0;
+//  padding: 0;
+//  width: 100%;
+//}
 
 .logo {
   background-color: grey;

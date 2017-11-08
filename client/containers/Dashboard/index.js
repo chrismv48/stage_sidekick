@@ -9,10 +9,9 @@
  * the linting exception.
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './Dashboard.scss'
-import {Grid, Container} from 'semantic-ui-react'
-import Layout from "../../components/Layout/index";
+import {Container, Grid} from 'semantic-ui-react'
 
 export default class Dashboard extends Component { //React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -35,15 +34,13 @@ export default class Dashboard extends Component { //React.PureComponent { // es
 
   render() {
     return (
-      <Layout>
-          <Grid id="content-grid">
-            <Grid.Row>
-              <Container fluid>
-                {this.state.greeting}
-              </Container>
-            </Grid.Row>
-          </Grid>
-      </Layout>
+      <Grid className="Dashboard">
+        <Grid.Row>
+          <Container fluid>
+            {this.state.greeting}
+          </Container>
+        </Grid.Row>
+      </Grid>
     );
   }
 }
