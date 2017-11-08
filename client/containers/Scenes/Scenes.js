@@ -49,7 +49,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
     const {byId: scenesById = {}, allIds: scenesAllIds = []} = this.props.scenes
     const {charactersById, dispatch} = this.props
     return (
-        <div className="Scenes">
+        <Grid className="Scenes">
           <Grid.Row>
             <Grid.Column>
               <Header as="h2" dividing>
@@ -63,7 +63,11 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                 <Icon name='add user'/>
                 Add Scene
               </Button>
-              <CardGroup itemsPerRow={4} resource='characters'>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <CardGroup sortable resource='scenes'>
                 {scenesAllIds.map((sceneId, i) => {
                   let scene = scenesById[sceneId]
                   const sceneImageUrl = scene.display_image ? scene.display_image.url : null
@@ -72,7 +76,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
                       cardImage={sceneImageUrl}
                       showEditBar
                       header={scene.title}
-                      meta={scene.setting}
+                      meta={`${scene.setting}, ${scene.length_in_minutes}m runtime`}
                       frontDescription={scene.description}
                       extra={this.generateCardExtra(scene)}
                       onEditCallback={(event) => this.handleEditScene(event, sceneId)}
@@ -89,7 +93,7 @@ class Scenes extends React.Component { // eslint-disable-line react/prefer-state
               </CardGroup>
             </Grid.Column>
           </Grid.Row>
-        </div>
+        </Grid>
     );
   }
 }

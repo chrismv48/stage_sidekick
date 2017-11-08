@@ -5,7 +5,7 @@ class ScenesController < ApplicationController
 
   # GET /scenes
   def index
-    @scenes = Scene.all
+    @scenes = Scene.order(:order_index)
 
     render json: build_json_response(@scenes,  ASSOCIATIONS_TO_INCLUDE)
   end
@@ -17,6 +17,16 @@ class ScenesController < ApplicationController
 
   # POST /scenes
   def create
+
+    if params[:order_index_swap]
+      scenes = Scene.where(id: params[:order_index_swap])
+      scenes.each_with_index do |scene|
+        scene.order_index = params[:order_index_swap].index(scene.id)
+        scene.save
+      end
+      return render json: build_json_response(scenes, ASSOCIATIONS_TO_INCLUDE)
+    end
+
     @scene = Scene.new(scene_params)
 
     if @scene.save

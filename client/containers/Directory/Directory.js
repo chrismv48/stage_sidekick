@@ -12,12 +12,10 @@ const faker = require('faker');
   const {
     dispatch,
     roles = {},
-    users: {byId: usersById} = {}
   } = state.resources
   return {
     dispatch,
     roles,
-    usersById
   }
 })
 
@@ -29,7 +27,7 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
 
   render() {
     const {byId: rolesById = {}, allIds: rolesAllIds = []} = this.props.roles
-    const {usersById = {}, dispatch} = this.props
+    const {dispatch} = this.props
     return (
         <Grid className="Directory">
           <Grid.Row>
@@ -75,13 +73,13 @@ export class Directory extends React.Component { // eslint-disable-line react/pr
 
                 <Table.Body>
                   {rolesAllIds.map((roleId, i) => {
-                      const role = rolesById[roleId]
-                      const user = usersById[role.user_id] || {}
+                    const role = rolesById[roleId]
+                    const user = role.user || {}
                       return (
                         <Table.Row key={i}>
                           <Table.Cell>
-                            <Header as='h4' image>
-                              <Image src={role.avatar.url}/>
+                            <Header as='h4'>
+                              <Image id='avatar' avatar src={role.display_image.url}/>
                               <Header.Content>
                                 {`${role.first_name} ${role.last_name}`}
                                 <Header.Subheader>{role.title}</Header.Subheader>

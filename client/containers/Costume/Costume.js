@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import './Costume.scss'
-import {Dimmer, Grid, Header, Image, Item, Label, List, Loader, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, Item, Label, List, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -71,9 +71,11 @@ export class Costume extends React.Component {
     const { costume, charactersById, rolesById, scenesById, costumeItemsAllIds, costumeItemsById, dispatch } = this.props
     if (!charactersById || !rolesById || !scenesById || !costume || !costumeItemsById) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <Segment basic>
+          <Dimmer active={true} inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
+        </Segment>
       )
     }
     const groupedCharacterScenes = this.groupCharacterScenes()
@@ -141,10 +143,11 @@ export class Costume extends React.Component {
                           {characterScenes.map(characterSceneId => {
                             const sceneId = _.find(costume.characters_scenes, {'id': characterSceneId}).scene_id
                             const scene = scenesById[sceneId]
+                            const sceneImageUrl = scene.display_image ? scene.display_image.url : null
                             return (
                               <List key={characterSceneId}>
                                 <List.Item>
-                                  <Image avatar src={scene.display_image.url}/>
+                                  <Image avatar src={sceneImageUrl}/>
                                   <List.Content>
                                     <List.Header as='a'>{scene.title}</List.Header>
                                     <List.Description>{scene.description}</List.Description>

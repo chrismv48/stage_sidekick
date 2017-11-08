@@ -39,10 +39,31 @@ export class Costumes extends React.Component {
     this.props.dispatch(showModal('RESOURCE_MODAL', {resourceName: 'costumes', resourceId: costumeId}))
   }
 
-
-  handleDestroyCostume = (costumeId) => {
+  handleDestroyCostume = (event, costumeId) => {
+    event.preventDefault()
     this.props.dispatch(deleteResource('costume', `costumes/${costumeId}`))
     this.props.dispatch(fetchResource('costumes', 'costumes'))
+  }
+
+  generateCardExtra = (costume) => {
+    const num_scenes = costume.scene_ids.length
+    const num_characters = costume.character_ids.length
+    let sentence = ''
+    if (num_scenes > 0 && num_characters > 0) {
+      sentence = `Worn in ${num_scenes} ${num_scenes > 1 ? 'scenes' : 'scene'} by ${num_characters} ${num_characters > 1 ? 'characters' : 'character'}`
+    }
+    else if (num_scenes > 0) {
+      sentence = `Worn in ${num_scenes} ${num_scenes > 1 ? 'scenes' : 'scene'}`
+    }
+    else if (num_characters > 0) {
+      sentence = `Worn by ${num_characters} ${num_characters > 1 ? 'characters' : 'character'}`
+    }
+    else {
+      sentence = ''
+    }
+    return (
+      <p style={{textAlign: 'center'}}>{sentence}</p>
+    )
   }
 
   render() {
@@ -65,13 +86,15 @@ export class Costumes extends React.Component {
                 <Icon name='add user'/>
                 Add Costume
               </Button>
-              <Popup
-                trigger={<a>{cardsPerRow} per page</a>}
-                content={<Input type="range" min="1" max="8" step="1" value={cardsPerRow}
-                                onChange={(e) => this.setState({cardsPerRow: e.target.value})}/>}
-                on='click'
-                position='top right'
-              />
+              <div style={{display: 'none'}}>
+                <Popup
+                  trigger={<a>{cardsPerRow} per page</a>}
+                  content={<Input type="range" min="1" max="8" step="1" value={cardsPerRow}
+                                  onChange={(e) => this.setState({cardsPerRow: e.target.value})}/>}
+                  on='click'
+                  position='top right'
+                />
+              </div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -80,7 +103,7 @@ export class Costumes extends React.Component {
                 <Dimmer active={loading} inverted>
                   <Loader inverted>Loading</Loader>
                 </Dimmer>
-                <CardGroup itemsPerRow={cardsPerRow} resource={'costumes'}>
+                <CardGroup resource={'costumes'}>
                   {costumesAllIds.map((costumeId, i) => {
                     let costume = costumesById[costumeId]
                     const costumeImageUrl = costume.display_image ? costume.display_image.url : null
@@ -89,9 +112,8 @@ export class Costumes extends React.Component {
                           cardImage={costumeImageUrl}
                           showEditBar
                           header={costume.title}
-                          meta='Wut should go here?'
                           frontDescription={costume.description}
-                          extra={'idk yet'}
+                          extra={this.generateCardExtra(costume)}
                           onEditCallback={(event) => this.handleEditCostume(event, costumeId)}
                           onDeleteCallback={(event) => this.handleDestroyCostume(event, costumeId)}
                           label='Costume'

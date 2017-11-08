@@ -23,8 +23,8 @@ class CostumesController < ApplicationController
       unless params[:grouped_costumes_characters_scenes].nil?
         costumes_characters_scenes = parse_character_scenes(params[:grouped_costumes_characters_scenes])
         @costume.costumes_characters_scenes.create(costumes_characters_scenes)
-        render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume
       end
+      render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume
     else
       render json: @costume.errors, status: :unprocessable_entity
     end
@@ -46,7 +46,11 @@ class CostumesController < ApplicationController
 
   # DELETE /costumes/1
   def destroy
-    @costume.destroy
+    if @costume.destroy
+      render json: {success: true}
+    else
+      render json: @costume.errors, status: :unprocessable_entity
+    end
   end
 
   private

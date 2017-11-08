@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import './Scene.scss'
-import {Dimmer, Grid, Header, Icon, Image, Loader, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Icon, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {deleteResource, fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -50,9 +50,11 @@ export class Scene extends React.Component {
     const {scene, rolesById, charactersById, dispatch} = this.props
     if (!charactersById || !rolesById || !scene) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <Segment basic>
+          <Dimmer active={true} inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
+        </Segment>
       )
     }
 
@@ -68,7 +70,7 @@ export class Scene extends React.Component {
           </Header.Subheader>
             </Header>
           </div>
-          <div className="card-edit-icons">
+          <div className="card-edit-icons" style={{display: 'none'}}>
             <Icon name="edit"
                   color="blue"
                   size='large'

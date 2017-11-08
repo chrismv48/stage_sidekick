@@ -23,3 +23,7 @@ User Stories
 - Create new account (designer)
 - Create new account (theatre)
 - Create new show (designer / theatre)
+
+- deleting an item requires a page refresh
+
+

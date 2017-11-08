@@ -21,7 +21,7 @@
 class Scene < ApplicationRecord
   mount_base64_uploader :display_image, ImageUploader, file_name: -> (scene) { "#{scene.title}_#{Time.zone.now.to_i}" }
 
-  has_many :characters_scenes
+  has_many :characters_scenes, dependent: :destroy
   has_many :characters, through: :characters_scenes
 
 end

@@ -58,6 +58,7 @@ function apiReducer(state = {}, action) {
     case ACTION_RESOURCE_COMPLETED('post', resource):
     case ACTION_RESOURCE_COMPLETED('delete', resource):
       // TODO: right now this deletes staging entirely. If we ever want to stage multiple objects, we'll need to refine this.
+
       return _.omit([`${resource}.success`, `${resource}.staging`], state)
     case `UPDATE_${resource.toUpperCase()}_FORM_FIELDS`:
       let {resourceId, field, value} = action

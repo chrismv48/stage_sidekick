@@ -40,6 +40,7 @@ export class Characters extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchResource('characters', 'characters'))
     this.props.dispatch(fetchResource('scenes', 'scenes'))
+    this.props.dispatch(fetchResource('roles', 'roles'))
   }
 
   handleDestroyCharacter = (event, characterId) => {
@@ -139,11 +140,11 @@ export class Characters extends React.Component {
               <Dimmer active={loading} inverted>
                 <Loader inverted>Loading</Loader>
               </Dimmer>
-              <CardGroup sortable={true} itemsPerRow={4} resource='characters'>
+              <CardGroup sortable resource='characters'>
                 {charactersAllIds.map((characterId, i) => {
                   let character = charactersById[characterId]
                   const characterImageUrl = character.display_image ? character.display_image.url : null
-                  const characterRole = _.isEmpty(character.roles) ? null : rolesById[character.roles[0]]
+                  const characterRole = _.isEmpty(character.role_ids) ? null : rolesById[character.role_ids[0]]
                   return (
                     <DisplayCard
                       cardImage={characterImageUrl}

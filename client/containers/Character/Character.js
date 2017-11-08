@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import './Character.scss'
-import {Dimmer, Grid, Header, Image, Loader, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {fetchResource} from "../../api/actions"
 import * as _ from "lodash";
 import CardGroup from "../../components/CardGroup/CardGroup";
@@ -51,9 +51,11 @@ export class Character extends React.Component {
     const {character, charactersById, rolesById, scenesById} = this.props
     if (!charactersById || !rolesById || !scenesById) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <Segment basic>
+          <Dimmer active={true} inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
+        </Segment>
       )
     }
     const characterRole = _.isEmpty(character.role_ids) ? {} : rolesById[character.role_ids[0]]
