@@ -18,7 +18,8 @@ const relationshipIdToLabel = {
   'scene_ids': 'scenes',
   'role_ids': 'roles',
   'character_ids': 'characters',
-  'costume_ids': 'costumes'
+  'costume_ids': 'costumes',
+  'costume_id': 'costume',
 }
 
 const sceneFormFields = [
@@ -66,6 +67,7 @@ const itemTypes = [
   'Shoes',
   'Hat',
   'Belt',
+  'Dress'
 ]
 
 const characterFormFields = [
@@ -120,7 +122,8 @@ const costumeItemFormFields = [
     },
   },
   {
-    fieldName: 'costume',
+    fieldName: 'costume_id',
+    label: 'Costume',
     inputType: 'dropdown',
     dropdownText: 'title',
   },
@@ -261,7 +264,7 @@ export class ResourceForm extends React.Component { // eslint-disable-line react
           const relationshipLabel = relationshipIdToLabel[fieldName] || fieldName
           dropdownOptions = {
             multiple,
-            options: this.generateRelationshipOptions(relationshipLabel, dropdownText),
+            options: this.generateRelationshipOptions(pluralizeResource(relationshipLabel), dropdownText),
             value
           }
         }
