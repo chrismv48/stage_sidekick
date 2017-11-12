@@ -12,6 +12,7 @@ import ImageUpload from "components/ImageUpload/ImageUpload";
   const {
     scenes: {byId: scenesById = {}, allIds: scenesAllIds = []} = {},
     characters: {byId: charactersById = {}, allIds: charactersAllIds = []} = {},
+    costume_items: {byId: costumeItemsById = {}, allIds: costumeItemsAllIds = []} = {},
     costumes = {},
   } = state.resources
 
@@ -28,16 +29,26 @@ import ImageUpload from "components/ImageUpload/ImageUpload";
     scenesAllIds,
     charactersById,
     charactersAllIds,
+    costumeItemsById,
+    costumeItemsAllIds,
   }
 })
 
 export class CostumeForm extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
+  state = {loading: true}
+
   componentDidMount() {
     const {costumeId, dispatch} = this.props
-    if (costumeId) dispatch(fetchResource('costumes', `costumes/${costumeId}`))
-    dispatch(fetchResource('scenes', 'scenes'))
-    dispatch(fetchResource('characters', 'characters'))
+    this.setState({loading: true})
+    Promise.all([
+      () => {
+        if (costumeId) dispatch(fetchResource('costumes', `costumes/${costumeId}`))
+      },
+      dispatch(fetchResource('scenes', 'scenes')),
+      dispatch(fetchResource('characters', 'characters')),
+      dispatch(fetchResource('costume_items', 'costume_items')),
+    ]).then(this.setState({loading: false}))
   }
 
   groupCharacterScenes() {
@@ -78,9 +89,22 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
     })
   }
 
+  generateCostumeItemOptions() {
+    const {costumeItemsAllIds, costumeItemsById} = this.props
+    return costumeItemsAllIds.map(costumeItemId => {
+      const costumeItem = costumeItemsById[costumeItemId]
+      return {
+        key: costumeItem.id,
+        text: costumeItem.title,
+        value: costumeItem.id,
+      }
+    })
+  }
+
   generateCharacterOptions = (characterId) => {
     const grouped_costumes_characters_scenes = this.getGroupedCharacterScenes()
     const {charactersById, charactersAllIds} = this.props
+    if (_.isEmpty(charactersAllIds)) return
     // I guess JavaScript converts all keys into strings?
     const groupedCostumesCharactersScenesIds = Object.keys(grouped_costumes_characters_scenes).map(id => parseInt(id))
     let characterOptions = _.pullAll(charactersAllIds, groupedCostumesCharactersScenesIds)
@@ -121,15 +145,20 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
   }
 
   render() {
-    const {costumeStaging = {}, costume, dispatch, loading, costumeId} = this.props
+
+    if (this.state.loading) {
+      return (
+        <Dimmer active={true} inverted>
+          <Loader inverted>Loading</Loader>
+        </Dimmer>
+      )
+    }
+    const {costumeStaging = {}, costume, dispatch, costumeId} = this.props
     const costumeImageUrl = costumeStaging['display_image'] || _.get(costume, 'display_image.url')
     const groupedCharacterScenes = this.getGroupedCharacterScenes()
 
     return (
       <Segment basic>
-        <Dimmer active={loading} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
         <Form>
           <ImageUpload currentImage={costumeImageUrl}
                        handleImageChange={(imageUrl) => dispatch(updateResourceFields('costumes', 'display_image', imageUrl, costumeId))}/>
@@ -144,6 +173,13 @@ export class CostumeForm extends React.Component { // eslint-disable-line react/
             <textarea
               value={_.isUndefined(costumeStaging['description']) ? costume.description : costumeStaging['description'] || ""}
               onChange={(e) => dispatch(updateResourceFields('costumes', 'description', e.target.value, costumeId))}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Costume items</label>
+            <Dropdown fluid multiple selection
+                      options={this.generateCostumeItemOptions() || []}
+                      value={costumeStaging["costume_item_ids"] || costume["costume_item_ids"] || []}
             />
           </Form.Field>
 
