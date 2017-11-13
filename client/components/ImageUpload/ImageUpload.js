@@ -11,10 +11,6 @@ class ImageUpload extends React.Component { // eslint-disable-line react/prefer-
 
     reader.onloadend = () => {
       handleImageChange(reader.result)
-      // this.setState({
-      //   file: file,
-      //   imagePreviewUrl: reader.result
-      // });
     }
 
     reader.readAsDataURL(file)
@@ -26,7 +22,7 @@ class ImageUpload extends React.Component { // eslint-disable-line react/prefer-
     if (currentImage) {
       imagePreview = (<Image src={currentImage} size='small'/>);
     } else {
-      imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
+      imagePreview = (<div>Please select an image to preview</div>);
     }
     return (
       <Form.Field>
