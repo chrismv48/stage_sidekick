@@ -20,7 +20,7 @@ class ImageUpload extends React.Component { // eslint-disable-line react/prefer-
     let {currentImage} = this.props;
     let imagePreview = null;
     if (currentImage) {
-      imagePreview = (<Image src={currentImage} size='small'/>);
+      imagePreview = (<Image src={currentImage} style={{maxWidth: '400px'}} />);
     } else {
       imagePreview = (<div>Please select an image to preview</div>);
     }
