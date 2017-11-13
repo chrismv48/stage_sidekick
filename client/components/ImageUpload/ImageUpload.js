@@ -1,6 +1,5 @@
 import React from 'react';
-import {Image, Input, Segment} from "semantic-ui-react";
-import './ImageUpload.scss'
+import {Button, Form, Icon, Image, Input, Segment} from "semantic-ui-react";
 
 class ImageUpload extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -25,19 +24,29 @@ class ImageUpload extends React.Component { // eslint-disable-line react/prefer-
     let {currentImage} = this.props;
     let imagePreview = null;
     if (currentImage) {
-      imagePreview = (<Image src={currentImage}/>);
+      imagePreview = (<Image src={currentImage} size='small'/>);
     } else {
       imagePreview = (<div className="previewText">Please select an Image for Preview</div>);
     }
     return (
-      <Segment>
-        <Input
-          type="file"
-          onChange={(e) => this.processImageChange(e)}/>
-        <div className="imgPreview">
+      <Form.Field>
+        <label>Image</label>
+        <Segment>
+          <Button as="label" htmlFor="file">
+            <Icon name='upload'/>
+            Upload Image
+            <Input
+              type="file"
+              id="file"
+              onChange={(e) => this.processImageChange(e)}
+              style={{display: 'none'}}
+            />
+          </Button>
+          <Segment basic style={{paddingLeft: 0}}>
           {imagePreview}
-        </div>
-      </Segment>
+          </Segment>
+        </Segment>
+      </Form.Field>
     );
   }
 }
