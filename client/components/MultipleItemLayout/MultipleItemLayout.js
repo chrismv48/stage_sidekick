@@ -33,7 +33,7 @@ class MultipleItemLayout extends React.Component { // eslint-disable-line react/
     const ResourceCardGroup = RESOURCE_CARD_GROUPS[resource]
     return (
       <div>
-        <Button onClick={() => this.handleAddResoureClick} primary>
+        <Button onClick={this.handleAddResoureClick} primary>
           <Icon name='add user'/>
           Add {resourceLabel}
         </Button>
