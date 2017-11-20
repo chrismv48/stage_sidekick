@@ -13,7 +13,7 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
       <div>
         <div className="sidebar-fixed">
           <div className="logo">
-            <p style={{textAlign: 'center'}}>LOGO</p>
+            <p style={{textAlign: 'center'}}>SK</p>
           </div>
           <Divider/>
           <div className="sidebar-menu">
@@ -34,6 +34,11 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
                 Scenes
               </Menu.Item>
 
+              <Menu.Item as={Link} to='/costumes' id="sidebar-button" name='costumes' active={thisPage === 'costumes'}>
+                <Icon name='shopping bag'/>
+                Costumes
+              </Menu.Item>
+
               <Menu.Item id="sidebar-button" name='budget' active={thisPage === 'budget'}>
                 <Icon name='dollar'/>
                 Budget
@@ -42,11 +47,6 @@ class Layout extends React.Component { // eslint-disable-line react/prefer-state
               <Menu.Item id="sidebar-button" name='gallery' active={thisPage === 'gallery'}>
                 <Icon name='camera retro'/>
                 Gallery
-              </Menu.Item>
-
-              <Menu.Item as={Link} to='/costumes' id="sidebar-button" name='costumes' active={thisPage === 'costumes'}>
-                <Icon name='shopping bag'/>
-                Costumes
               </Menu.Item>
 
             </Menu>

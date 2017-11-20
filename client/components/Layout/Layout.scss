@@ -10,7 +10,7 @@ $content-vertical-margin: 20px;
   position: fixed;
   width: $sidebar-width;
   height: 100%;
-  background-color: #595961;
+  background-color: #4d4563;
   top: 0;
   left: 0;
   z-index: 10;
@@ -18,7 +18,7 @@ $content-vertical-margin: 20px;
 }
 
 #sidebar-menu {
-  background-color: #595961;
+  background-color: #4d4563;
 }
 
 .content-container {
@@ -41,7 +41,7 @@ $content-vertical-margin: 20px;
 //}
 
 .logo {
-  background-color: grey;
+  background-color: #4d4563;
   border-radius: 3px;
   margin: 10px;
 }

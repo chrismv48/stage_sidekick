@@ -67,7 +67,7 @@ class CostumesController < ApplicationController
         :description,
         :production_id
       )
-      # costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
+      costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
       return costume_params
     end
 
