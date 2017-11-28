@@ -8,8 +8,8 @@
   },
   "proxy": "http://localhost:3005/",
   "engines": {
-    "npm": ">=3",
-    "node": ">=5"
+    "npm": "4.2",
+    "node": "6.10.2"
   },
   "author": "Chris Armstrong",
   "scripts": {
