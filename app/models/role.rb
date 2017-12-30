@@ -9,7 +9,6 @@
 #  title         :string
 #  department    :string
 #  status        :string
-#  role_type     :string
 #  start_date    :date
 #  end_date      :date
 #  created_at    :datetime         not null
@@ -18,6 +17,7 @@
 #  last_name     :string
 #  avatar        :string
 #  display_image :string
+#  type          :string
 #
 # Indexes
 #
@@ -33,5 +33,7 @@ class Role < ApplicationRecord
   belongs_to :user
   belongs_to :production
   belongs_to :venue
+
+  scope :actor, -> { where(title: 'Actor') }
 
 end

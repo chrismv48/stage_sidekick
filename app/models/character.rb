@@ -22,8 +22,8 @@ class Character < ApplicationRecord
   has_many :characters_scenes, dependent: :destroy
   has_many :scenes, through: :characters_scenes
 
-  # has_many :characters_costumes, dependent: :destroy
-  # has_many :costumes, through: :characters_costumes
+  has_many :characters_costumes, dependent: :destroy
+  has_many :costumes, through: :characters_costumes
 
   has_many :characters_roles, dependent: :destroy
   has_many :roles, through: :characters_roles

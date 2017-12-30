@@ -20,10 +20,6 @@ class CostumesController < ApplicationController
     @costume = Costume.new(costume_params)
 
     if @costume.save
-      unless params[:grouped_costumes_characters_scenes].nil?
-        costumes_characters_scenes = parse_character_scenes(params[:grouped_costumes_characters_scenes])
-        @costume.costumes_characters_scenes.create(costumes_characters_scenes)
-      end
       render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume
     else
       render json: @costume.errors, status: :unprocessable_entity
@@ -32,12 +28,7 @@ class CostumesController < ApplicationController
 
   # PATCH/PUT /costumes/1
   def update
-    if @costume.update(costume_params.except(:grouped_costumes_characters_scenes))
-      unless costume_params[:grouped_costumes_characters_scenes].nil?
-        costumes_characters_scenes = parse_character_scenes(params[:grouped_costumes_characters_scenes])
-        @costume.costumes_characters_scenes.destroy_all
-        @costume.costumes_characters_scenes.create(costumes_characters_scenes)
-      end
+    if @costume.update(costume_params)
       render json: build_json_response(@costume, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @costume.errors, status: :unprocessable_entity
@@ -61,36 +52,18 @@ class CostumesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def costume_params
-      costume_params = params.permit(
+      params.permit!
+      costume_params = params.slice(
         :id,
         :title,
         :description,
-        :production_id
+        :production_id,
+        # :display_image,
+        :costume_item_ids
       )
-      costume_params[:grouped_costumes_characters_scenes] = params[:grouped_costumes_characters_scenes]
+      if params[:costumes_characters_scenes]
+        costume_params[:costumes_characters_scenes] = params[:costumes_characters_scenes].map {|ccs| CostumesCharactersScene.new(ccs)}
+      end
       return costume_params
     end
-
-  def parse_character_scenes(grouped_costumes_characters_scenes)
-    costumes_characters_scenes = []
-    grouped_costumes_characters_scenes.each do |character_id, character_scenes|
-      if character_scenes.any?
-        character_scenes.each do |character_scene_id|
-          costumes_characters_scene = {
-            costume_id: costume_params[:id],
-            character_id: character_id,
-            characters_scene_id: character_scene_id
-          }
-          costumes_characters_scenes.push(costumes_characters_scene)
-        end
-      else
-        characters_costumes_attribute = {
-          costume_id: costume_params[:id],
-          character_id: character_id
-        }
-        costumes_characters_scenes.push(characters_costumes_attribute)
-      end
-    end
-    return costumes_characters_scenes
-  end
 end

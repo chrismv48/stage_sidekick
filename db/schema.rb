@@ -10,10 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170905233233) do
+ActiveRecord::Schema.define(version: 20171226213930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actor_measurements", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "gender"
+    t.float    "height"
+    t.float    "weight"
+    t.string   "ethnicity"
+    t.string   "eye_color"
+    t.string   "hair_color"
+    t.float    "chest"
+    t.float    "waist"
+    t.float    "hips"
+    t.float    "neck"
+    t.float    "inseam"
+    t.float    "sleeve"
+    t.float    "shoe_size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_actor_measurements_on_user_id", using: :btree
+  end
 
   create_table "characters", force: :cascade do |t|
     t.string   "name",          limit: 50,   null: false
@@ -105,7 +125,6 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.string   "title"
     t.string   "department"
     t.string   "status"
-    t.string   "role_type"
     t.date     "start_date"
     t.date     "end_date"
     t.datetime "created_at",    null: false
@@ -114,6 +133,7 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.string   "last_name"
     t.string   "avatar"
     t.string   "display_image"
+    t.string   "type"
     t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
     t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
     t.index ["venue_id"], name: "index_roles_on_venue_id", using: :btree

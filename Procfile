@@ -1,2 +1,1 @@
-web: npm run start
-api: bundle exec rails s -p 3005
+web: foreman start -f StartProcfile

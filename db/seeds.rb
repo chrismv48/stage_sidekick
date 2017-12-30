@@ -18,9 +18,9 @@ production = Production.create(
   start_date: Time.zone.today + 3.months
 )
 
-job_titles = ['Producer', 'Director', 'Administration', 'Actor', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
+job_titles = ['Producer', 'Director', 'Administration', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
 scene_settings = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Beach', 'Indoors']
-departments = ['Production', 'Lighting', 'Costumes', 'Acting', 'Administration']
+departments = ['Production', 'Lighting', 'Costumes', 'Administration']
 statuses = ['Full-time', 'Contractor', 'Part-time']
 costume_item_types = ['Jeans', 'Shirt', 'Skirt', 'Dress', 'Shoes', 'Belt', 'Hat']
 
@@ -33,7 +33,7 @@ users = User.create(20.times.collect {|i| {
   default_title: job_titles.sample
 }})
 
-roles = Role.create(users.map {|user| {
+roles = Role.create(users[0..14].map {|user| {
   user_id: user.id,
   first_name: user.first_name,
   last_name: user.last_name,
@@ -41,10 +41,25 @@ roles = Role.create(users.map {|user| {
   venue_id: venue.id,
   title: user.default_title,
   department: departments.sample,
-  role_type: statuses.sample,
+  status: statuses.sample,
   start_date: Faker::Date.between(2.years.ago, Date.today),
   remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
+
+actors = Actor.create(users[15..-1].map {|user| {
+  user_id: user.id,
+  first_name: user.first_name,
+  last_name: user.last_name,
+  production_id: production.id,
+  venue_id: venue.id,
+  title: 'Actor',
+  department: 'Acting',
+  status: 'Contractor',
+  start_date: Faker::Date.between(2.years.ago, Date.today),
+  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
+}})
+
+
 
 # characters = Character.create(10.times.collect {|i| {
 #   name: Faker::Name.first_name,
@@ -59,7 +74,7 @@ characters = [
   Character.create(
     name: 'Titania',
     description: "Titania is a character in William Shakespeare's play A Midsummer Night's Dream. In the play, she is the queen of the fairies. Due to Shakespeare's influence, later fiction has often used the name \"Titania\" for fairy queen characters.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 1,
     production_id: production.id,
     remote_display_image_url: 'https://i.pinimg.com/736x/9b/51/d4/9b51d419edbb97546bc7dcca3de66fe7--fairy-queen-michelle-pfeiffer.jpg'
@@ -67,7 +82,7 @@ characters = [
   Character.create(
     name: 'Oberon',
     description: "Oberon is a king of the fairies in medieval and Renaissance literature. He is best known as a character in William Shakespeare's play A Midsummer Night's Dream, in which he is Consort to Titania, Queen of the Fairies.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 2,
     production_id: production.id,
     remote_display_image_url: 'http://legacy.shadowandact.com/wp-content/uploads/2016/05/976.jpg'
@@ -75,7 +90,7 @@ characters = [
   Character.create(
     name: 'Hermia',
     description: "Hermia is caught in a romantic accident where she loves one man, Lysander, but is loved by Demetrius, whose feelings she does not return.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 3,
     production_id: production.id,
     remote_display_image_url: 'https://www.yorknotes.com/images/onlineguides/a-level/A-Midsummer-Nights-Dream/Hermia.jpg'
@@ -83,7 +98,7 @@ characters = [
   Character.create(
     name: 'Puck',
     description: "Puck is a clever, mischievous elf, sprite or jester that personifies the wise knave. In the play, Shakespeare introduces Puck as the \"shrewd and knavish sprite\" and \"that merry wanderer of the night\".",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 3,
     production_id: production.id,
     remote_display_image_url: 'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'

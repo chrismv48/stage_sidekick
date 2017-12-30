@@ -37,7 +37,11 @@ class CostumeItemsController < ApplicationController
 
   # DELETE /costume_items/1
   def destroy
-    @costume_item.destroy
+    if @costume_item.destroy
+      render json: {success: true}
+    else
+      render json: @costume_item.errors, status: :unprocessable_entity
+    end
   end
 
   private
