@@ -59,11 +59,10 @@ export class CharacterCardGroup extends React.Component {
     return (
       <CardGroup sortable resource='characters'>
         {characters.map((character, i) => {
-          const characterImageUrl = character.display_image ? character.display_image.url : null
           const characterRole = character.roles.length > 0 ? character.roles[0] : null
           return (
             <DisplayCard
-              cardImage={characterImageUrl}
+              cardImage={character.main_image}
               showEditBar
               header={character.name}
               meta={faker.random.arrayElement(['Leading Role', 'Primary Role', 'Supporting Role'])}

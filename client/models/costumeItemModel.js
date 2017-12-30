@@ -7,7 +7,7 @@ const FIELD_NAMES = {
   description: undefined,
   display_image: undefined,
   item_type: undefined,
-  costume_id: [],
+  costume_id: {},
 }
 
 const RESOURCE = 'costume_items'

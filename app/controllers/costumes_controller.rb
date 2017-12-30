@@ -58,7 +58,7 @@ class CostumesController < ApplicationController
         :title,
         :description,
         :production_id,
-        # :display_image,
+        :display_image,
         :costume_item_ids
       )
       if params[:costumes_characters_scenes]

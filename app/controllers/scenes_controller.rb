@@ -47,7 +47,11 @@ class ScenesController < ApplicationController
 
   # DELETE /scenes/1
   def destroy
-    @scene.destroy
+    if @scene.destroy
+      render json: {success: true}
+    else
+      render json: @scene.errors, status: :unprocessable_entity
+    end
   end
 
   private

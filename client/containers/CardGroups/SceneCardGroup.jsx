@@ -45,10 +45,9 @@ export class SceneCardGroup extends React.Component {
     return (
       <CardGroup sortable resource='scenes'>
         {scenes.map((scene, i) => {
-            const sceneImageUrl = scene.display_image ? scene.display_image.url : null
             return (
               <DisplayCard
-                cardImage={sceneImageUrl}
+                cardImage={scene.main_image}
                 showEditBar
                 header={scene.title}
                 meta={`${scene.setting}, ${scene.length_in_minutes}m runtime`}

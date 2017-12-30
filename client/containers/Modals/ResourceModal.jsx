@@ -27,7 +27,6 @@ export default class ResourceModal extends React.Component {
 
   handleResourceSubmit = () => {
     const {uiStore} = this.props
-    debugger
     this.resourceStaged.save()
     uiStore.hideModal()
   }

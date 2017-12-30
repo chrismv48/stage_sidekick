@@ -80,10 +80,9 @@ export class Character extends React.Component {
           <CardGroup resource={'scenes'}>
             {this.character.scene_ids.map((sceneId, i) => {
                 const scene = scenes.find(scene => scene.id === sceneId)
-                const sceneImageUrl = scene.display_image ? scene.display_image.url : null
                 return (
                   <DisplayCard
-                    cardImage={sceneImageUrl}
+                    cardImage={scene.main_image}
                     header={scene.title}
                     meta={scene.setting}
                     frontDescription={scene.description}

@@ -76,10 +76,9 @@ export class Costume extends React.Component {
           <CardGroup resource={'costume_items'}>
             {this.costume.costume_item_ids.map((costumeItemId, i) => {
                 let costumeItem = costume_items.find(costume_item => costume_item.id === this.costume.id)
-                const costumeItemImageUrl = costumeItem.display_image ? costumeItem.display_image.url : null
                 return (
                   <DisplayCard
-                    cardImage={costumeItemImageUrl}
+                    cardImage={costumeItem.main_image}
                     header={costumeItem.title}
                     meta={costumeItem.item_type}
                     frontDescription={costumeItem.description}

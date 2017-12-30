@@ -48,13 +48,12 @@ export class ActorForm extends React.Component {
         </Dimmer>
       )
     }
-    const actorImageUrl = get(this.actorStaged, 'display_image.url' || this.actorStaged['display_image'])
     let actorStaged = this.actorStaged
 
     return (
       <Segment basic>
         <Form>
-          <ImageUpload currentImage={actorImageUrl}
+          <ImageUpload currentImage={actorStaged.main_image}
                        handleImageChange={(imageUrl) => actorStaged.display_image = imageUrl}/>
           <Form.Field>
             <label>Name</label>

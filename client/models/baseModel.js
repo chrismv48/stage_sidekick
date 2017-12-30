@@ -1,10 +1,18 @@
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {remove} from 'lodash'
+import {get, isString, remove} from 'lodash'
 import {RESOURCES} from "../constants";
 
 export class BaseModel {
 
   modified = false // this can probably be computed?
+
+  @computed get main_image() {
+    if (isString(this._display_image)) {
+      return this._display_image
+    } else {
+      return get(this, '_display_image.url')
+    }
+  }
 
   constructor(store, field_names, resource) {
     this.store = store
@@ -73,6 +81,7 @@ export class BaseModel {
       method = 'PUT'
       apiEndpoint += `/${this.id}`
     }
+    debugger
     let payload = this.asJson(true)
     if (_.isEmpty(payload)) return
 
@@ -83,6 +92,10 @@ export class BaseModel {
         if (method === 'POST') {
           this.store[this.resource].push(this)
         }
+        // Clean up staged resource reference
+        const resourceObj = RESOURCES[this.resource]
+        this.store[`${resourceObj.singularized}Staged`] = undefined
+        this.modified = false
       })
   }
 

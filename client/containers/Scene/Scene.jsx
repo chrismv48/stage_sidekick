@@ -98,16 +98,16 @@ export class Scene extends React.Component {
           {this.scene.character_ids.map((characterId, i) => {
               const character = characters.find(character => character.id === characterId)
               const characterRole = roles.find(role => role.id === character.role_ids[0])
-              const characterImageUrl = character.display_image ? character.display_image.url : null
               return (
                 <DisplayCard
-                  cardImage={characterImageUrl}
+                  cardImage={character.main_image}
                   header={character.name}
                   meta={`Played by ${characterRole.first_name} ${characterRole.last_name}`}
                   frontDescription={character.description}
                   label='Character'
                   key={`index-${i}`}
                   sortable={false}
+                  link={`/characters/${characterId}`}
                   index={i}
                 />
               )

@@ -99,14 +99,13 @@ export class CostumeForm extends React.Component {
         </Dimmer>
       )
     }
-    const costumeImageUrl = get(this.costumeStaged, 'display_image.url' || this.costumeStaged['display_image'])
     const characterScenesByCharacter = this.costumeStaged.characterScenesByCharacter
     let costumeStaged = this.costumeStaged
 
     return (
       <Segment basic>
         <Form>
-          <ImageUpload currentImage={costumeImageUrl}
+          <ImageUpload currentImage={costumeStaged.main_image}
                        handleImageChange={(imageUrl) => costumeStaged.display_image = imageUrl}/>
           <Form.Field>
             <label>Title</label>
