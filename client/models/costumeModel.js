@@ -55,9 +55,11 @@ export class Costume extends BaseModel {
   }
 
   updateCostumeCharacterScenes(characterId, characterSceneIds = []) {
-    // First delete all CCS's with this characterId because it's easier to overwrite then try to modify
     transaction(() => {
-      remove(this.costumes_characters_scenes, (ccs) => ccs.character_id === characterId)
+
+      // First delete all CCS's with this characterId because it's easier to overwrite then try to modify
+      this.costumes_characters_scenes = this.costumes_characters_scenes.filter(ccs => ccs.character_id !== characterId)
+      // remove(this.costumes_characters_scenes, (ccs) => ccs.character_id === characterId)
 
       if (isEmpty(characterSceneIds)) {
         characterSceneIds = [null]

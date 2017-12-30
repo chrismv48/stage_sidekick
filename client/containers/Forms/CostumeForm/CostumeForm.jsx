@@ -86,8 +86,7 @@ export class CostumeForm extends React.Component {
   }
 
   handleDeleteCharacterScene = (characterId) => {
-    let costumeStaged = this.costumeStaged
-    remove(costumeStaged.costumes_characters_scenes, ccs => ccs.character_id === characterId)
+    this.costumeStaged.costumes_characters_scenes = this.costumeStaged.costumes_characters_scenes.filter(ccs => ccs.character_id !== characterId)
   }
 
   render() {

@@ -61,8 +61,9 @@ class CostumesController < ApplicationController
         :display_image,
         :costume_item_ids
       )
+      # With this we're deleting and then creating new costume characters scenes every time there is a change. Fine for now, but might want to revisit later.
       if params[:costumes_characters_scenes]
-        costume_params[:costumes_characters_scenes] = params[:costumes_characters_scenes].map {|ccs| CostumesCharactersScene.new(ccs)}
+        costume_params[:costumes_characters_scenes] = params[:costumes_characters_scenes].map {|ccs| CostumesCharactersScene.new(ccs.except(:id))}
       end
       return costume_params
     end
