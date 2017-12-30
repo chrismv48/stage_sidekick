@@ -5,19 +5,19 @@ const RESOURCE = 'actors'
 
 const FIELD_NAMES = {
   ...ROLE_FIELD_NAMES,
-  gender: undefined,
-  height: undefined,
-  weight: undefined,
-  ethnicity: undefined,
-  eye_color: undefined,
-  hair_color: undefined,
-  chest: undefined,
-  waist: undefined,
-  hips: undefined,
-  neck: undefined,
-  inseam: undefined,
-  sleeve: undefined,
-  shoe_size: undefined,
+  gender: null,
+  height: null,
+  weight: null,
+  ethnicity: null,
+  eye_color: null,
+  hair_color: null,
+  chest: null,
+  waist: null,
+  hips: null,
+  neck: null,
+  inseam: null,
+  sleeve: null,
+  shoe_size: null,
   character_ids: []
 }
 

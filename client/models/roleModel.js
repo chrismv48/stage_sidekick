@@ -2,17 +2,17 @@ import {BaseModel} from "./baseModel";
 import {computed} from "mobx";
 
 export const FIELD_NAMES = {
-  id: undefined,
-  user_id: undefined,
-  title: undefined,
-  department: undefined,
-  status: undefined,
-  role_type: undefined,
-  start_date: undefined,
-  end_date: undefined,
-  first_name: undefined,
-  last_name: undefined,
-  display_image: undefined,
+  id: null,
+  user_id: null,
+  title: null,
+  department: null,
+  status: null,
+  role_type: null,
+  start_date: null,
+  end_date: null,
+  first_name: null,
+  last_name: null,
+  display_image: null,
   user: {}
 }
 

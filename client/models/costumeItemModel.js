@@ -2,11 +2,11 @@ import {computed} from 'mobx'
 import {BaseModel} from "./baseModel";
 
 const FIELD_NAMES = {
-  id: undefined,
-  title: undefined,
-  description: undefined,
-  display_image: undefined,
-  item_type: undefined,
+  id: null,
+  title: null,
+  description: null,
+  display_image: null,
+  item_type: null,
   costume_id: {},
 }
 

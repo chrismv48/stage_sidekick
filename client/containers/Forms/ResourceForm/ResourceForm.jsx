@@ -79,7 +79,6 @@ export class ResourceForm extends React.Component {
         // if no dropdown options are passed, we assume we need to use the relationships to generate them
         if (isEmpty(dropdownOptions)) {
           const multiple = pluralizeResource(fieldName) === fieldName
-          debugger
           const value = isObservableArray(resource[fieldName]) ? resource[fieldName].toJS() : resource[fieldName]
           // const value = resource[fieldName] ? resource[fieldName].toJS() : (multiple ? [] : '')
           const relationshipLabel = relationshipIdToLabel[fieldName] || fieldName

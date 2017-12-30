@@ -81,7 +81,6 @@ export class BaseModel {
       method = 'PUT'
       apiEndpoint += `/${this.id}`
     }
-    debugger
     let payload = this.asJson(true)
     if (_.isEmpty(payload)) return
 

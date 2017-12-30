@@ -2,13 +2,13 @@ import {computed, transaction} from 'mobx'
 import {BaseModel} from "./baseModel";
 
 const FIELD_NAMES = {
-  id: undefined,
-  title: undefined,
-  description: undefined,
-  length_in_minutes: undefined,
-  setting: undefined,
-  order_index: undefined,
-  display_image: undefined,
+  id: null,
+  title: null,
+  description: null,
+  length_in_minutes: null,
+  setting: null,
+  order_index: null,
+  display_image: null,
   character_ids: []
 }
 

@@ -3,10 +3,10 @@ import {BaseModel} from "./baseModel";
 import {isEmpty, remove} from 'lodash'
 
 const FIELD_NAMES = {
-  id: undefined,
-  title: undefined,
-  description: undefined,
-  display_image: undefined,
+  id: null,
+  title: null,
+  description: null,
+  display_image: null,
   character_ids: [],
   scene_ids: [],
   costume_item_ids: [],

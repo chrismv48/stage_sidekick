@@ -2,14 +2,14 @@ import {computed, extendObservable, observable, transaction} from 'mobx'
 import {BaseModel} from "./baseModel";
 
 const FIELD_NAMES = {
-  id: undefined,
-  name: undefined,
-  description: undefined,
-  type: undefined,
-  order_index: undefined,
-  display_image: undefined,
-  scene_ids: undefined,
-  role_ids: undefined,
+  id: null,
+  name: null,
+  description: null,
+  type: null,
+  order_index: null,
+  display_image: null,
+  scene_ids: [],
+  role_ids: [],
   characters_scenes: []
 }
 
