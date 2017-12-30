@@ -31,6 +31,7 @@ export class ActorForm extends React.Component {
 
   @computed get generateCharacterOptions() {
     const {characters} = this.props.resourceStore
+    debugger
     return characters.map(character => {
       return {
         key: character.id,

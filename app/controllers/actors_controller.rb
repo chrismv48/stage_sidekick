@@ -41,7 +41,7 @@ class ActorsController < ApplicationController
 
   # PATCH/PUT /actors/1
   def update
-    if @actor.update(actor_params.slice(*Actor.attribute_names))
+    if @actor.update(actor_params.slice(*Actor.attribute_names, :character_ids))
       actor_measurement_params = actor_params.slice(*ActorMeasurement.attribute_names.reject {|attr| attr == "id"})
       if !actor_measurement_params.empty?
         actor_measurements = ActorMeasurement.find_or_initialize_by(user_id: @actor.user_id)

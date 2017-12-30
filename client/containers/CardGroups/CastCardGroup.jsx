@@ -23,7 +23,7 @@ export class CastCardGroup extends React.Component {
 
     const characterTags = actor.character_ids.map(characterId => {
       const character = this.props.resourceStore.characters.find(character => character.id === characterId)
-      return (<a href={`characters/${characterId}`}>{character.name}</a>)
+      return (<a key={character.id} href={`characters/${characterId}`}>{character.name}</a>)
     })
     return (
       <div>
@@ -66,6 +66,7 @@ export class CastCardGroup extends React.Component {
     return (
       <CardGroup resource={'actors'}>
         {actors.map((actor, i) => {
+            debugger
             return (
               <DisplayCard
                 cardImage={actor.main_image}
@@ -80,7 +81,7 @@ export class CastCardGroup extends React.Component {
                 index={i}
               />
             )
-          },
+          }
         )}
       </CardGroup>
     )
