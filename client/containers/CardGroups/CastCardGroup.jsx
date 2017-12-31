@@ -66,7 +66,6 @@ export class CastCardGroup extends React.Component {
     return (
       <CardGroup resource={'actors'}>
         {actors.map((actor, i) => {
-            debugger
             return (
               <DisplayCard
                 cardImage={actor.main_image}

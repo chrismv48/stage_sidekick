@@ -55,7 +55,7 @@ export default class App extends Component {
     return (
       <Provider {...rootStore}>
         <Layout thisPage={this.props.location.pathname}>
-          <DevTools />
+          {process.env.NODE_ENV === 'development' ? <DevTools /> : null}
           <RootModal/>
           <Route exact path='/' name='dashboard' component={Dashboard}/>
           <Route exact path='/cast' component={Actors}/>

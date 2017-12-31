@@ -1,10 +1,8 @@
 const webpack = require('webpack')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const merge = require('webpack-merge')
 
 const commonConfig = require('./webpack.common')
-const HotModuleReplacementPlugin = new webpack.HotModuleReplacementPlugin()
 
 const devConfig = {
   entry: [
@@ -14,8 +12,9 @@ const devConfig = {
   ],
   devtool: 'inline-source-map',
   plugins: [
-    // HotModuleReplacementPlugin
-    // new BundleAnalyzerPlugin()
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    })
   ]
 }
 
