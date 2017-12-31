@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
 import './ResourceForm.scss'
-import {capitalize, get, isEmpty, isString} from "lodash";
+import {capitalize, get, isEmpty, isString, replace} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
 import {inject, observer} from "mobx-react";
 import {isObservableArray} from 'mobx'
@@ -43,7 +43,7 @@ export class ResourceForm extends React.Component {
       const {
         fieldName,
         inputType,
-        label = capitalize(fieldName).replace('_', ' '),
+        label = capitalize(replace(fieldName, /_/g, ' ')),
         dropdownText,
         inputOptions = {}
       } = formField

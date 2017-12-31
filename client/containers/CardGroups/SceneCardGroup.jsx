@@ -31,6 +31,18 @@ export class SceneCardGroup extends React.Component {
     )
   }
 
+  generateCardMeta = (scene) => {
+    if (scene.setting && scene.length_in_minutes) {
+      return `${scene.setting}, ${scene.length_in_minutes}m runtime`
+    } else if (scene.setting) {
+      return scene.setting
+    } else if (scene.length_in_minutes) {
+      return `${scene.length_in_minutes}m runtime`
+    } else {
+      return null
+    }
+  }
+
   render() {
     const {scenes, isLoading} = this.props.resourceStore
 
@@ -50,7 +62,7 @@ export class SceneCardGroup extends React.Component {
                 cardImage={scene.main_image}
                 showEditBar
                 header={scene.title}
-                meta={`${scene.setting}, ${scene.length_in_minutes}m runtime`}
+                meta={this.generateCardMeta(scene)}
                 frontDescription={scene.description}
                 extra={this.generateCardExtra(scene)}
                 onEditCallback={(event) => this.handleEditScene(event, scene)}

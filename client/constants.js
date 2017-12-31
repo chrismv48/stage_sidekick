@@ -110,6 +110,14 @@ export const sceneFormFields = [
     inputType: 'textarea',
   },
   {
+    fieldName: 'setting',
+    inputType: 'text',
+  },
+  {
+    fieldName: 'length_in_minutes',
+    inputType: 'text',
+  },
+  {
     fieldName: 'character_ids',
     label: 'Characters',
     inputType: 'dropdown',

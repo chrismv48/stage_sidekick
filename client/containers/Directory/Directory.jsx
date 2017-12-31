@@ -85,7 +85,7 @@ export class Directory extends React.Component {
                           </Table.Cell>
                           <Table.Cell>{role.department}</Table.Cell>
                           <Table.Cell>
-                            {role.role_type}
+                            {role.status}
                           </Table.Cell>
                           <Table.Cell>{user.email}</Table.Cell>
                           <Table.Cell>{user.phone_number}</Table.Cell>
