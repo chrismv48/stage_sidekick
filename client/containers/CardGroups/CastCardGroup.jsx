@@ -78,6 +78,7 @@ export class CastCardGroup extends React.Component {
                 key={`index-${i}`}
                 sortable={true}
                 index={i}
+                link={`cast/${actor.id}`}
               />
             )
           }

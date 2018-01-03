@@ -29,6 +29,7 @@ import Character from "containers/Character/Character";
 import Scene from "containers/Scene/Scene";
 import Directory from "containers/Directory/Directory";
 import Actors from "containers/Actors/Actors";
+import Actor from "containers/Actor/Actor";
 
 const rootStore = new RootStore()
 
@@ -59,6 +60,7 @@ export default class App extends Component {
           <RootModal/>
           <Route exact path='/' name='dashboard' component={Dashboard}/>
           <Route exact path='/cast' component={Actors}/>
+          <Route exact path='/cast/:actorId' component={Actor}/>
           <Route exact path='/characters' component={Characters}/>
           <Route exact path='/scenes' component={Scenes}/>
           <Route exact path='/costumes' component={Costumes}/>

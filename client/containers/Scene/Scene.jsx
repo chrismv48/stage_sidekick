@@ -94,7 +94,7 @@ export class Scene extends React.Component {
           Characters
         </Header>
 
-        <CardGroup resource={'scenes'}>
+        <CardGroup resource={'characters'}>
           {this.scene.character_ids.map((characterId, i) => {
               const character = characters.find(character => character.id === characterId)
               const characterRole = roles.find(role => role.id === character.role_ids[0])

@@ -1,5 +1,6 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
+import {computed, observable} from 'mobx'
 import {Dimmer, Header, Loader} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
@@ -9,9 +10,26 @@ const faker = require('faker');
 @inject("resourceStore", "uiStore") @observer
 export class CharacterCardGroup extends React.Component {
 
+  @computed get characters() {
+    const {characterIds, resourceStore} = this.props
+
+    if (characterIds) {
+      return resourceStore.characters.filter(character => characterIds.includes(character.id))
+    } else {
+      return resourceStore.characters
+    }
+  }
+
+  @observable loading = true
+
   componentDidMount() {
-    this.props.resourceStore.loadCharacters()
-    this.props.resourceStore.loadRoles()
+    this.loading = true
+
+    Promise.all([
+      this.props.resourceStore.loadCharacters(),
+      this.props.resourceStore.loadRoles()
+    ]).then(() => this.loading = false)
+
   }
 
   handleDestroyCharacter = (event, character) => {
@@ -47,8 +65,7 @@ export class CharacterCardGroup extends React.Component {
   }
 
   render() {
-    const {characters, isLoading} = this.props.resourceStore
-    if (isLoading) {
+    if (this.loading) {
       return (
         <Dimmer active={true} inverted>
           <Loader inverted>Loading</Loader>
@@ -58,7 +75,7 @@ export class CharacterCardGroup extends React.Component {
 
     return (
       <CardGroup sortable resource='characters'>
-        {characters.map((character, i) => {
+        {this.characters.map((character, i) => {
           const characterRole = character.roles.length > 0 ? character.roles[0] : null
           return (
             <DisplayCard
