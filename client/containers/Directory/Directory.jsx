@@ -87,7 +87,7 @@ export class Directory extends React.Component {
                           <Table.Cell>
                             {role.status}
                           </Table.Cell>
-                          <Table.Cell>{user.email}</Table.Cell>
+                          <Table.Cell><a href={`mailto:${user.email}`}>{user.email}</a></Table.Cell>
                           <Table.Cell>{user.phone_number}</Table.Cell>
                         </Table.Row>
                       )

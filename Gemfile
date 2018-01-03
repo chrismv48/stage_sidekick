@@ -30,6 +30,8 @@ gem 'pg', '~> 0.18.4'
 gem 'annotate', require: true
 gem 'faker', require: true
 gem 'foreman', '0.84.0'
+gem 'figaro'
+gem 'fog-aws'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
