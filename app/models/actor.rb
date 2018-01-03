@@ -18,6 +18,7 @@
 #  avatar        :string
 #  display_image :string
 #  type          :string
+#  order_index   :integer
 #
 # Indexes
 #
@@ -35,5 +36,12 @@ class Actor < Role
 
   belongs_to :user
   has_one :actor_measurement, through: :user
+
+  after_create do |actor|
+    if actor.order_index.nil?
+      actor.order_index = actor.id
+      actor.save!
+    end
+  end
 
 end

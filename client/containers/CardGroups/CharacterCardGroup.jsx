@@ -76,7 +76,7 @@ export class CharacterCardGroup extends React.Component {
               link={`characters/${character.id}`}
             />
             )
-          },
+          }
         )}
       </CardGroup>
     )

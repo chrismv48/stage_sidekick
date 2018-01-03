@@ -5,6 +5,7 @@ const RESOURCE = 'actors'
 
 const FIELD_NAMES = {
   ...ROLE_FIELD_NAMES,
+  order_index: null,
   gender: null,
   height: null,
   weight: null,

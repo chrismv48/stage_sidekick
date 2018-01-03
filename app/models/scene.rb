@@ -24,4 +24,11 @@ class Scene < ApplicationRecord
   has_many :characters_scenes, dependent: :destroy
   has_many :characters, through: :characters_scenes
 
+  after_create do |scene|
+    if scene.order_index.nil?
+      scene.order_index = scene.id
+      scene.save!
+    end
+  end
+
 end

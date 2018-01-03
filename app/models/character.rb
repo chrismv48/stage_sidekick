@@ -31,6 +31,9 @@ class Character < ApplicationRecord
   alias_attribute :actors, :roles
 
   after_create do |character|
-    self.order_index = self.id
+    if character.order_index.nil?
+      character.order_index = character.id
+      character.save!
+    end
   end
 end

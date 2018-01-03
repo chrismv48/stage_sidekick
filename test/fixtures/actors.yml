@@ -18,6 +18,7 @@
 #  avatar        :string
 #  display_image :string
 #  type          :string
+#  order_index   :integer
 #
 # Indexes
 #

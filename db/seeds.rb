@@ -89,7 +89,7 @@ characters = [
     name: 'Puck',
     description: "Puck is a clever, mischievous elf, sprite or jester that personifies the wise knave. In the play, Shakespeare introduces Puck as the \"shrewd and knavish sprite\" and \"that merry wanderer of the night\".",
     actors: [actors.sample],
-    order_index: 3,
+    order_index: 4,
     production_id: production.id,
     remote_display_image_url: 'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'
   )

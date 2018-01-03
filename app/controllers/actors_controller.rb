@@ -20,6 +20,15 @@ class ActorsController < ApplicationController
 
   # POST /actors
   def create
+    if params[:order_index_swap]
+      actors = Actor.where(id: params[:order_index_swap])
+      actors.each_with_index do |actor|
+        actor.order_index = params[:order_index_swap].index(actor.id)
+        actor.save
+      end
+      return render json: build_json_response(actors, ASSOCIATIONS_TO_INCLUDE)
+    end
+
     @actor = Actor.new(actor_params)
 
     @actor.venue_id = 1

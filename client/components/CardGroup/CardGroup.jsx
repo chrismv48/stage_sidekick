@@ -3,7 +3,6 @@ import {Card} from "semantic-ui-react";
 import './CardGroup.scss'
 import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {inject, observer} from "mobx-react/index";
-// import {swapResourceOrderIndex} from "../../api/actions";
 
 const SortableCard = SortableElement(({children}) => children)
 const SortableCardGroup = SortableContainer(({children}) => children)
@@ -12,9 +11,9 @@ const SortableCardGroup = SortableContainer(({children}) => children)
 class CardGroup extends React.Component {
 
   handleOnSortEnd = ({oldIndex, newIndex}) => {
+    console.log('handle on sort end')
     if (oldIndex === newIndex) return
     const {resource, resourceStore} = this.props
-    // dispatch(swapResourceOrderIndex(resource, oldIndex, newIndex))
     resourceStore.updateOrderIndex(resource, oldIndex, newIndex)
   }
 

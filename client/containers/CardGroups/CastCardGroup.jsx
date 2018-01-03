@@ -64,7 +64,7 @@ export class CastCardGroup extends React.Component {
     }
 
     return (
-      <CardGroup resource={'actors'}>
+      <CardGroup sortable resource='actors'>
         {actors.map((actor, i) => {
             return (
               <DisplayCard
@@ -76,7 +76,7 @@ export class CastCardGroup extends React.Component {
                 onDeleteCallback={(event) => this.handleDestroyActor(event, actor)}
                 label='Actor'
                 key={`index-${i}`}
-                sortable={false}
+                sortable={true}
                 index={i}
               />
             )
