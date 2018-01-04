@@ -1,3 +1,23 @@
 .Actor {
+  .profile-measurements-container {
+    display: flex;
+
+    .profile-container {
+      width: 250px;
+      margin-right: 30px;
+    }
+    .measurements-container {
+      width: 250px;
+    }
+  }
+
+  .field-container {
+    width: 120px;
+    text-align: right;
+  }
+
+  .actor-list-item {
+    margin-bottom: 7px;
+  }
 
 }

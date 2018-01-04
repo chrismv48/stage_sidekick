@@ -42,7 +42,9 @@ class ActorsController < ApplicationController
         actor_measurements.user_id = @actor.user_id
         actor_measurements.save!
       end
-      render json: build_json_response(@actor, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @actor
+      json_response = build_json_response(@actor, ASSOCIATIONS_TO_INCLUDE)
+      merged_json_response = merge_in_actor_measurements(json_response)
+      render json: merged_json_response, status: :created, location: @actor
     else
       render json: @actor.errors, status: :unprocessable_entity
     end
@@ -58,7 +60,9 @@ class ActorsController < ApplicationController
         actor_measurements.user_id = @actor.user_id
         actor_measurements.save!
       end
-      render json: build_json_response(@actor, ASSOCIATIONS_TO_INCLUDE)
+      json_response = build_json_response(@actor, ASSOCIATIONS_TO_INCLUDE)
+      merged_json_response = merge_in_actor_measurements(json_response)
+      render json: merged_json_response, status: :created, location: @actor
     else
       render json: @actor.errors, status: :unprocessable_entity
     end

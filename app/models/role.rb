@@ -19,6 +19,7 @@
 #  display_image :string
 #  type          :string
 #  order_index   :integer
+#  description   :string
 #
 # Indexes
 #

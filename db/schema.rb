@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180103165717) do
+ActiveRecord::Schema.define(version: 20180104004320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(version: 20180103165717) do
     t.string   "display_image"
     t.string   "type"
     t.integer  "order_index"
+    t.string   "description"
     t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
     t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
     t.index ["venue_id"], name: "index_roles_on_venue_id", using: :btree

@@ -220,6 +220,25 @@ export const roleFormFields = [
   },
 ]
 
+export const actorProfileFields = [
+  'gender',
+  'height',
+  'weight',
+  'ethnicity',
+  'eye_color',
+  'hair_color',
+]
+
+export const actorMeasurementFields = [
+  'chest',
+  'waist',
+  'hips',
+  'neck',
+  'inseam',
+  'sleeve',
+  'shoe_size'
+]
+
 export const actorFormFields = [
   {
     fieldName: 'display_image',
@@ -235,6 +254,10 @@ export const actorFormFields = [
     label: 'Characters',
     inputType: 'dropdown',
     dropdownText: 'name',
+  },
+  {
+    fieldName: 'description',
+    inputType: 'textarea',
   },
   {
     fieldName: 'gender',

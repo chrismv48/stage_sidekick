@@ -1,12 +1,14 @@
 import React from 'react';
 import './Actor.scss'
-import {Dimmer, Grid, Header, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
-import {find, get} from 'lodash'
+import {capitalize, find, get, replace} from 'lodash'
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
+import {EditableField} from "../../components/EditableField/EditableField";
+import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
@@ -18,7 +20,6 @@ export class Actor extends React.Component {
   }
 
   @computed get actor() {
-    debugger
     return this.props.resourceStore.actors.find(actor => actor.id === this.actorId)
   }
 
@@ -53,7 +54,6 @@ export class Actor extends React.Component {
         </Segment>
       )
     }
-
     return (
       <Grid className="Actor">
         <Grid.Column>
@@ -64,13 +64,52 @@ export class Actor extends React.Component {
           <Header as='h3' dividing>
             Description
           </Header>
-          <p>
-            {this.actor.description}
-          </p>
+          <EditableField resource={'actors'} resourceId={this.actorId} field={'description'} fieldType='textarea'/>
+          <Header as='h3' dividing>
+            Profile / Measurements
+          </Header>
+          <div className='profile-measurements-container'>
+            <div className='profile-container'>
+              <Header as='h5'>Profile</Header>
+              <List verticalAlign='middle'>
+                {actorProfileFields.map((profileField, i) => {
+                  const field = actorFormFields.find(field => field.fieldName === profileField)
+                  return(
+                    <List.Item key={`profile-${i}`} className='actor-list-item'>
+                    <List.Content floated='right'>
+                      <div className='field-container'>
+                        <EditableField resource={'actors'} resourceId={this.actorId} field={field.fieldName} fieldType={field.inputType}/>
+                      </div>
+                    </List.Content>
+                    <List.Content>{field.label || capitalize(replace(field.fieldName, /_/g, ' '))}</List.Content>
+                  </List.Item>
+                  )}
+                )}
+              </List>
+            </div>
+            <div className='measurements-container'>
+              <Header as='h5'>Measurements</Header>
+              <List verticalAlign='middle'>
+                {actorMeasurementFields.map((measurementField, i) => {
+                  const field = actorFormFields.find(field => field.fieldName === measurementField)
+                  return(
+                    <List.Item key={`measurement-${i}`}>
+                      <List.Content floated='right'>
+                        <div className='field-container'>
+                          <EditableField resource={'actors'} resourceId={this.actorId} field={field.fieldName} fieldType={field.inputType}/>
+                        </div>
+                      </List.Content>
+                      <List.Content>{field.label || capitalize(replace(field.fieldName, /_/g, ' '))}</List.Content>
+                    </List.Item>
+                  )}
+                )}
+              </List>
+            </div>
+          </div>
           <Header as='h3' dividing>
             Characters
           </Header>
-          <CharacterCardGroup characterIds={this.actor.character_ids} />
+          <CharacterCardGroup characterIds={this.actor.character_ids}/>
           <Header as='h3' dividing>
             Activity
           </Header>

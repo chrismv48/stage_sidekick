@@ -3,6 +3,7 @@ import {computed} from "mobx";
 
 export const FIELD_NAMES = {
   id: null,
+  description: null,
   user_id: null,
   title: null,
   department: null,
