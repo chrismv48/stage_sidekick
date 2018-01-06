@@ -1,6 +1,6 @@
 import React from 'react';
 import './Actor.scss'
-import {Dimmer, Grid, Header, Icon, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
@@ -9,6 +9,7 @@ import {capitalize, find, get, replace} from 'lodash'
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "../../components/EditableField/EditableField";
 import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
+import EditIcon from "components/EditIcon/EditIcon";
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
@@ -122,15 +123,9 @@ export class Actor extends React.Component {
           <Header as='h3' dividing>
             Characters
             {this.actor.character_ids.length > 0 &&
-            <Icon
-              name='edit'
-              className='edit-section-label'
-              size='tiny'
-              onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
-                resourceName: 'actors',
-                resourceId: this.actor.id
-              })}
-            />
+            <span style={{float:'right'}}>
+              <EditIcon resource='actors' resourceId={this.actorId} />
+            </span>
             }
           </Header>
           {this.actor.character_ids.length > 0 ?
