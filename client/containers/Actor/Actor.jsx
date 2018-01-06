@@ -1,6 +1,6 @@
 import React from 'react';
 import './Actor.scss'
-import {Dimmer, Grid, Header, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Icon, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
@@ -40,6 +40,19 @@ export class Actor extends React.Component {
 
     return (
       <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+    )
+  }
+
+  renderEmptyContent() {
+    return (
+      <p
+        className='empty-field'
+        onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+          resourceName: 'actors',
+          resourceId: this.actor.id
+        })}>
+        Click to add
+      </p>
     )
   }
 
@@ -108,8 +121,22 @@ export class Actor extends React.Component {
           </div>
           <Header as='h3' dividing>
             Characters
+            {this.actor.character_ids.length > 0 &&
+            <Icon
+              name='edit'
+              className='edit-section-label'
+              size='tiny'
+              onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+                resourceName: 'actors',
+                resourceId: this.actor.id
+              })}
+            />
+            }
           </Header>
-          <CharacterCardGroup characterIds={this.actor.character_ids}/>
+          {this.actor.character_ids.length > 0 ?
+            <CharacterCardGroup characterIds={this.actor.character_ids}/>
+            : this.renderEmptyContent()
+          }
           <Header as='h3' dividing>
             Activity
           </Header>

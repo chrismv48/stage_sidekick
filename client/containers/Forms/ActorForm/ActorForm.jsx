@@ -72,8 +72,8 @@ export class ActorForm extends React.Component {
           <Form.Field>
             <label>Characters</label>
             <Dropdown fluid multiple selection
-                      options={this.generateCharacterOptions}
-                      value={actorStaged.character_ids.toJS()}
+                      options={this.generateCharacterOptions || []}
+                      value={actorStaged.character_ids.toJS() || []}
                       onChange={(e, data) => actorStaged.character_ids = data.value}
             />
           </Form.Field>
