@@ -4,7 +4,7 @@
 
     .profile-container {
       width: 250px;
-      margin-right: 30px;
+      margin-right: 50px;
     }
     .measurements-container {
       width: 250px;
@@ -12,12 +12,13 @@
   }
 
   .field-container {
-    width: 120px;
     text-align: right;
+    width: 120px;
+    height: 20px;
   }
 
   .actor-list-item {
-    margin-bottom: 7px;
+    margin-bottom: 15px;
   }
 
 }

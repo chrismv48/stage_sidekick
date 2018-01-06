@@ -5,6 +5,7 @@ import {observer} from "mobx-react";
 import {capitalize, replace} from "lodash";
 import {inject} from "mobx-react/index";
 import {Button, Form, Input, TextArea} from "semantic-ui-react";
+import classNames from 'classnames'
 import './EditableField.scss'
 
 @inject("resourceStore", "uiStore") @observer
@@ -15,7 +16,6 @@ export class EditableField extends React.Component {
     return resourceStore[resource].find(resource => resource.id === resourceId)
   }
 
-  @observable showEditMode = false
   @observable editing = false
 
 
@@ -45,7 +45,7 @@ export class EditableField extends React.Component {
 
   renderTextareaDisplayMode() {
     return (
-      <p>
+      <p className='display-input textarea-input'>
         {
           this.resource[this.props.field] ?
             this.resource[this.props.field] :
@@ -57,7 +57,7 @@ export class EditableField extends React.Component {
 
   renderTextDisplayMode() {
     return (
-      <Input transparent>
+      <Input transparent className='display-input text-input'>
         {
           this.resource[this.props.field] ?
             this.resource[this.props.field] :
@@ -69,18 +69,17 @@ export class EditableField extends React.Component {
 
   renderTextareaEditMode() {
     return (
-      <Form>
-      <TextArea
-        autoHeight
-        onBlur={this.handleOnBlur}
-        onFocus={() => {
-          this.editing = true
-        }}
-        onChange={(e) => this.resource[this.props.field] = e.target.value}
-        value={this.resource[this.props.field] || ''}
-      >
-      </TextArea>
-        <div style={{float:"right"}}>
+      <Form className='edit-input textarea-input'>
+        <TextArea
+          onBlur={this.handleOnBlur}
+          onFocus={() => {
+            this.editing = true
+          }}
+          onChange={(e) => this.resource[this.props.field] = e.target.value}
+          value={this.resource[this.props.field] || ''}
+        >
+        </TextArea>
+        <div style={{float: 'right'}}>
           <Button size='mini' attached='left' compact icon='checkmark' onMouseDown={this.saveChange}/>
           <Button size='mini' attached='right' compact icon='remove' onMouseDown={this.handleOnBlur}/>
         </div>
@@ -94,7 +93,7 @@ export class EditableField extends React.Component {
         onFocus={() => {
           this.editing = true
         }}
-        className='text-input'
+        className='edit-input text-input'
         onChange={(e) => this.resource[this.props.field] = e.target.value}
         onBlur={this.handleOnBlur}
         value={this.resource[this.props.field] || ''}
@@ -113,38 +112,21 @@ export class EditableField extends React.Component {
   saveChange = () => {
     console.log('save change')
     this.resource.save()
-    this.showEditMode = false
     this.editing = false
   }
 
   handleOnBlur = () => {
     this.resource.revert()
-    this.showEditMode = false
     this.editing = false
-  }
-
-  handleMouseEnter = () => {
-    if (!this.editing) {
-      console.log('entering!')
-      this.showEditMode = true
-    }
-  }
-
-  handleMouseLeave = () => {
-    if (!this.editing) {
-      console.log('leaving!')
-      this.showEditMode = false
-    }
   }
 
   render() {
     return (
       <div
-        className='field-container'
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
+        className={classNames('field-wrapper', this.editing ? 'edit-mode' : 'display-mode')}
       >
-        {this.showEditMode || this.editing ? this.renderEditMode() : this.renderDisplayMode()}
+        {this.renderDisplayMode()}
+        {this.renderEditMode()}
       </div>
     )
   }

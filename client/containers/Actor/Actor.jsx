@@ -93,7 +93,7 @@ export class Actor extends React.Component {
                 {actorMeasurementFields.map((measurementField, i) => {
                   const field = actorFormFields.find(field => field.fieldName === measurementField)
                   return(
-                    <List.Item key={`measurement-${i}`}>
+                    <List.Item key={`measurement-${i}`} className='actor-list-item'>
                       <List.Content floated='right'>
                         <div className='field-container'>
                           <EditableField resource={'actors'} resourceId={this.actorId} field={field.fieldName} fieldType={field.inputType}/>

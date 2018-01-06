@@ -6,3 +6,35 @@
 .text-input {
   line-height: 0.9em;
 }
+
+.display-mode {
+
+  .edit-input {
+    display: none !important;
+  }
+
+  &:hover {
+    .text-input {
+      display: flex !important;
+    }
+    .textarea-input {
+      display: block !important;
+    }
+    .display-input {
+      display: none !important;
+    }
+  }
+}
+
+.edit-mode {
+  .text-input {
+    display: flex !important;
+  }
+  .textarea-input {
+    display: block !important;
+  }
+
+  .display-input {
+    display: none !important;
+  }
+}
