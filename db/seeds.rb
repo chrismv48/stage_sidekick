@@ -44,8 +44,15 @@ roles = Role.create(users[0..14].map {|user| {
   department: departments.sample,
   status: statuses.sample,
   start_date: Faker::Date.between(2.years.ago, Date.today),
-  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
+
+roles.each do |role|
+  Image.create({
+                 imageable: role,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: true
+               })
+end
 
 actors = Actor.create(users[15..-1].map {|user| {
   user_id: user.id,
@@ -57,8 +64,23 @@ actors = Actor.create(users[15..-1].map {|user| {
   department: 'Acting',
   status: 'Contractor',
   start_date: Faker::Date.between(2.years.ago, Date.today),
-  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
+
+actors.each do |actor|
+  Image.create({
+                 imageable: actor,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: true
+               })
+end
+
+actors.each do |actor|
+  Image.create({
+                 imageable: actor,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: false
+               })
+end
 
 characters = [
   Character.create(
@@ -67,7 +89,6 @@ characters = [
     actors: [actors.sample],
     order_index: 1,
     production_id: production.id,
-    remote_display_image_url: 'https://i.pinimg.com/736x/9b/51/d4/9b51d419edbb97546bc7dcca3de66fe7--fairy-queen-michelle-pfeiffer.jpg'
   ),
   Character.create(
     name: 'Oberon',
@@ -75,7 +96,6 @@ characters = [
     actors: [actors.sample],
     order_index: 2,
     production_id: production.id,
-    remote_display_image_url: 'http://legacy.shadowandact.com/wp-content/uploads/2016/05/976.jpg'
   ),
   Character.create(
     name: 'Hermia',
@@ -83,7 +103,6 @@ characters = [
     actors: [actors.sample],
     order_index: 3,
     production_id: production.id,
-    remote_display_image_url: 'https://www.yorknotes.com/images/onlineguides/a-level/A-Midsummer-Nights-Dream/Hermia.jpg'
   ),
   Character.create(
     name: 'Puck',
@@ -91,9 +110,23 @@ characters = [
     actors: [actors.sample],
     order_index: 4,
     production_id: production.id,
-    remote_display_image_url: 'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'
   )
 ]
+
+character_images = [
+  'https://i.pinimg.com/736x/9b/51/d4/9b51d419edbb97546bc7dcca3de66fe7--fairy-queen-michelle-pfeiffer.jpg',
+  'http://legacy.shadowandact.com/wp-content/uploads/2016/05/976.jpg',
+  'https://www.yorknotes.com/images/onlineguides/a-level/A-Midsummer-Nights-Dream/Hermia.jpg',
+  'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'
+]
+
+character_images.each_with_index do |character_image, i|
+  Image.create({
+                 imageable: characters[i],
+                 remote_image_src_url: character_image,
+                 primary: true
+               })
+end
 
 scenes = [
   Scene.create(
@@ -104,7 +137,6 @@ scenes = [
     length_in_minutes: 20,
     setting: 'Indoors',
     character_ids: [1, 2],
-    remote_display_image_url: "http://www.uky.edu/~jsreid2/ENG340/Grieve5.jpg"
   ),
   Scene.create(
     title: "Athens. A room in Quince's house",
@@ -114,9 +146,21 @@ scenes = [
     length_in_minutes: 15,
     setting: 'Indoors',
     character_ids: [3, 4],
-    remote_display_image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJxu6vCFQCPQrE3XSH6CAQQ7Dsjdcx0nUEHmbBMh56IDBc6VDo"
   )
 ]
+
+scene_images = [
+  "http://www.uky.edu/~jsreid2/ENG340/Grieve5.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJxu6vCFQCPQrE3XSH6CAQQ7Dsjdcx0nUEHmbBMh56IDBc6VDo"
+]
+
+scene_images.each_with_index do |scene_image, i|
+  Image.create({
+                 remote_image_src_url: scene_image,
+                 imageable: scenes[i],
+                 primary: true
+               })
+end
 
 costumes = [
   Costume.create(
@@ -124,23 +168,34 @@ costumes = [
     description: 'Ethereal dark gown full of mystery and splendor',
     character_ids: [1],
     production_id: production.id,
-    remote_display_image_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg"
   ),
   Costume.create(
     title: "Oberon being a boss",
     description: 'Sweet leather vest underneath frilly coat thing',
     character_ids: [2],
     production_id: production.id,
-    remote_display_image_url: "http://i.telegraph.co.uk/multimedia/archive/01243/PD26354744_A-Midsu_1243845i.jpg"
   ),
   Costume.create(
     title: "Classic Puck",
     description: 'Fur legs and skin colored spandex shirt',
     character_ids: [3],
     production_id: production.id,
-    remote_display_image_url: "http://vignette3.wikia.nocookie.net/amidsummernightsdream/images/b/b6/Puck.png/revision/latest?cb=20120520073630"
   )
 ]
+
+costume_images = [
+  "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg",
+  "http://i.telegraph.co.uk/multimedia/archive/01243/PD26354744_A-Midsu_1243845i.jpg",
+  "http://vignette3.wikia.nocookie.net/amidsummernightsdream/images/b/b6/Puck.png/revision/latest?cb=20120520073630"
+]
+
+costume_images.each_with_index do |costume_image, i|
+  Image.create({
+                 remote_image_src_url: costume_image,
+                 imageable: costumes[i],
+                 primary: true
+               })
+end
 
 CostumesCharactersScene.create(
   costume_id: 1,
@@ -148,12 +203,16 @@ CostumesCharactersScene.create(
   character_id: 1
 )
 
-CostumeItem.create(
+costume_item = CostumeItem.create(
     title: "Titania's gown",
     description: 'Gown made of fairy dust and AMEX points',
     costume_id: 1,
     item_type: 'Dress',
-    remote_display_image_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg"
   )
 
+Image.create({
+               remote_image_src_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg",
+               imageable: costume_item,
+               primary: true
+             })
 

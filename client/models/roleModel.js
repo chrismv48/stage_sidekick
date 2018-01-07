@@ -13,7 +13,7 @@ export const FIELD_NAMES = {
   end_date: null,
   first_name: null,
   last_name: null,
-  display_image: null,
+  images: [],
   user: {}
 }
 

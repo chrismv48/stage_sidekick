@@ -8,6 +8,7 @@ const FIELD_NAMES = {
   display_image: null,
   item_type: null,
   costume_id: {},
+  images: []
 }
 
 const RESOURCE = 'costume_items'

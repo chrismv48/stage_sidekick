@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180104004320) do
+ActiveRecord::Schema.define(version: 20180107154907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.datetime "updated_at",                 null: false
     t.integer  "production_id",              null: false
     t.integer  "order_index"
-    t.string   "display_image"
   end
 
   create_table "characters_costumes", force: :cascade do |t|
@@ -80,9 +79,8 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.string   "title"
     t.string   "description"
     t.string   "item_type"
-    t.string   "display_image"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["costume_id"], name: "index_costume_items_on_costume_id", using: :btree
   end
 
@@ -92,7 +90,6 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.integer  "production_id",              null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.string   "display_image"
     t.index ["production_id"], name: "index_costumes_on_production_id", using: :btree
   end
 
@@ -105,6 +102,18 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.index ["character_id"], name: "index_costumes_characters_scenes_on_character_id", using: :btree
     t.index ["characters_scene_id"], name: "index_costumes_characters_scenes_on_characters_scene_id", using: :btree
     t.index ["costume_id"], name: "index_costumes_characters_scenes_on_costume_id", using: :btree
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string   "name",                           null: false
+    t.boolean  "primary",        default: false, null: false
+    t.string   "image_src",                      null: false
+    t.string   "size"
+    t.string   "imageable_type"
+    t.integer  "imageable_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
   end
 
   create_table "productions", force: :cascade do |t|
@@ -131,8 +140,6 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.datetime "updated_at",    null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "avatar"
-    t.string   "display_image"
     t.string   "type"
     t.integer  "order_index"
     t.string   "description"
@@ -150,7 +157,6 @@ ActiveRecord::Schema.define(version: 20180104004320) do
     t.string   "setting",           limit: 30
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.string   "display_image"
     t.index ["production_id"], name: "index_scenes_on_production_id", using: :btree
   end
 

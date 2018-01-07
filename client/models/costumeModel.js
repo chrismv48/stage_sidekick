@@ -11,7 +11,8 @@ const FIELD_NAMES = {
   scene_ids: [],
   costume_item_ids: [],
   costumes_characters_scenes: [],
-  characters_scenes: []
+  characters_scenes: [],
+  images: []
 }
 
 const RESOURCE = 'costumes'

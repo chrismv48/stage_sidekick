@@ -72,7 +72,7 @@ export class Actor extends React.Component {
       <Grid className="Actor">
         <Grid.Column>
           <Header as="h1">
-            <Image shape='circular' src={this.actor.main_image}/>
+            <Image shape='circular' src={this.actor.primary_image}/>
             {this.actor.fullName}
           </Header>
           <Header as='h3' dividing>

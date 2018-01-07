@@ -1,7 +1,7 @@
 class RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = ['user']
+  ASSOCIATIONS_TO_INCLUDE = [:user, :images]
 
   # GET /roles
   def index

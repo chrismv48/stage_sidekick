@@ -75,7 +75,7 @@ export class Character extends React.Component {
       <Grid className="this.character">
         <Grid.Column className="this.character">
           <Header as="h1">
-            <Image shape='circular' src={get(this.character, 'display_image.url')}/>
+            <Image shape='circular' src={this.character.primary_image}/>
             {' '}{this.character.name}
             <Header.Subheader>
               Played by <a href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>

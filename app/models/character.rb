@@ -10,12 +10,9 @@
 #  updated_at    :datetime         not null
 #  production_id :integer          not null
 #  order_index   :integer
-#  display_image :string
 #
 
 class Character < ApplicationRecord
-
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}_#{Time.zone.now.to_i}" }
 
   has_many :costumes_characters_scenes, dependent: :destroy
 
@@ -28,6 +25,8 @@ class Character < ApplicationRecord
   has_many :characters_roles, dependent: :destroy
   has_many :roles, through: :characters_roles
 
+  has_many :images, as: :imageable
+
   alias_attribute :actors, :roles
 
   after_create do |character|
@@ -36,4 +35,13 @@ class Character < ApplicationRecord
       character.save!
     end
   end
+
+  def primary_image(default_to_non_primary = true)
+    if default_to_non_primary
+      self.images.order(primary: :desc)
+    else
+      self.images.find_by(primary: true)
+    end
+  end
+
 end

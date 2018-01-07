@@ -8,7 +8,6 @@
 #  production_id :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  display_image :string
 #
 # Indexes
 #
@@ -16,14 +15,21 @@
 #
 
 class Costume < ApplicationRecord
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (costume) { "#{costume.title}_#{Time.zone.now.to_i}" }
 
   has_many :costumes_characters_scenes, dependent: :destroy
   has_many :characters_scenes, through: :costumes_characters_scenes
   has_many :characters, through: :costumes_characters_scenes
   has_many :scenes, through: :characters_scenes
-
   has_many :costume_items
+  has_many :images, as: :imageable
 
-  # accepts_nested_attributes_for :characters_costumes, allow_destroy: true
+
+  def primary_image(default_to_non_primary = true)
+    if default_to_non_primary
+      self.images.order(primary: :desc)
+    else
+      self.images.find_by(primary: true)
+    end
+  end
+
 end

@@ -7,7 +7,7 @@ const CharacterItemContent = (character, actor) => {
   return (
     <div className='fragment-container'>
       <div>
-        <Image avatar src={character.display_image.url}/>
+        <Image avatar src={character.primary_image}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>

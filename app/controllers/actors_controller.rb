@@ -1,7 +1,7 @@
 class ActorsController < ApplicationController
   before_action :set_actor, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = [:character_ids]
+  ASSOCIATIONS_TO_INCLUDE = [:character_ids, :images]
 
   # GET /actors
   def index

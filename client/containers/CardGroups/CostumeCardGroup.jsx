@@ -57,7 +57,7 @@ export class CostumeCardGroup extends React.Component {
         {costumes.map((costume, i) => {
             return (
               <DisplayCard
-                cardImage={costume.main_image}
+                cardImage={costume.primary_image}
                 showEditBar
                 header={costume.title}
                 frontDescription={costume.description}

@@ -1,0 +1,53 @@
+# == Schema Information
+#
+# Table name: images
+#
+#  id             :integer          not null, primary key
+#  name           :string           not null
+#  primary        :boolean          default(FALSE), not null
+#  image_src      :string           not null
+#  size           :string
+#  imageable_type :string
+#  imageable_id   :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+# Indexes
+#
+#  index_images_on_imageable_type_and_imageable_id  (imageable_type,imageable_id)
+#
+
+class Image < ApplicationRecord
+  mount_base64_uploader :image_src, ImageUploader, file_name: -> (image) {"#{image.imageable_type}_#{image.imageable_id}_#{Time.zone.now.to_i}"}
+
+  belongs_to :imageable, polymorphic: true
+
+  after_initialize :init
+  before_validation :assign_primary
+
+  def init
+    self.name ||= "#{self.imageable_type}_#{self.imageable_id}_#{Time.zone.now.to_i}"
+  end
+
+  # since at least one image per imageable needs to be primary, we need to assign it appropriately
+  def assign_primary
+    if self.primary
+      prexisting_primary_image = self.imageable.images.find_by(primary: true)
+      if prexisting_primary_image
+        prexisting_primary_image.primary = false
+        prexisting_primary_image.save!(validate: false)  # prevent infinite loop
+      end
+    else
+      other_images = self.imageable.images.where.not(id: self.id)
+      if !other_images.any?(&:primary)
+        if self.primary_was
+          new_primary_image = other_images.first
+          new_primary_image.primary = true
+          new_primary_image.save!(validate: false)   # prevent infinite loop
+        else
+          self.primary = true
+        end
+      end
+    end
+  end
+end

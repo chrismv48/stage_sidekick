@@ -6,12 +6,9 @@ export class BaseModel {
 
   modified = false // this can probably be computed?
 
-  @computed get main_image() {
-    if (isString(this._display_image)) {
-      return this._display_image
-    } else {
-      return get(this, '_display_image.url')
-    }
+  @computed get primary_image() {
+    const primary_image = this._images.find(image => image.primary)
+    return primary_image ? primary_image.image_src.url : null
   }
 
   constructor(store, field_names, resource) {

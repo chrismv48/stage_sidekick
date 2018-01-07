@@ -15,8 +15,6 @@
 #  updated_at    :datetime         not null
 #  first_name    :string
 #  last_name     :string
-#  avatar        :string
-#  display_image :string
 #  type          :string
 #  order_index   :integer
 #  description   :string
@@ -29,13 +27,21 @@
 #
 
 class Role < ApplicationRecord
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (role) { "#{role.id}_#{Time.zone.now.to_i}" }
-  mount_base64_uploader :avatar, ImageUploader, file_name: -> (role) { "#{role.id}_#{Time.zone.now.to_i}" }
 
   belongs_to :user
   belongs_to :production
   belongs_to :venue
 
+  has_many :images, as: :imageable
+
   scope :actor, -> { where(title: 'Actor') }
+
+  def primary_image(default_to_non_primary = true)
+    if default_to_non_primary
+      self.images.order(primary: :desc)
+    else
+      self.images.find_by(primary: true)
+    end
+  end
 
 end

@@ -1,7 +1,7 @@
 class CostumeItemsController < ApplicationController
   before_action :set_costume_item, only: [:show, :update, :destroy]
 
-  ASSOCIATIONS_TO_INCLUDE = [:costume]
+  ASSOCIATIONS_TO_INCLUDE = [:costume, :images]
 
   # GET /costume_items
   def index

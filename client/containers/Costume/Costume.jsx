@@ -76,7 +76,7 @@ export class Costume extends React.Component {
       <Grid className="Costume">
         <Grid.Column>
           <Header as="h1">
-            <Image shape='circular' src={get(this.costume, 'display_image.url')}/>
+            <Image shape='circular' src={this.costume.primary_image}/>
             {this.costume.title}
           </Header>
           <Header as='h3' dividing>
@@ -116,7 +116,7 @@ export class Costume extends React.Component {
               const characterSceneIds = this.costume.characterScenesByCharacter[characterId]
               return (
                 <Item key={characterId}>
-                  <Item.Image src={get(character, 'display_image.url')}/>
+                  <Item.Image src={character.primary_image}/>
                   <Item.Content>
                     <Item.Header as='a'>{character.name}</Item.Header>
                     <Item.Meta>
@@ -133,11 +133,10 @@ export class Costume extends React.Component {
                           {characterSceneIds.map(characterSceneId => {
                             const sceneId = find(this.costume.characters_scenes, {'id': characterSceneId}).scene_id
                             const scene = scenes.find(scene => scene.id === sceneId)
-                            const sceneImageUrl = scene.display_image ? scene.display_image.url : null
                             return (
                               <List key={characterSceneId}>
                                 <List.Item>
-                                  <Image avatar src={sceneImageUrl}/>
+                                  <Image avatar src={scene.primary_image}/>
                                   <List.Content>
                                     <List.Header as='a'>{scene.title}</List.Header>
                                     <List.Description>{scene.description}</List.Description>

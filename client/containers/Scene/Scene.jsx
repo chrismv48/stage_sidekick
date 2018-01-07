@@ -73,7 +73,7 @@ export class Scene extends React.Component {
         <div className="header-container">
           <div className={"header"}>
             <Header as="h1">
-          <Image shape='circular' src={get(this.scene, 'display_image.url')}/>
+          <Image shape='circular' src={this.scene.primary_image}/>
           {' '}{this.scene.title}
           <Header.Subheader>
             {this.scene.setting}, {this.scene.length_in_minutes}m runtime

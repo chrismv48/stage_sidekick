@@ -7,10 +7,10 @@ const FIELD_NAMES = {
   description: null,
   type: null,
   order_index: null,
-  display_image: null,
   scene_ids: [],
   role_ids: [],
-  characters_scenes: []
+  characters_scenes: [],
+  images: []
 }
 
 const RESOURCE = 'characters'

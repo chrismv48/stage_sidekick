@@ -9,7 +9,8 @@ const FIELD_NAMES = {
   setting: null,
   order_index: null,
   display_image: null,
-  character_ids: []
+  character_ids: [],
+  images: []
 }
 
 const RESOURCE = 'scenes'

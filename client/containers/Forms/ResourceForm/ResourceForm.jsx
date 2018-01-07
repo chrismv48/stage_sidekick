@@ -108,7 +108,7 @@ export class ResourceForm extends React.Component {
       if (inputType === 'image_upload') {
         return (
           <ImageUpload key={label}
-                       currentImage={resource.main_image}
+                       currentImage={resource.primary_image}
                        handleImageChange={(imageUrl) => resource[fieldName] = imageUrl}
           />
         )

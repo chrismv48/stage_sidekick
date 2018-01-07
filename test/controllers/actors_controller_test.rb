@@ -15,8 +15,6 @@
 #  updated_at    :datetime         not null
 #  first_name    :string
 #  last_name     :string
-#  avatar        :string
-#  display_image :string
 #  type          :string
 #  order_index   :integer
 #  description   :string

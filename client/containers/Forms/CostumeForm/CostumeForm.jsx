@@ -104,7 +104,7 @@ export class CostumeForm extends React.Component {
     return (
       <Segment basic>
         <Form>
-          <ImageUpload currentImage={costumeStaged.main_image}
+          <ImageUpload currentImage={costumeStaged.primary_image}
                        handleImageChange={(imageUrl) => costumeStaged.display_image = imageUrl}/>
           <Form.Field>
             <label>Title</label>
