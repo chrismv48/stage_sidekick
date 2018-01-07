@@ -2,12 +2,13 @@ import React from 'react';
 import './Character.scss'
 import {Dimmer, Grid, Header, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {get, isEmpty} from "lodash";
-import CardGroup from "components/CardGroup/CardGroup";
-import DisplayCard from "components/DisplayCard/DisplayCard";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {computed, observable} from "mobx";
 import {inject, observer} from "mobx-react/index";
+import {EditableField} from "components/EditableField/EditableField";
+import EditIcon from "components/EditIcon/EditIcon";
+import {SceneCardGroup} from "containers/CardGroups/SceneCardGroup";
 
 @inject("resourceStore", "uiStore") @observer
 export class Character extends React.Component {
@@ -42,6 +43,19 @@ export class Character extends React.Component {
     )
   }
 
+  renderEmptyContent() {
+    return (
+      <p
+        className='empty-field'
+        onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+          resourceName: 'characters',
+          resourceId: this.characterId
+        })}>
+        Click to add
+      </p>
+    )
+  }
+
   render() {
     const {roles, scenes} = this.props.resourceStore
     if (this.loading) {
@@ -70,32 +84,20 @@ export class Character extends React.Component {
           <Header as='h3' dividing>
             Description
           </Header>
-          <p>
-            {this.character.description}
-          </p>
+          <EditableField resource='characters' resourceId={this.characterId} field='description' fieldType='textarea'/>
+
           <Header as='h3' dividing>
             Scenes
+            {this.character.scene_ids.length > 0 &&
+            <span style={{float: 'right'}}>
+              <EditIcon resource='characters' resourceId={this.characterId}/>
+            </span>
+            }
           </Header>
-
-          <CardGroup resource={'scenes'}>
-            {this.character.scene_ids.map((sceneId, i) => {
-                const scene = scenes.find(scene => scene.id === sceneId)
-                return (
-                  <DisplayCard
-                    cardImage={scene.main_image}
-                    header={scene.title}
-                    meta={scene.setting}
-                    frontDescription={scene.description}
-                    label='Scene'
-                    key={`index-${i}`}
-                    sortable={false}
-                    index={i}
-                  />
-                )
-              },
-            )}
-          </CardGroup>
-
+          {this.character.scene_ids.length > 0 ?
+            <SceneCardGroup sceneIds={this.character.scene_ids}/>
+            : this.renderEmptyContent()
+          }
           <Header as='h3' dividing>
             Activity
           </Header>

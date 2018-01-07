@@ -3,14 +3,32 @@ import {inject, observer} from "mobx-react";
 import {Dimmer, Loader} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
+import {computed, observable} from "mobx";
 
 const faker = require('faker');
 
 @inject("resourceStore", "uiStore") @observer
 export class SceneCardGroup extends React.Component {
 
+  @computed get scenes() {
+    const {sceneIds, resourceStore} = this.props
+
+    if (sceneIds) {
+      return resourceStore.scenes.filter(scene => sceneIds.includes(scene.id))
+    } else {
+      return resourceStore.scenes
+    }
+  }
+
+  @observable loading = true
+
   componentDidMount() {
-    this.props.resourceStore.loadScenes()
+
+    this.loading = true
+
+    Promise.all([
+      this.props.resourceStore.loadScenes()
+    ]).then(() => this.loading = false)
   }
 
   handleDestroyScene = (event, scene) => {
@@ -44,9 +62,8 @@ export class SceneCardGroup extends React.Component {
   }
 
   render() {
-    const {scenes, isLoading} = this.props.resourceStore
 
-    if (isLoading) {
+    if (this.loading) {
       return (
         <Dimmer active={true} inverted>
           <Loader inverted>Loading</Loader>
@@ -56,7 +73,7 @@ export class SceneCardGroup extends React.Component {
 
     return (
       <CardGroup sortable resource='scenes'>
-        {scenes.map((scene, i) => {
+        {this.scenes.map((scene, i) => {
             return (
               <DisplayCard
                 cardImage={scene.main_image}

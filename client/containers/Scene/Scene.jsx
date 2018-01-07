@@ -2,12 +2,13 @@ import React from 'react';
 import './Scene.scss'
 import {Dimmer, Grid, Header, Icon, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {get} from "lodash";
-import CardGroup from "components/CardGroup/CardGroup";
-import DisplayCard from "components/DisplayCard/DisplayCard";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {computed, observable} from "mobx";
 import {inject, observer} from "mobx-react/index";
+import EditIcon from "components/EditIcon/EditIcon";
+import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
+import {EditableField} from "components/EditableField/EditableField";
 
 @inject("resourceStore", "uiStore") @observer
 export class Scene extends React.Component {
@@ -39,6 +40,19 @@ export class Scene extends React.Component {
 
     return (
       <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+    )
+  }
+
+  renderEmptyContent() {
+    return (
+      <p
+        className='empty-field'
+        onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+          resourceName: 'scenes',
+          resourceId: this.sceneId
+        })}>
+        Click to add
+      </p>
     )
   }
 
@@ -87,33 +101,20 @@ export class Scene extends React.Component {
         <Header as='h3' dividing>
           Description
         </Header>
-        <p>
-          {this.scene.description}
-        </p>
+        <EditableField resource='scenes' resourceId={this.sceneId} field='description' fieldType='textarea'/>
+
         <Header as='h3' dividing>
           Characters
+          {this.scene.character_ids.length > 0 &&
+          <span style={{float:'right'}}>
+              <EditIcon resource='scenes' resourceId={this.sceneId} />
+            </span>
+          }
         </Header>
-
-        <CardGroup resource={'characters'}>
-          {this.scene.character_ids.map((characterId, i) => {
-              const character = characters.find(character => character.id === characterId)
-              const characterRole = roles.find(role => role.id === character.role_ids[0])
-              return (
-                <DisplayCard
-                  cardImage={character.main_image}
-                  header={character.name}
-                  meta={`Played by ${characterRole.first_name} ${characterRole.last_name}`}
-                  frontDescription={character.description}
-                  label='Character'
-                  key={`index-${i}`}
-                  sortable={false}
-                  link={`/characters/${characterId}`}
-                  index={i}
-                />
-              )
-            },
-          )}
-        </CardGroup>
+        {this.scene.character_ids.length > 0 ?
+          <CharacterCardGroup characterIds={this.scene.character_ids}/>
+          : this.renderEmptyContent()
+        }
 
         <Header as='h3' dividing>
           Activity

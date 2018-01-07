@@ -2,12 +2,14 @@ import React from 'react';
 import './Costume.scss'
 import {Dimmer, Grid, Header, Image, Item, Label, List, Loader, Segment, Tab,} from 'semantic-ui-react'
 import CardGroup from "components/CardGroup/CardGroup";
-import DisplayCard from "components/DisplayCard/DisplayCard";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import {find, get} from 'lodash'
+import {EditableField} from "../../components/EditableField/EditableField";
+import EditIcon from "../../components/EditIcon/EditIcon";
+import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
 
 @inject("resourceStore", "uiStore") @observer
 export class Costume extends React.Component {
@@ -44,6 +46,20 @@ export class Costume extends React.Component {
     )
   }
 
+  renderEmptyContent() {
+    return (
+      <p
+        className='empty-field'
+        onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+          resourceName: 'characters',
+          resourceId: this.characterId
+        })}>
+        Click to add
+      </p>
+    )
+  }
+
+
   render() {
     const { costume_items, characters, scenes, roles } = this.props.resourceStore
     if (this.loading) {
@@ -66,35 +82,33 @@ export class Costume extends React.Component {
           <Header as='h3' dividing>
             Description
           </Header>
-          <p>
-            {this.costume.description}
-          </p>
+          <EditableField resource='costumes' resourceId={this.costumeId} field='description' fieldType='textarea'/>
           <Header as='h3' dividing>
             Costume Items
+            {this.costume.costume_item_ids.length > 0 &&
+            <span style={{float: 'right'}}>
+              <EditIcon resource='costumes' resourceId={this.costumeId}/>
+            </span>
+            }
           </Header>
 
           <CardGroup resource={'costume_items'}>
-            {this.costume.costume_item_ids.map((costumeItemId, i) => {
-                let costumeItem = costume_items.find(costume_item => costume_item.id === this.costume.id)
-                return (
-                  <DisplayCard
-                    cardImage={costumeItem.main_image}
-                    header={costumeItem.title}
-                    meta={costumeItem.item_type}
-                    frontDescription={costumeItem.description}
-                    label='Costume Item'
-                    key={`index-${i}`}
-                    sortable={false}
-                    index={i}
-                  />
-                )
-              },
-            )}
+            {this.costume.costume_item_ids.length > 0 ?
+              <CostumeItemCardGroup costumeItemIds={this.costume.costume_item_ids}/>
+              : this.renderEmptyContent()
+            }
           </CardGroup>
           <Header as='h3' dividing>
             Character Scenes
+            {this.costume.characterScenesByCharacter.length > 0 &&
+            <span style={{float: 'right'}}>
+              <EditIcon resource='costumes' resourceId={this.costumeId}/>
+            </span>
+            }
           </Header>
           <Item.Group divided>
+            {this.costume.characterScenesByCharacter.length > 0 && this.renderEmptyContent()}
+
             {Object.keys(this.costume.characterScenesByCharacter).map(characterId => {
               characterId = parseInt(characterId)
               const character = characters.find(character => character.id === characterId)

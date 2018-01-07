@@ -1,5 +1,6 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
+import {computed, observable} from "mobx";
 import {Dimmer, Loader} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
@@ -7,8 +8,24 @@ import DisplayCard from "components/DisplayCard/DisplayCard";
 @inject("resourceStore", "uiStore") @observer
 export class CostumeItemCardGroup extends React.Component {
 
+  @computed get costume_items() {
+    const {costumeItemIds, resourceStore} = this.props
+
+    if (costumeItemIds) {
+      return resourceStore.costume_items.filter(scene => costumeItemIds.includes(scene.id))
+    } else {
+      return resourceStore.costume_items
+    }
+  }
+
+  @observable loading = true
+
   componentDidMount() {
-    this.props.resourceStore.loadCostumeItems()
+    this.loading = true
+
+    Promise.all([
+      this.props.resourceStore.loadCostumeItems()
+    ]).then(() => this.loading = false)
   }
 
   handleEditCostumeItem = (event, costumeItem) => {
@@ -22,8 +39,7 @@ export class CostumeItemCardGroup extends React.Component {
   }
 
   render() {
-    const {costume_items, isLoading} = this.props.resourceStore
-    if (isLoading) {
+    if (this.loading) {
       return (
         <Dimmer active={true} inverted>
           <Loader inverted>Loading</Loader>
@@ -33,7 +49,7 @@ export class CostumeItemCardGroup extends React.Component {
 
     return (
       <CardGroup resource={'costume_items'}>
-        {costume_items.map((costumeItem, i) => {
+        {this.costume_items.map((costumeItem, i) => {
             return (
               <DisplayCard
                 cardImage={costumeItem.main_image}
