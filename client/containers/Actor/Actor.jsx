@@ -10,11 +10,13 @@ import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "../../components/EditableField/EditableField";
 import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 import EditIcon from "components/EditIcon/EditIcon";
+import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
 
   @observable loading = true
+  @observable showLightbox = false
 
   @computed get actorId() {
     return parseInt(this.props.match.params.actorId)
@@ -57,6 +59,7 @@ export class Actor extends React.Component {
     )
   }
 
+
   render() {
     const { characters, scenes } = this.props.resourceStore
     if (this.loading) {
@@ -68,11 +71,23 @@ export class Actor extends React.Component {
         </Segment>
       )
     }
+    debugger
     return (
       <Grid className="Actor">
         <Grid.Column>
-          <Header as="h1">
-            <Image shape='circular' src={this.actor.primary_image}/>
+            <Image
+              src={this.actor.primary_image}
+              onClick={() => this.showLightbox = true}
+              size={'large'}
+              className='header-image'
+            />
+            <ImgLightbox
+              images={this.actor.images.toJS()}
+              isOpen={this.showLightbox}
+              handleOnClose={() => this.showLightbox = false}
+            />
+            <Header as="h1">
+
             {this.actor.fullName}
           </Header>
           <Header as='h3' dividing>

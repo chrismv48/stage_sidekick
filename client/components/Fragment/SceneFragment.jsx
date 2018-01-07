@@ -21,7 +21,6 @@ const SceneFragmentContent = (scene) => {
   )
 }
 
-
 class SceneFragment extends React.Component {
 
   render() {
