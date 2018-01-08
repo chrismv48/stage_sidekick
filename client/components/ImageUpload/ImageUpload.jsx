@@ -1,32 +1,28 @@
 import React from 'react';
 import {Button, Form, Icon, Image, Input, Segment} from "semantic-ui-react";
+import PropTypes from 'prop-types'
+import './ImageUpload.scss'
 
 class ImageUpload extends React.Component {
 
   processImageChange(e) {
-    const { handleImageChange } = this.props
+    const {handleAddImage} = this.props
 
     let reader = new FileReader();
     let file = e.target.files[0];
 
     reader.onloadend = () => {
-      handleImageChange(reader.result)
+      handleAddImage(reader.result)
     }
 
     reader.readAsDataURL(file)
   }
 
   render() {
-    let {currentImage} = this.props;
-    let imagePreview = null;
-    if (currentImage) {
-      imagePreview = (<Image src={currentImage} style={{maxWidth: '400px'}} />);
-    } else {
-      imagePreview = (<div>Please select an image to preview</div>);
-    }
+    const {images, handleRemoveImage} = this.props
     return (
       <Form.Field>
-        <label>Image</label>
+        <label>Images</label>
         <Segment>
           <Button as="label" htmlFor="file">
             <Icon name='upload'/>
@@ -39,7 +35,21 @@ class ImageUpload extends React.Component {
             />
           </Button>
           <Segment basic style={{paddingLeft: 0}}>
-          {imagePreview}
+            {images.length === 0 && 'Please upload an image.'}
+            {images.map((image, i) => {
+              return (
+                <Segment key={i} compact padded className='image-segment'>
+                  <Image src={image.image_src.url} size='large' className='uploaded-image'/>
+                  <Icon
+                    className='image-remove-icon'
+                    name='remove circle'
+                    color='red'
+                    onClick={() => handleRemoveImage(image.image_src.url)}
+                  />
+                </Segment>
+              )
+            })
+            }
           </Segment>
         </Segment>
       </Form.Field>
@@ -47,6 +57,10 @@ class ImageUpload extends React.Component {
   }
 }
 
-ImageUpload.propTypes = {};
+ImageUpload.propTypes = {
+  images: PropTypes.array.isRequired,
+  handleAddImage: PropTypes.func.isRequired,
+  handleRemoveImage: PropTypes.func.isRequired
+};
 
 export default ImageUpload

@@ -12,12 +12,11 @@ class ImgLightbox extends React.Component {
 
   generateLightBoxImages() {
     return this.props.images.map(image => {
-      return {src: image.image_src.url}
+      return { src: image.image_src.url }
     })
   }
 
   handleOnClickNext = () => {
-    debugger
     this.currentImage++
   }
 
@@ -27,7 +26,6 @@ class ImgLightbox extends React.Component {
 
   render() {
     const { isOpen, handleOnClose } = this.props
-    debugger
     return (
       <Lightbox
         images={this.generateLightBoxImages()}

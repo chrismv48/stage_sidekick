@@ -71,7 +71,6 @@ export class Actor extends React.Component {
         </Segment>
       )
     }
-    debugger
     return (
       <Grid className="Actor">
         <Grid.Column>
@@ -81,6 +80,15 @@ export class Actor extends React.Component {
               size={'large'}
               className='header-image'
             />
+          <a
+            className='edit-images-link'
+            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+              resourceName: 'actors',
+              resourceId: this.actor.id
+            })}
+          >
+            Edit
+          </a>
             <ImgLightbox
               images={this.actor.images.toJS()}
               isOpen={this.showLightbox}

@@ -52,5 +52,4 @@ class Actor < Role
       self.images.find_by(primary: true)
     end
   end
-
 end

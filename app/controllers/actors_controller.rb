@@ -60,6 +60,11 @@ class ActorsController < ApplicationController
         actor_measurements.user_id = @actor.user_id
         actor_measurements.save!
       end
+
+      if actor_params[:images]
+        reconcile_images(actor_params[:images])
+      end
+
       json_response = build_json_response(@actor, ASSOCIATIONS_TO_INCLUDE)
       merged_json_response = merge_in_actor_measurements(json_response)
       render json: merged_json_response, status: :created, location: @actor
@@ -112,5 +117,31 @@ class ActorsController < ApplicationController
 
     return json_response
   end
+
+  # since we can't use object.association = for images, we have to do a manual implementation
+  def reconcile_images(images)
+    current_image_ids = @actor.images.pluck(:id)
+
+    # remove associations
+    images_to_remove = current_image_ids - images.pluck(:id)
+    @actor.images.where(id: images_to_remove).each do |img_to_remove|
+      img_to_remove.update(imageable_id: nil,  imageable_type: nil)
+    end
+    # create / update
+    images.each do |image|
+      if current_image_ids.include? image['id']
+        Image.find(image['id']).update(image.except(:image_src))
+      else
+        Image.create(
+          name: image['name'],
+          imageable: @actor,
+          image_src: image['image_src']['url'],
+          primary: image['primary'] || false,
+          size: image['size']
+        )
+      end
+    end
+  end
+
 
 end

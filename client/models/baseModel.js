@@ -1,5 +1,5 @@
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {get, isString, remove} from 'lodash'
+import {get, isString, reject, remove} from 'lodash'
 import {RESOURCES} from "../constants";
 
 export class BaseModel {
@@ -46,6 +46,18 @@ export class BaseModel {
         this[`_${field}`] = attributes[field]
       })
     })
+  }
+
+  addImage(imageUrl) {
+    this.images = [{
+      image_src: { url: imageUrl},
+      name: null,
+      id: null
+    }].concat(this.images.toJS())
+  }
+
+  removeImage(imageUrl) {
+    this.images = reject(this.images, image => image.image_src.url === imageUrl)
   }
 
   asJson(modifiedOnly = true) {

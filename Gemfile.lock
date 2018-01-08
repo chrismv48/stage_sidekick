@@ -51,6 +51,7 @@ GEM
     carrierwave-base64 (2.5.3)
       carrierwave (>= 0.8.0)
       mime-types (~> 3.0)
+    coderay (1.1.2)
     concurrent-ruby (1.0.5)
     erubis (2.7.0)
     excon (0.60.0)
@@ -99,6 +100,14 @@ GEM
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     pg (0.18.4)
+    pry (0.11.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+    pry-byebug (3.4.3)
+      byebug (>= 9.0, < 9.1)
+      pry (~> 0.10)
+    pry-rails (0.3.6)
+      pry (>= 0.10.4)
     puma (3.9.1)
     rack (2.0.3)
     rack-cors (1.0.1)
@@ -165,6 +174,8 @@ DEPENDENCIES
   foreman (= 0.84.0)
   listen (~> 3.0.5)
   pg (~> 0.18.4)
+  pry-byebug
+  pry-rails
   puma (~> 3.0)
   rack-cors
   rails (~> 5.0.4)
