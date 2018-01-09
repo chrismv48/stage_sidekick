@@ -1,24 +1,8 @@
 .Scene {
-
-  .header-container {
-    display: flex;
-
-    div.header {
-      align-self: flex-start;
-    }
-    div.card-edit-icons {
-      margin-left: auto;
-      align-self: flex-end;
-
-      .edit-icon {
-        opacity: .6;
-        cursor: pointer;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
-    }
+  .edit-images-link {
+    cursor: pointer;
   }
-
+  .header-image {
+    cursor: pointer;
+  }
 }

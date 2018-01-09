@@ -1,6 +1,6 @@
 import React from 'react';
 import './Scene.scss'
-import {Dimmer, Grid, Header, Icon, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Dimmer, Grid, Header, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
 import {get} from "lodash";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
@@ -9,11 +9,13 @@ import {inject, observer} from "mobx-react/index";
 import EditIcon from "components/EditIcon/EditIcon";
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "components/EditableField/EditableField";
+import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
 
 @inject("resourceStore", "uiStore") @observer
 export class Scene extends React.Component {
 
   @observable loading = true
+  @observable showLightbox = false
 
   @computed get sceneId() {
     return parseInt(this.props.match.params.sceneId)
@@ -69,35 +71,35 @@ export class Scene extends React.Component {
     }
 
     return (
-      <Grid.Column className="Scene">
-        <div className="header-container">
-          <div className={"header"}>
-            <Header as="h1">
-          <Image shape='circular' src={this.scene.primary_image}/>
-          {' '}{this.scene.title}
+      <Grid className='Scene'>
+        <Grid.Column>
+          <Image
+            src={this.scene.primary_image}
+            onClick={() => this.showLightbox = true}
+            size={'large'}
+            className='header-image'
+          />
+          <a
+            className='edit-images-link'
+            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+              resourceName: 'scenes',
+              resourceId: this.scene.id
+            })}
+          >
+            Edit
+          </a>
+          <ImgLightbox
+            images={this.scene.images.toJS()}
+            isOpen={this.showLightbox}
+            handleOnClose={() => this.showLightbox = false}
+          />
+          <Header as="h1">
+            {this.scene.title}
           <Header.Subheader>
             {this.scene.setting}, {this.scene.length_in_minutes}m runtime
           </Header.Subheader>
-            </Header>
-          </div>
-          <div className="card-edit-icons" style={{display: 'none'}}>
-            <Icon name="edit"
-                  color="blue"
-                  size='large'
-                  onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
-                    resourceName: 'scenes',
-                    resourceId: scene.id,
-                  })}
-                  className='edit-icon'
-            />
-            <Icon name="trash"
-                  color="red"
-                  size='large'
-                  onClick={() => this.scene.destroy()}
-                  className='edit-icon'
-            />
-          </div>
-        </div>
+          </Header>
+
         <Header as='h3' dividing>
           Description
         </Header>
@@ -121,6 +123,7 @@ export class Scene extends React.Component {
         </Header>
         {this.renderActivitySection()}
       </Grid.Column>
+      </Grid>
     );
   }
 }

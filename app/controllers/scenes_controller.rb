@@ -1,5 +1,6 @@
 class ScenesController < ApplicationController
   before_action :set_scene, only: [:show, :update, :destroy]
+  before_action :parse_params, only: [:create, :update]
 
   ASSOCIATIONS_TO_INCLUDE = [:character_ids, :images]
 
@@ -17,19 +18,17 @@ class ScenesController < ApplicationController
 
   # POST /scenes
   def create
-
     if params[:order_index_swap]
-      scenes = Scene.where(id: params[:order_index_swap])
-      scenes.each_with_index do |scene|
-        scene.order_index = params[:order_index_swap].index(scene.id)
-        scene.save
-      end
+      scenes = persist_order_index_swap
       return render json: build_json_response(scenes, ASSOCIATIONS_TO_INCLUDE)
     end
 
-    @scene = Scene.new(scene_params)
+    @scene = Scene.new(@scene_params)
 
     if @scene.save
+      if params[:images]
+        reconcile_images(@scene, params[:images])
+      end
       render json: build_json_response(@scene, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @scene
     else
       render json: @scene.errors, status: :unprocessable_entity
@@ -38,7 +37,12 @@ class ScenesController < ApplicationController
 
   # PATCH/PUT /scenes/1
   def update
-    if @scene.update(scene_params)
+    if @scene.update(@scene_params)
+
+      if params[:images]
+        reconcile_images(@scene, params[:images])
+      end
+
       render json: build_json_response(@scene, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @scene.errors, status: :unprocessable_entity
@@ -55,23 +59,23 @@ class ScenesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_scene
-      @scene = Scene.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def scene_params
-      params.permit(
-        :id,
-        :production_id,
-        :title,
-        :description,
-        :order_index,
-        :length_in_minutes,
-        :setting,
-        :display_image,
-        character_ids: []
-      )
+  def set_scene
+    @scene = Scene.find(params[:id])
+  end
+
+  def parse_params
+    params.permit!
+    @scene_params = params.slice(*Scene.attribute_names, :scene_ids)
+  end
+
+  def persist_order_index_swap
+    scenes = Scene.where(id: params[:order_index_swap])
+    scenes.each_with_index do |scene|
+      scene.order_index = params[:order_index_swap].index(scene.id)
+      scene.save
     end
+    return scenes
+  end
+
 end

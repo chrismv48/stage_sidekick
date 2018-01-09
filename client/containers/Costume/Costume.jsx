@@ -10,11 +10,13 @@ import {find, get} from 'lodash'
 import {EditableField} from "../../components/EditableField/EditableField";
 import EditIcon from "../../components/EditIcon/EditIcon";
 import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
+import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
 
 @inject("resourceStore", "uiStore") @observer
 export class Costume extends React.Component {
 
   @observable loading = true
+  @observable showLightbox = false
 
   @computed get costumeId() {
     return parseInt(this.props.match.params.costumeId)
@@ -75,8 +77,27 @@ export class Costume extends React.Component {
     return (
       <Grid className="Costume">
         <Grid.Column>
+          <Image
+            src={this.costume.primary_image}
+            onClick={() => this.showLightbox = true}
+            size={'large'}
+            className='header-image'
+          />
+          <a
+            className='edit-images-link'
+            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+              resourceName: 'costumes',
+              resourceId: this.costume.id
+            })}
+          >
+            Edit
+          </a>
+          <ImgLightbox
+            images={this.costume.images.toJS()}
+            isOpen={this.showLightbox}
+            handleOnClose={() => this.showLightbox = false}
+          />
           <Header as="h1">
-            <Image shape='circular' src={this.costume.primary_image}/>
             {this.costume.title}
           </Header>
           <Header as='h3' dividing>

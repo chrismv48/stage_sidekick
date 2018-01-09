@@ -95,7 +95,6 @@ export class Actor extends React.Component {
               handleOnClose={() => this.showLightbox = false}
             />
             <Header as="h1">
-
             {this.actor.fullName}
           </Header>
           <Header as='h3' dividing>

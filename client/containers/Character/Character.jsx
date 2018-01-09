@@ -9,11 +9,13 @@ import {inject, observer} from "mobx-react/index";
 import {EditableField} from "components/EditableField/EditableField";
 import EditIcon from "components/EditIcon/EditIcon";
 import {SceneCardGroup} from "containers/CardGroups/SceneCardGroup";
+import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 
 @inject("resourceStore", "uiStore") @observer
 export class Character extends React.Component {
 
   @observable loading = true
+  @observable showLightbox = false
 
   @computed get characterId() {
     return parseInt(this.props.match.params.characterId)
@@ -68,15 +70,33 @@ export class Character extends React.Component {
       )
     }
 
-
     const characterRole = isEmpty(this.character.role_ids) ? {} : roles.find(role => role.id === this.character.role_ids[0])
 
     return (
-      <Grid className="this.character">
-        <Grid.Column className="this.character">
+      <Grid className="Character">
+        <Grid.Column>
+          <Image
+            src={this.character.primary_image}
+            onClick={() => this.showLightbox = true}
+            size={'large'}
+            className='header-image'
+          />
+          <a
+            className='edit-images-link'
+            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+              resourceName: 'characters',
+              resourceId: this.character.id
+            })}
+          >
+            Edit
+          </a>
+          <ImgLightbox
+            images={this.character.images.toJS()}
+            isOpen={this.showLightbox}
+            handleOnClose={() => this.showLightbox = false}
+          />
           <Header as="h1">
-            <Image shape='circular' src={this.character.primary_image}/>
-            {' '}{this.character.name}
+            {this.character.name}
             <Header.Subheader>
               Played by <a href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
             </Header.Subheader>

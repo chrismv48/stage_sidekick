@@ -1,5 +1,6 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
+  before_action :parse_params, only: [:create, :update]
 
   ASSOCIATIONS_TO_INCLUDE = [:role_ids, :scene_ids, :characters_scenes, :images]
 
@@ -19,17 +20,18 @@ class CharactersController < ApplicationController
   # POST /characters
   def create
     if params[:order_index_swap]
-      characters = Character.where(id: params[:order_index_swap])
-      characters.each_with_index do |character|
-        character.order_index = params[:order_index_swap].index(character.id)
-        character.save
-      end
+      characters = persist_order_index_swap
       return render json: build_json_response(characters, ASSOCIATIONS_TO_INCLUDE)
     end
 
-    @character = Character.new(character_params)
+    @character = Character.new(@character_params)
 
     if @character.save
+
+      if params[:images]
+        reconcile_images(@character, params[:images])
+      end
+
       render json: build_json_response(@character, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @character
     else
       render json: @character.errors, status: :unprocessable_entity
@@ -38,7 +40,12 @@ class CharactersController < ApplicationController
 
   # PATCH/PUT /characters/1
   def update
-    if @character.update(character_params)
+    if @character.update(@character_params)
+
+      if params[:images]
+        reconcile_images(@character, params[:images])
+      end
+
       render json: build_json_response(@character, ASSOCIATIONS_TO_INCLUDE)
     else
       render json: @character.errors, status: :unprocessable_entity
@@ -55,22 +62,23 @@ class CharactersController < ApplicationController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
+
   def set_character
     @character = Character.find(params[:id])
   end
 
-  # Only allow a trusted parameter "white list" through.
-  def character_params
-    params.permit(
-      :id,
-      :name,
-      :description,
-      :production_id,
-      :display_image,
-      scene_ids: [],
-      role_ids: [],
-    )
+  def parse_params
+    params.permit!
+    @character_params = params.slice(*Character.attribute_names, :character_ids, :role_ids, :scene_ids)
+  end
+
+  def persist_order_index_swap
+    characters = Actor.where(id: params[:order_index_swap])
+    characters.each_with_index do |character|
+      character.order_index = params[:order_index_swap].index(character.id)
+      character.save
+    end
+    return characters
   end
 
 end
