@@ -71,6 +71,7 @@ export class EditableField extends React.Component {
     return (
       <Form className='edit-input textarea-input'>
         <TextArea
+          autoFocus
           onBlur={this.handleOnBlur}
           onFocus={() => {
             this.editing = true
@@ -93,6 +94,7 @@ export class EditableField extends React.Component {
         onFocus={() => {
           this.editing = true
         }}
+        autoFocus
         className='edit-input text-input'
         onChange={(e) => this.resource[this.props.field] = e.target.value}
         onBlur={this.handleOnBlur}
@@ -124,9 +126,10 @@ export class EditableField extends React.Component {
     return (
       <div
         className={classNames('field-wrapper', this.editing ? 'edit-mode' : 'display-mode')}
+        onClick={() => this.editing = true}
       >
-        {this.renderDisplayMode()}
-        {this.renderEditMode()}
+        {this.editing ? this.renderEditMode() : this.renderDisplayMode()}
+        {/*{this.renderEditMode()}*/}
       </div>
     )
   }

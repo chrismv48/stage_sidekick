@@ -6,36 +6,16 @@
 
 .text-input {
   line-height: 0.9em;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid transparent;
 }
 
 .display-mode {
 
-  .edit-input {
-    display: none !important;
-  }
-
   &:hover {
-    .text-input {
-      display: flex !important;
-    }
-    .textarea-input {
-      display: block !important;
-    }
-    .display-input {
-      display: none !important;
-    }
-  }
-}
-
-.edit-mode {
-  .text-input {
-    display: flex !important;
-  }
-  .textarea-input {
-    display: block !important;
-  }
-
-  .display-input {
-    display: none !important;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
   }
 }
