@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180107154907) do
+ActiveRecord::Schema.define(version: 20180110231543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,15 @@ ActiveRecord::Schema.define(version: 20180107154907) do
     t.index ["character_id"], name: "index_characters_costumes_on_character_id", using: :btree
     t.index ["costume_id"], name: "index_characters_costumes_on_costume_id", using: :btree
     t.index ["scene_id"], name: "index_characters_costumes_on_scene_id", using: :btree
+  end
+
+  create_table "characters_lines", force: :cascade do |t|
+    t.integer  "line_id",      null: false
+    t.integer  "character_id", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["character_id"], name: "index_characters_lines_on_character_id", using: :btree
+    t.index ["line_id"], name: "index_characters_lines_on_line_id", using: :btree
   end
 
   create_table "characters_roles", force: :cascade do |t|
@@ -114,6 +123,16 @@ ActiveRecord::Schema.define(version: 20180107154907) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
+  end
+
+  create_table "lines", force: :cascade do |t|
+    t.integer  "scene_id"
+    t.integer  "number"
+    t.integer  "page_number"
+    t.string   "status"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["scene_id"], name: "index_lines_on_scene_id", using: :btree
   end
 
   create_table "productions", force: :cascade do |t|
