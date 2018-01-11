@@ -126,12 +126,16 @@ ActiveRecord::Schema.define(version: 20180110231543) do
   end
 
   create_table "lines", force: :cascade do |t|
+    t.integer  "production_id", null: false
     t.integer  "scene_id"
     t.integer  "number"
     t.integer  "page_number"
+    t.string   "line_type"
+    t.string   "content"
     t.string   "status"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["production_id"], name: "index_lines_on_production_id", using: :btree
     t.index ["scene_id"], name: "index_lines_on_scene_id", using: :btree
   end
 

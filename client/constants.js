@@ -4,6 +4,7 @@ import {Role} from "./models/roleModel";
 import {Costume} from "./models/costumeModel";
 import {CostumeItem} from "./models/costumeItemModel";
 import {Actor} from "./models/actorModel";
+import {Line} from "./models/lineModel";
 
 export const CHARACTER_RESOURCE = 'characters'
 export const SCENE_RESOURCE = 'scenes'
@@ -11,6 +12,7 @@ export const ROLE_RESOURCE = 'roles'
 export const ACTOR_RESOURCE = 'actors'
 export const COSTUME_RESOURCE = 'costumes'
 export const COSTUME_ITEM_RESOURCE = 'costume_items'
+export const LINE_RESOURCE = 'lines'
 
 export const RESOURCES = {
   [CHARACTER_RESOURCE]: {
@@ -48,6 +50,12 @@ export const RESOURCES = {
     pluralized: 'actors',
     singularized: 'actor',
     model: Actor
+  },
+  [LINE_RESOURCE]: {
+    apiEndpoint: 'lines',
+    pluralized: 'lines',
+    singularized: 'line',
+    model: Line
   }
 }
 

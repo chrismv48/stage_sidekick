@@ -81,10 +81,10 @@ class ActorsController < ApplicationController
 
   def merge_in_actor_measurements(json_response)
     puts json_response
-    json_response['actors'][:byId].values.each do |actor|
+    json_response['actors'].each_with_index do |actor, i|
       actor_measurement = ActorMeasurement.find_by(user_id: actor['user_id'])
       next unless actor_measurement
-      json_response['actors'][:byId][actor['id']] = actor.merge(actor_measurement.attributes.except('updated_at', 'created_at', 'id', 'user_id'))
+      json_response['actors'][i] = actor.merge(actor_measurement.attributes.except('updated_at', 'created_at', 'id', 'user_id'))
     end
 
     return json_response

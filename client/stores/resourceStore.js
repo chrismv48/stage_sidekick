@@ -1,8 +1,8 @@
 import {computed, observable, toJS, transaction} from 'mobx'
 import {difference, sortBy} from "lodash";
 import {
-  ACTOR_RESOURCE, CHARACTER_RESOURCE, COSTUME_ITEM_RESOURCE, COSTUME_RESOURCE, RESOURCES, ROLE_RESOURCE,
-  SCENE_RESOURCE
+  ACTOR_RESOURCE, CHARACTER_RESOURCE, COSTUME_ITEM_RESOURCE, COSTUME_RESOURCE, LINE_RESOURCE, RESOURCES,
+  ROLE_RESOURCE, SCENE_RESOURCE
 } from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 
@@ -14,6 +14,7 @@ export class ResourceStore {
   @observable actors = []
   @observable costumes = []
   @observable costume_items = []
+  @observable lines = []
 
   @observable isLoading = false
 
@@ -55,13 +56,16 @@ export class ResourceStore {
     return this.loadResource(ACTOR_RESOURCE, idOrIds)
   }
 
-
   loadCostumes(idOrIds = null) {
     return this.loadResource(COSTUME_RESOURCE, idOrIds)
   }
 
   loadCostumeItems(idOrIds = null) {
     return this.loadResource(COSTUME_ITEM_RESOURCE, idOrIds)
+  }
+
+  loadLines(idOrIds = null) {
+    return this.loadResource(LINE_RESOURCE, idOrIds)
   }
 
   getStagedResource(resource, id = null) {
@@ -90,7 +94,8 @@ export class ResourceStore {
     return this._api(apiEndpoint, 'GET', null, params).then(
       entities => {
         transaction(() => {
-          Object.values(entities[resource].byId).forEach(json => {
+          debugger
+          entities[resource].forEach(json => {
             this._updateResourceFromServer(json, resource)
           });
           this[resource] = sortBy(this[resource], n => n.order_index)

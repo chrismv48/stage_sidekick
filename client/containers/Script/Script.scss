@@ -1,0 +1,10 @@
+.Script {
+  .line-type-icon {
+    opacity: 0.6;
+    margin-left: 5px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

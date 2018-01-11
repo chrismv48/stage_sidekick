@@ -95,8 +95,8 @@ export class BaseModel {
 
     this.store._api(apiEndpoint, method, payload).then(
       response => {
-        // I know it says forEach but the response will always have a single value in a hash
-        Object.values(response[this.resource].byId).forEach(json => this.updateFromObject(json))
+        // I know it says forEach but the response will always have a single value in an array
+        response[this.resource].forEach(json => this.updateFromObject(json))
         if (method === 'POST') {
           this.store[this.resource].push(this)
         }

@@ -22,6 +22,11 @@ class Layout extends Component {
                 Directory
               </Menu.Item>
 
+              <Menu.Item as={Link} to="/script" id="sidebar-button" name='script' active={thisPage === '/script'}>
+                <Icon name='book'/>
+                Script
+              </Menu.Item>
+
               <Menu.Item as={Link} to="/cast" id="sidebar-button" name='cast' active={thisPage === '/cast'}>
                 <Icon name='star'/>
                 Cast
