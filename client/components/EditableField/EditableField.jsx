@@ -106,18 +106,25 @@ export class EditableField extends React.Component {
       >
         <input/>
         <Button size='mini' compact icon='checkmark' onMouseDown={this.saveChange}/>
-        <Button size='mini' compact icon='remove' onMouseDown={this.handleOnBlur}/>
+        <Button size='mini' compact icon='remove' onMouseDown={this.handleDiscardInput}/>
       </Input>
     )
   }
 
   saveChange = () => {
-    console.log('save change')
     this.resource.save()
     this.editing = false
   }
 
   handleOnBlur = () => {
+    // If the user has made changes, we want to protect against accidental clicks and make them explicitly click the x button
+    if (!this.resource.modified) {
+      // this.resource.revert()
+      this.editing = false
+    }
+  }
+
+  handleDiscardInput= () => {
     this.resource.revert()
     this.editing = false
   }

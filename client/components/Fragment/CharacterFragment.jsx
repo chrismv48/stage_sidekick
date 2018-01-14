@@ -14,7 +14,7 @@ const CharacterItemContent = (character, actor) => {
           <Link to={`characters/${character.id}`} target="_blank">
             {character.name}
           </Link>
-          <Header.Subheader>Played by {actor.first_name} {actor.last_name}</Header.Subheader>
+          <Header.Subheader>Played by <a href={`/cast/${actor.id}`}>{actor.fullName}</a></Header.Subheader>
         </Header>
       </div>
     </div>

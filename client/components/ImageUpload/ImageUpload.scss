@@ -1,5 +1,6 @@
 .image-segment {
   position: relative;
+  margin: 0 10px 0 0 !important;
 }
 
 .image-remove-icon {
@@ -13,4 +14,8 @@
   &:hover {
     opacity: 1 !important;
   }
+}
+
+.image-container {
+  display: flex;
 }

@@ -2,7 +2,7 @@ class CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:role_ids, :scene_ids, :characters_scenes, :images]
+  ASSOCIATIONS_TO_INCLUDE = [:actor_ids, :scene_ids, :characters_scenes, :images]
 
   # GET /characters
   def index
@@ -69,7 +69,7 @@ class CharactersController < ApplicationController
 
   def parse_params
     params.permit!
-    @character_params = params.slice(*Character.attribute_names, :character_ids, :role_ids, :scene_ids)
+    @character_params = params.slice(*Character.attribute_names, :character_ids, :actor_ids, :scene_ids)
   end
 
   def persist_order_index_swap

@@ -64,7 +64,7 @@ export const RESOURCES = {
 export const relationshipsByResource = {
   'scenes': ['characters'],
   'roles': [],
-  'characters': ['scenes', 'roles'],
+  'characters': ['scenes', 'actors'],
   'costume_items': ['costumes'],
   'actors': ['characters']
 }
@@ -72,6 +72,7 @@ export const relationshipsByResource = {
 export const relationshipIdToLabel = {
   'scene_ids': 'scenes',
   'role_ids': 'roles',
+  'actor_ids': 'actors',
   'character_ids': 'characters',
   'costume_ids': 'costumes',
   'costume_id': 'costume',
@@ -153,10 +154,10 @@ export const characterFormFields = [
     dropdownText: 'title',
   },
   {
-    fieldName: 'role_ids',
+    fieldName: 'actor_ids',
     label: 'Played by',
     inputType: 'dropdown',
-    dropdownText: (role) => `${role.first_name} ${role.last_name}`,
+    dropdownText: (actor) => `${actor.first_name} ${actor.last_name}`,
   },
 ]
 

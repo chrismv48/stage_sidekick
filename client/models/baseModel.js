@@ -4,7 +4,7 @@ import {RESOURCES} from "../constants";
 
 export class BaseModel {
 
-  modified = false // this can probably be computed?
+  @observable modified = false // this can probably be computed?
 
   @computed get primary_image() {
     const primary_image = this._images.find(image => image.primary)
@@ -80,6 +80,7 @@ export class BaseModel {
         this[`_${field}`] = this[`orig_${field}`]
       }
     })
+    this.modified = false
   }
 
   save() {

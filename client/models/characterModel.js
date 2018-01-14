@@ -8,7 +8,7 @@ const FIELD_NAMES = {
   type: null,
   order_index: null,
   scene_ids: [],
-  role_ids: [],
+  actor_ids: [],
   characters_scenes: [],
   images: []
 }
@@ -20,8 +20,8 @@ export class Character extends BaseModel {
   @computed get scenes() {
     return this.store && this.store.scenes.filter(scene => this.scene_ids.includes(scene.id))
   }
-  @computed get roles() {
-    return this.store && this.store.roles.filter(role => this.role_ids.includes(role.id))
+  @computed get actors() {
+    return this.store && this.store.actors.filter(actor => this.actor_ids.includes(actor.id))
   }
 
   constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {

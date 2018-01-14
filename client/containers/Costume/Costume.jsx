@@ -133,7 +133,7 @@ export class Costume extends React.Component {
             {Object.keys(this.costume.characterScenesByCharacter).map(characterId => {
               characterId = parseInt(characterId)
               const character = characters.find(character => character.id === characterId)
-              const characterRole = roles.find(role => role.id === character.role_ids[0])
+              const characterRole = roles.find(role => role.id === character.actor_ids[0])
               const characterSceneIds = this.costume.characterScenesByCharacter[characterId]
               return (
                 <Item key={characterId}>

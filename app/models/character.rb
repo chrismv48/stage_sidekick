@@ -27,7 +27,9 @@ class Character < ApplicationRecord
 
   has_many :images, as: :imageable
 
+  # TODO there's probably a way to just create a relationship with actors directly
   alias_attribute :actors, :roles
+  alias_attribute :actor_ids, :role_ids
 
   after_create do |character|
     if character.order_index.nil?

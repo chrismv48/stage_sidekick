@@ -66,7 +66,7 @@ export class CostumeCardGroup extends React.Component {
                 onDeleteCallback={(event) => this.handleDestroyCostume(event, costume)}
                 label='Costume'
                 key={`index-${i}`}
-                link={`costumes/${costume.id}`}
+                link={`/costumes/${costume.id}`}
                 sortable={false}
                 index={i}
               />

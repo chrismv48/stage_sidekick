@@ -27,7 +27,7 @@ export class CharacterCardGroup extends React.Component {
 
     Promise.all([
       this.props.resourceStore.loadCharacters(),
-      this.props.resourceStore.loadRoles()
+      this.props.resourceStore.loadActors()
     ]).then(() => this.loading = false)
 
   }
@@ -56,7 +56,7 @@ export class CharacterCardGroup extends React.Component {
         {characterRole &&
         <Header as="h5">
           Played by <a
-          href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+          href={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</a>
         </Header>
         }
         {character.description}
@@ -76,7 +76,7 @@ export class CharacterCardGroup extends React.Component {
     return (
       <CardGroup sortable resource='characters'>
         {this.characters.map((character, i) => {
-          const characterRole = character.roles.length > 0 ? character.roles[0] : null
+          const characterRole = character.actors.length > 0 ? character.actors[0] : null
           return (
             <DisplayCard
               cardImage={character.primary_image}
@@ -90,7 +90,7 @@ export class CharacterCardGroup extends React.Component {
               label='Character'
               key={`index-${i}`}
               index={i}
-              link={`characters/${character.id}`}
+              link={`/characters/${character.id}`}
             />
             )
           }

@@ -36,10 +36,11 @@ class ImageUpload extends React.Component {
           </Button>
           <Segment basic style={{paddingLeft: 0}}>
             {images.length === 0 && 'Please upload an image.'}
+            <div className='image-container'>
             {images.map((image, i) => {
               return (
                 <Segment key={i} compact padded className='image-segment'>
-                  <Image src={image.image_src.url} size='large' className='uploaded-image'/>
+                  <Image src={image.image_src.url} size='small' className='uploaded-image'/>
                   <Icon
                     className='image-remove-icon'
                     name='remove circle'
@@ -50,6 +51,7 @@ class ImageUpload extends React.Component {
               )
             })
             }
+            </div>
           </Segment>
         </Segment>
       </Form.Field>

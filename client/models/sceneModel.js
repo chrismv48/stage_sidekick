@@ -24,7 +24,7 @@ export class Scene extends BaseModel {
 
   @computed
   get roles() {
-    return this.store.roles.filter(role => this.role_ids.includes(role.id))
+    return this.store.actors.filter(role => this.actor_ids.includes(role.id))
   }
 
   constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {

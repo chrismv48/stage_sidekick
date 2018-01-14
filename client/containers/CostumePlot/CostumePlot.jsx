@@ -28,7 +28,7 @@ export class CostumePlot extends React.Component {
   renderCharacter(characterId) {
     const {characters, roles} = this.props.resourceStore
     const character = characters.find(character => character.id === characterId)
-    const characterRole = isEmpty(character.role_ids) ? {} : roles.find(role => role.id === character.role_ids[0])
+    const characterRole = isEmpty(character.actor_ids) ? {} : roles.find(role => role.id === character.actor_ids[0])
     return (
       <CharacterFragment character={character} actor={characterRole} />
     )

@@ -54,6 +54,6 @@ class LinesController < ApplicationController
 
   def parse_params
     params.permit!
-    @line_params = params.slice(*Line.attribute_names, :line_ids, :role_ids, :scene_ids)
+    @line_params = params.slice(*Line.attribute_names, :line_ids, :actor_ids, :scene_ids)
   end
 end

@@ -70,7 +70,7 @@ export class Character extends React.Component {
       )
     }
 
-    const characterRole = isEmpty(this.character.role_ids) ? {} : roles.find(role => role.id === this.character.role_ids[0])
+    const characterRole = isEmpty(this.character.actor_ids) ? {} : roles.find(role => role.id === this.character.actor_ids[0])
 
     return (
       <Grid className="Character">
@@ -98,7 +98,7 @@ export class Character extends React.Component {
           <Header as="h1">
             {this.character.name}
             <Header.Subheader>
-              Played by <a href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+              Played by <a href={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</a>
             </Header.Subheader>
           </Header>
           <Header as='h3' dividing>

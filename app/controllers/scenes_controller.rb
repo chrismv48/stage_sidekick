@@ -66,7 +66,7 @@ class ScenesController < ApplicationController
 
   def parse_params
     params.permit!
-    @scene_params = params.slice(*Scene.attribute_names, :scene_ids)
+    @scene_params = params.slice(*Scene.attribute_names, :character_ids)
   end
 
   def persist_order_index_swap

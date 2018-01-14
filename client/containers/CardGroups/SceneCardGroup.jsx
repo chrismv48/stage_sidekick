@@ -87,7 +87,7 @@ export class SceneCardGroup extends React.Component {
                 label='Scene'
                 key={`index-${i}`}
                 index={scene.order_index}
-                link={`scenes/${scene.id}`}
+                link={`/scenes/${scene.id}`}
                 flipped={false}
               />
             )

@@ -23,7 +23,7 @@ class CostumeItemsController < ApplicationController
     if @costume_item.save
 
       if params[:images]
-        reconcile_images(@costume_items, params[:images])
+        reconcile_images(@costume_item, params[:images])
       end
 
       render json: build_json_response(@costume_item, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @costume_item
@@ -37,7 +37,7 @@ class CostumeItemsController < ApplicationController
     if @costume_item.update(@costume_item_params)
 
       if params[:images]
-        reconcile_images(@costume_items, params[:images])
+        reconcile_images(@costume_item, params[:images])
       end
 
       render json: build_json_response(@costume_item, ASSOCIATIONS_TO_INCLUDE)
