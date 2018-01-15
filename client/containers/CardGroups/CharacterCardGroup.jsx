@@ -79,7 +79,7 @@ export class CharacterCardGroup extends React.Component {
           const characterRole = character.actors.length > 0 ? character.actors[0] : null
           return (
             <DisplayCard
-              cardImage={character.primary_image}
+              cardImage={character.cardImage}
               showEditBar
               header={character.name}
               meta={faker.random.arrayElement(['Leading Role', 'Primary Role', 'Supporting Role'])}

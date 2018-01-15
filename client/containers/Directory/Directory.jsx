@@ -76,7 +76,7 @@ export class Directory extends React.Component {
                         <Table.Row key={i}>
                           <Table.Cell>
                             <Header as='h4'>
-                              <Image id='avatar' avatar src={role.primary_image}/>
+                              <Image id='avatar' avatar src={role.avatar}/>
                               <Header.Content>
                                 {role.fullName}
                                 <Header.Subheader>{role.title}</Header.Subheader>

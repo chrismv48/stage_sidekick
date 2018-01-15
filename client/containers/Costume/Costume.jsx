@@ -78,7 +78,7 @@ export class Costume extends React.Component {
       <Grid className="Costume">
         <Grid.Column>
           <Image
-            src={this.costume.primary_image}
+            src={this.costume.primaryImage}
             onClick={() => this.showLightbox = true}
             size={'large'}
             className='header-image'
@@ -137,7 +137,7 @@ export class Costume extends React.Component {
               const characterSceneIds = this.costume.characterScenesByCharacter[characterId]
               return (
                 <Item key={characterId}>
-                  <Item.Image src={character.primary_image}/>
+                  <Item.Image src={character.cardImage}/>
                   <Item.Content>
                     <Item.Header as='a'>{character.name}</Item.Header>
                     <Item.Meta>
@@ -157,7 +157,7 @@ export class Costume extends React.Component {
                             return (
                               <List key={characterSceneId}>
                                 <List.Item>
-                                  <Image avatar src={scene.primary_image}/>
+                                  <Image avatar src={scene.cardImage}/>
                                   <List.Content>
                                     <List.Header as='a'>{scene.title}</List.Header>
                                     <List.Description>{scene.description}</List.Description>

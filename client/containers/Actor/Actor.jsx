@@ -75,7 +75,7 @@ export class Actor extends React.Component {
       <Grid className="Actor">
         <Grid.Column>
             <Image
-              src={this.actor.primary_image}
+              src={this.actor.primaryImage}
               onClick={() => this.showLightbox = true}
               size={'large'}
               className='header-image'

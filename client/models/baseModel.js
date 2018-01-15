@@ -6,9 +6,19 @@ export class BaseModel {
 
   @observable modified = false // this can probably be computed?
 
-  @computed get primary_image() {
+  @computed get primaryImage() {
     const primary_image = this._images.find(image => image.primary)
     return primary_image ? primary_image.image_src.url : null
+  }
+
+  @computed get avatar() {
+    const primary_image = this._images.find(image => image.primary)
+    return primary_image ? primary_image.image_src.thumbnail.url : null
+  }
+
+  @computed get cardImage() {
+    const primary_image = this._images.find(image => image.primary)
+    return primary_image ? primary_image.image_src.card.url : null
   }
 
   constructor(store, field_names, resource) {

@@ -61,7 +61,7 @@ export class Script extends React.Component {
               {lines.map((line, i) => {
                 return (
                     <Item key={i}>
-                      <Item.Image avatar size='mini' src={line.characters[0].primary_image}/>
+                      <Item.Image avatar size='mini' src={line.characters[0].avatar}/>
                       <Item.Content>
                         <Item.Header>
                           {line.characters[0].name}

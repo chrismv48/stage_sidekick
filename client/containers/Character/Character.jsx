@@ -76,7 +76,7 @@ export class Character extends React.Component {
       <Grid className="Character">
         <Grid.Column>
           <Image
-            src={this.character.primary_image}
+            src={this.character.primaryImage}
             onClick={() => this.showLightbox = true}
             size={'large'}
             className='header-image'

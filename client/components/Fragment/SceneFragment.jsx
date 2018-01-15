@@ -7,7 +7,7 @@ const SceneFragmentContent = (scene) => {
   return (
     <div className='fragment-container'>
       <div>
-        <Image avatar src={scene.primary_image}/>
+        <Image avatar src={scene.avatar}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>

@@ -76,7 +76,7 @@ export class SceneCardGroup extends React.Component {
         {this.scenes.map((scene, i) => {
             return (
               <DisplayCard
-                cardImage={scene.primary_image}
+                cardImage={scene.cardImage}
                 showEditBar
                 header={scene.title}
                 meta={this.generateCardMeta(scene)}

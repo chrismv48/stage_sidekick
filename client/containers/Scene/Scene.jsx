@@ -74,7 +74,7 @@ export class Scene extends React.Component {
       <Grid className='Scene'>
         <Grid.Column>
           <Image
-            src={this.scene.primary_image}
+            src={this.scene.cardImage}
             onClick={() => this.showLightbox = true}
             size={'large'}
             className='header-image'

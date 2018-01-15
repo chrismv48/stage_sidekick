@@ -44,7 +44,7 @@ class DisplayCard extends React.Component {
             {this.renderEditBar()}
           </div>
         }
-        <Image src={cardImage} height={200}/>
+        <Image src={cardImage}/>
         <Card.Content>
           <Card.Header>
             {header}

@@ -68,7 +68,7 @@ export class CastCardGroup extends React.Component {
         {actors.map((actor, i) => {
             return (
               <DisplayCard
-                cardImage={actor.primary_image}
+                cardImage={actor.cardImage}
                 showEditBar
                 header={actor.fullName}
                 frontDescription={this.generateCardFrontDescription(actor)}

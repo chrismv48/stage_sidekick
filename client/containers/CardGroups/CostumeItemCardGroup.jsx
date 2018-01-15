@@ -52,7 +52,7 @@ export class CostumeItemCardGroup extends React.Component {
         {this.costume_items.map((costumeItem, i) => {
             return (
               <DisplayCard
-                cardImage={costumeItem.primary_image}
+                cardImage={costumeItem.cardImage}
                 showEditBar
                 header={costumeItem.title}
                 frontDescription={costumeItem.description}

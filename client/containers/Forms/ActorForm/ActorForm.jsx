@@ -53,7 +53,7 @@ export class ActorForm extends React.Component {
     return (
       <Segment basic>
         <Form>
-          <ImageUpload currentImage={actorStaged.primary_image}
+          <ImageUpload currentImage={actorStaged.primaryImage}
                        handleImageChange={(imageUrl) => actorStaged.display_image = imageUrl}/>
           <Form.Field>
             <label>Name</label>
