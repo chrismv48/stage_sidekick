@@ -94,7 +94,6 @@ export class ResourceStore {
     return this._api(apiEndpoint, 'GET', null, params).then(
       entities => {
         transaction(() => {
-          debugger
           entities[resource].forEach(json => {
             this._updateResourceFromServer(json, resource)
           });

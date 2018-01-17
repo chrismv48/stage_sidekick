@@ -16,7 +16,6 @@ const Api = (endpoint, method = 'get', payload = null, params = null) => {
   if (params) {
     endpoint += `?${stringify(params)}`
   }
-
   return fetch(`/api/${endpoint}`, fetchOptions)
     .then(response => {
       return response.json()

@@ -26,4 +26,32 @@ class Line < ApplicationRecord
   # the has many relationship with characters is necessary because some lines are spoken (sang) in unison.
   has_many :characters_lines
   has_many :characters, through: :characters_lines
+
+  after_validation :update_sort_order
+  after_destroy :update_sort_order
+
+  private
+
+  # Adjust line numbers since user can insert/swap lines etc. Naive implementation for now
+  def update_sort_order
+    return unless self.number_was != self.number || self.destroyed?
+    records_to_update = Line.where('number >= ?', self.number).where.not(id: self.id)
+    if self.destroyed?
+      line_number = self.number
+      records_to_update.find_each do |record|
+        record.number = line_number
+        record.save!(validate: false) # avoid infinite loop!
+
+        line_number += 1
+      end
+    else
+      line_number = self.number + 1
+      records_to_update.find_each do |record|
+        record.number = line_number
+        record.save!(validate: false) # avoid infinite loop!
+
+        line_number += 1
+      end
+    end
+  end
 end

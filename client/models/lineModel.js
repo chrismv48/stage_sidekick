@@ -9,7 +9,7 @@ const FIELD_NAMES = {
   line_type: null,
   status: null,
   character_ids: [],
-  scene_id: {},
+  scene_id: null,
 }
 
 const RESOURCE = 'lines'

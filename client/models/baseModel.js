@@ -106,11 +106,11 @@ export class BaseModel {
 
     this.store._api(apiEndpoint, method, payload).then(
       response => {
-        // I know it says forEach but the response will always have a single value in an array
-        response[this.resource].forEach(json => this.updateFromObject(json))
-        if (method === 'POST') {
-          this.store[this.resource].push(this)
-        }
+        transaction(() => {
+          response[this.resource].forEach(json => {
+            this.store._updateResourceFromServer(json, this.resource)
+          })
+        })
         // Clean up staged resource reference
         const resourceObj = RESOURCES[this.resource]
         this.store[`${resourceObj.singularized}Staged`] = undefined
@@ -122,7 +122,16 @@ export class BaseModel {
     const method = 'delete'
     const apiEndpoint = RESOURCES[this.resource].apiEndpoint + `/${this.id}`
 
-    this.store._api(apiEndpoint, method)
+    this.store._api(apiEndpoint, method).then(
+      response => {
+        transaction(() => {
+          if (!response[this.resource]) { return }
+          response[this.resource].forEach(json => {
+            this.store._updateResourceFromServer(json, this.resource)
+          })
+        })
+      }
+    )
     remove(this.store[this.resource], (n) => n.id === this.id)
 
   }

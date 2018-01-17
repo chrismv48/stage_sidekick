@@ -1,12 +1,16 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Dimmer, Grid, Header, Icon, Item, Loader, Segment} from 'semantic-ui-react'
+import {Button, Dimmer, Grid, Header, Loader, Segment} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {observable} from "mobx";
+import Line from "components/Line/Line";
 
 @inject("resourceStore", "uiStore") @observer
 export class Script extends React.Component {
+
   @observable loading = true
+  @observable editingLineId = null
+  @observable showNewLineAbove = null
 
   componentDidMount() {
     this.loading = true
@@ -17,24 +21,40 @@ export class Script extends React.Component {
     ]).then(() => this.loading = false)
   }
 
-  renderLineTypeIcon(lineType) {
+  handleSave(lineId) {
+    const line = this.props.resourceStore.getStagedResource('lines', lineId)
     debugger
-    let iconName = ''
-    let iconTitle = ''
-    if (lineType === 'line') {
-      iconName = 'talk'
-      iconTitle = 'Character Line'
-    } else if (lineType === 'song') {
-      iconName = 'music'
-      iconTitle = 'Song'
-    } else if (lineType === 'action') {
-      iconName = 'microphone slash'
-      iconTitle = 'Action'
+    if (!lineId && this.showNewLineAbove) {
+      if (this.showNewLineAbove === -1) {
+        line.number = this.props.resourceStore.lines.length + 1
+      } else {
+        line.number = this.showNewLineAbove
+      }
     }
+    line.save()
+    this.editingLineId = null
+    this.showNewLineAbove = null
+  }
 
-    return (
-      <Icon name={iconName} color='grey' size='small' className='line-type-icon' title={iconTitle} />
-    )
+  handleCancel(lineId) {
+    const line = this.props.resourceStore.getStagedResource('lines', lineId)
+    line.revert()
+    this.editingLineId = null
+    this.showNewLineAbove = null
+  }
+
+  handleAddLine = () => {
+    this.showNewLineAbove = -1
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  handleInsertAbove(lineNumber) {
+    this.showNewLineAbove = lineNumber
+  }
+
+  handleDelete(lineId) {
+    const line = this.props.resourceStore.getStagedResource('lines', lineId)
+    line.destroy()
   }
 
   render() {
@@ -57,28 +77,46 @@ export class Script extends React.Component {
             <Header as="h2" dividing>
               Script
             </Header>
-            <Item.Group relaxed>
-              {lines.map((line, i) => {
+            <Button primary icon='plus' onClick={this.handleAddLine} content='Add line'/>
+            <div className='lines-container'>
+              {lines.sort((a, b) => a.number - b.number).map((line, i) => {
                 return (
-                    <Item key={i}>
-                      <Item.Image avatar size='mini' src={line.characters[0].avatar}/>
-                      <Item.Content>
-                        <Item.Header>
-                          {line.characters[0].name}
-                          {this.renderLineTypeIcon(line.line_type)}
-                          </Item.Header>
-                        <Item.Meta>
-                          <span className='price'>{line.type}</span>
-                        </Item.Meta>
-                        <Item.Description>
-                          {line.content}
-                          </Item.Description>
-                      </Item.Content>
-                    </Item>
-                  )
-                }
-              )}
-            </Item.Group>
+                  <React.Fragment key={i}>
+                    {this.showNewLineAbove === line.number &&
+                    <Line
+                      lineId={null}
+                      editMode={true}
+                      handleSave={() => this.handleSave(null)}
+                      handleCancel={() => this.handleCancel(null)}
+                    />
+                    }
+                    <Line
+                      lineId={line.id}
+                      editMode={this.editingLineId === line.id}
+                      handleEdit={() => this.editingLineId = line.id}
+                      handleSave={() => this.handleSave(line.id)}
+                      handleCancel={() => this.handleCancel(line.id)}
+                      handleInsertAbove={() => this.handleInsertAbove(line.number)}
+                      handleDelete={() => this.handleDelete(line.id)}
+                    />
+                  </React.Fragment>
+                )
+              })
+              }
+              {this.showNewLineAbove === -1 &&
+              <Line
+                lineId={null}
+                editMode={true}
+                handleSave={() => this.handleSave(null)}
+                handleCancel={() => this.handleCancel(null)}
+              />
+              }
+              {this.showNewLineAbove !== -1 &&
+              <Segment className='add-line-text' onClick={() => this.showNewLineAbove = -1}>
+                <p>Click to add new line</p>
+              </Segment>
+              }
+            </div>
           </Grid.Column>
         </Grid.Row>
       </Grid>
