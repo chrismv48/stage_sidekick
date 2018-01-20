@@ -113,6 +113,7 @@ export class ResourceForm extends React.Component {
             handleAddImage={(imageUrl) => resource.addImage(imageUrl)}
             handleRemoveImage={(imageUrl) => resource.removeImage(imageUrl)}
             handleChangePrimary={(imageId) => resource.setPrimaryImage(imageId)}
+            handleOnSort={({oldIndex, newIndex}) => resource.updateImageOrder(oldIndex, newIndex)}
           />
         )
       }

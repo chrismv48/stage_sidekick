@@ -1,6 +1,7 @@
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {get, isString, reject, remove} from 'lodash'
+import {get, isString, reject, remove, sortBy} from 'lodash'
 import {RESOURCES} from "../constants";
+import {arrayMove} from "react-sortable-hoc";
 
 export class BaseModel {
 
@@ -77,6 +78,17 @@ export class BaseModel {
     })
   }
 
+  updateImageOrder(oldIndex, newIndex) {
+    debugger
+    const newOrder = arrayMove(this.images.map(image => image.id), oldIndex, newIndex)
+    transaction(() => {
+      for (let image of this.images) {
+        image.order_index = newOrder.indexOf(image.id)
+      }
+      this.images = sortBy(this.images, image => image.order_index)
+    })
+  }
+
   asJson(modifiedOnly = true) {
     let json = {}
     Object.keys(this.field_names).forEach(field => {
@@ -141,6 +153,7 @@ export class BaseModel {
       }
     )
     remove(this.store[this.resource], (n) => n.id === this.id)
-
   }
+
+
 }

@@ -11,6 +11,7 @@
 #  imageable_id   :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  order_index    :integer
 #
 # Indexes
 #
@@ -25,8 +26,21 @@ class Image < ApplicationRecord
   after_initialize :init
   before_validation :assign_primary
 
+  before_save :assign_order_index
+
   def init
     self.name ||= "#{self.imageable_type}_#{self.imageable_id}_#{Time.zone.now.to_i}"
+  end
+
+  def assign_order_index
+    return unless self.order_index.nil?
+    last_image = self.other_images_for_type.order(:order_index).last
+    self.order_index = (last_image.try(:order_index) || 1) + 1
+  end
+
+
+  def other_images_for_type
+    Image.where(imageable_type: self.imageable_type, imageable_id: self.imageable_id).where.not(id: self.id)
   end
 
   # since at least one image per imageable needs to be primary, we need to assign it appropriately

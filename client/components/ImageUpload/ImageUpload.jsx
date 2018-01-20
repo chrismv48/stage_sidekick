@@ -3,6 +3,58 @@ import {Button, Form, Icon, Image, Input, Label, Radio, Segment} from "semantic-
 import PropTypes from 'prop-types'
 import './ImageUpload.scss'
 import {observer} from "mobx-react";
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+
+const SortableImage = SortableElement(({image, handleChangePrimary, handleRemoveImage}) => {
+  return (
+    <Segment compact padded className='image-segment'>
+      {
+        image.primary &&
+        <Label color='blue' attached='top left' size='mini'>Primary</Label>
+      }
+      <Form.Field>
+        <Radio
+          value={`option${image.id}`}
+          onChange={() => handleChangePrimary(image.id)}
+          name='primary-image-radio'
+          checked={image.primary}
+          label=' '
+        />
+        <Image
+          inline
+          src={image.image_src.url}
+          size='small'
+          className='uploaded-image'
+        />
+        <Icon
+          className='image-remove-icon'
+          name='remove circle'
+          color='red'
+          onClick={() => handleRemoveImage(image.image_src.url)}
+        />
+      </Form.Field>
+    </Segment>
+  )
+})
+
+const SortableImages = SortableContainer(({images, handleChangePrimary, handleRemoveImage}) => {
+  return (
+    <div className='image-container'>
+      {images.map((image, i) => {
+        return (
+          <SortableImage
+            image={image}
+            key={`image-${i}`}
+            index={i}
+            handleChangePrimary={handleChangePrimary}
+            handleRemoveImage={handleRemoveImage}
+          />
+        )
+      })
+      }
+    </div>
+  )
+})
 
 @observer
 class ImageUpload extends React.Component {
@@ -21,7 +73,7 @@ class ImageUpload extends React.Component {
   }
 
   render() {
-    const {images, handleRemoveImage, handleChangePrimary} = this.props
+    const {images, handleRemoveImage, handleChangePrimary, handleOnSort} = this.props
     return (
       <Form.Field>
         <label>Images</label>
@@ -36,42 +88,17 @@ class ImageUpload extends React.Component {
               style={{display: 'none'}}
             />
           </Button>
-          <Segment basic style={{paddingLeft: 0}}>
+          <Segment basic style={{paddingLeft: 0, cursor: 'move'}}>
             {images.length === 0 && 'Please upload an image.'}
-            <div className='image-container'>
-                {images.map((image, i) => {
-                  return (
-                    <Segment key={i} compact padded className='image-segment'>
-                      {
-                        image.primary &&
-                        <Label color='blue' attached='top left' size='mini'>Primary</Label>
-                      }
-                      <Form.Field>
-                        <Radio
-                          value={`option${i}`}
-                          onChange={() => handleChangePrimary(image.id)}
-                          name='primary-image-radio'
-                          checked={image.primary}
-                          label=' '
-                        />
-                        <Image
-                          inline
-                          src={image.image_src.url}
-                          size='small'
-                          className='uploaded-image'
-                        />
-                        <Icon
-                          className='image-remove-icon'
-                          name='remove circle'
-                          color='red'
-                          onClick={() => handleRemoveImage(image.image_src.url)}
-                        />
-                      </Form.Field>
-                    </Segment>
-                  )
-                })
-                }
-            </div>
+            <SortableImages
+              images={images}
+              handleRemoveImage={handleRemoveImage}
+              handleChangePrimary={handleChangePrimary}
+              onSortEnd={handleOnSort}
+              axis='xy'
+              helperClass='sortableHelper'
+              distance={5}
+            />
           </Segment>
         </Segment>
       </Form.Field>
@@ -83,7 +110,8 @@ ImageUpload.propTypes = {
   images: PropTypes.array.isRequired,
   handleAddImage: PropTypes.func.isRequired,
   handleRemoveImage: PropTypes.func.isRequired,
-  handleChangePrimary: PropTypes.func.isRequired
+  handleChangePrimary: PropTypes.func.isRequired,
+  handleOnSort: PropTypes.func.isRequired
 };
 
 export default ImageUpload

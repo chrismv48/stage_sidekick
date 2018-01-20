@@ -31,7 +31,8 @@ class ApplicationController < ActionController::API
           imageable: imageable,
           image_src: image['image_src']['url'],
           primary: image['primary'] || false,
-          size: image['size']
+          size: image['size'],
+          order_index: image['order_index']
         )
       end
     end

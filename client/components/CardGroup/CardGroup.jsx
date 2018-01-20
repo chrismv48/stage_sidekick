@@ -11,7 +11,6 @@ const SortableCardGroup = SortableContainer(({children}) => children)
 class CardGroup extends React.Component {
 
   handleOnSortEnd = ({oldIndex, newIndex}) => {
-    console.log('handle on sort end')
     if (oldIndex === newIndex) return
     const {resource, resourceStore} = this.props
     resourceStore.updateOrderIndex(resource, oldIndex, newIndex)
