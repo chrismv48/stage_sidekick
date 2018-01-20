@@ -38,7 +38,6 @@ class Image < ApplicationRecord
     self.order_index = (last_image.try(:order_index) || 1) + 1
   end
 
-
   def other_images_for_type
     Image.where(imageable_type: self.imageable_type, imageable_id: self.imageable_id).where.not(id: self.id)
   end
