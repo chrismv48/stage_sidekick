@@ -24,9 +24,12 @@ class Image < ApplicationRecord
   belongs_to :imageable, polymorphic: true, optional: true
 
   after_initialize :init
+
   before_validation :assign_primary
 
   before_save :assign_order_index
+
+  default_scope { order(order_index: :asc) }
 
   def init
     self.name ||= "#{self.imageable_type}_#{self.imageable_id}_#{Time.zone.now.to_i}"
