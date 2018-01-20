@@ -70,6 +70,13 @@ export class BaseModel {
     this.images = reject(this.images, image => image.image_src.url === imageUrl)
   }
 
+  setPrimaryImage(imageId) {
+    this.images = this.images.map(image => {
+      image.primary = image.id === imageId;
+      return image
+    })
+  }
+
   asJson(modifiedOnly = true) {
     let json = {}
     Object.keys(this.field_names).forEach(field => {
@@ -102,6 +109,7 @@ export class BaseModel {
       apiEndpoint += `/${this.id}`
     }
     let payload = this.asJson(true)
+    debugger
     if (_.isEmpty(payload)) return
 
     this.store._api(apiEndpoint, method, payload).then(

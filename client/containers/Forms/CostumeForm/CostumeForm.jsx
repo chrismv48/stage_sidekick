@@ -108,6 +108,7 @@ export class CostumeForm extends React.Component {
             images={costumeStaged.images.toJS()}
             handleAddImage={(imageUrl) => costumeStaged.addImage(imageUrl)}
             handleRemoveImage={(imageUrl) => costumeStaged.removeImage(imageUrl)}
+            handleChangePrimary={(imageId) => costumeStaged.setPrimaryImage(imageId)}
           />
           <Form.Field>
             <label>Title</label>

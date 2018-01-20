@@ -112,6 +112,7 @@ export class ResourceForm extends React.Component {
             images={resource.images.toJS()}
             handleAddImage={(imageUrl) => resource.addImage(imageUrl)}
             handleRemoveImage={(imageUrl) => resource.removeImage(imageUrl)}
+            handleChangePrimary={(imageId) => resource.setPrimaryImage(imageId)}
           />
         )
       }
