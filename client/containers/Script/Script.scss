@@ -16,6 +16,51 @@
 
   .lines-container {
     margin-top: 15px;
+    margin-left: 3px;
+  }
+
+  .line-navbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .sticky {
+    position: fixed;
+    top: 45px;
+    padding: 10px 0 10px 25px;
+    background: white;
+    z-index: 2;
+    width: 100%;
+    margin-left: -25px;
+    box-shadow: 1px 0 1px grey;
+    transition: position 0.5s;
+  }
+
+  .line-slider-container {
+    margin: 0 30px;
+  }
+
+  .scene-selection-container {
+    margin: 0 30px;
+  }
+
+  .line-slider {
+    margin: 0 6px;
+    cursor: pointer;
+  }
+
+  .current-scene-label {
+    opacity: 0.5;
+    font-size: 10pt;
+  }
+
+  .scene-selection {
+
+  }
+
+  .add-line-button {
+    margin-right: 30px;
   }
 
 }

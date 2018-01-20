@@ -216,12 +216,12 @@ Image.create({
                primary: true
              })
 
-lines = Line.create(20.times.collect {|i| {
+lines = Line.create(39.times.collect {|i| {
   number: i + 1,
   production_id: 1,
   page_number: (i % 10) + 1,
   line_type: ['line', 'song', 'action'].sample,
   content: Faker::Lorem.sentence(3, true, 25),
   characters: [Character.order("RANDOM()").first],
-  scene: Scene.order("RANDOM()").first
+  scene: Scene.find(i / 20 + 1)
 }})
