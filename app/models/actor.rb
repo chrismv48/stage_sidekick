@@ -33,6 +33,9 @@ class Actor < Role
   has_many :characters_scenes, through: :characters
   has_many :scenes, through: :characters_scenes
 
+  has_many :costumes_characters_scenes, through: :characters
+  has_many :costumes, through: :characters
+
   has_many :images, as: :imageable
 
   belongs_to :user

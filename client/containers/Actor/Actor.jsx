@@ -11,6 +11,7 @@ import {EditableField} from "../../components/EditableField/EditableField";
 import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 import EditIcon from "components/EditIcon/EditIcon";
 import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import {CostumeCardGroup} from "containers/CardGroups/CostumeCardGroup";
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
@@ -142,6 +143,7 @@ export class Actor extends React.Component {
               </List>
             </div>
           </div>
+
           <Header as='h3' dividing>
             Characters
             {this.actor.character_ids.length > 0 &&
@@ -154,6 +156,15 @@ export class Actor extends React.Component {
             <CharacterCardGroup characterIds={this.actor.character_ids}/>
             : this.renderEmptyContent()
           }
+          {this.actor.costume_ids.length > 0 &&
+          <React.Fragment>
+            <Header as='h3' dividing>
+              Costumes
+            </Header>
+            <CostumeCardGroup costumeIds={this.actor.character_ids}/>
+          </React.Fragment>
+          }
+
           <Header as='h3' dividing>
             Activity
           </Header>

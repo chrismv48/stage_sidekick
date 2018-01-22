@@ -19,7 +19,8 @@ const FIELD_NAMES = {
   inseam: null,
   sleeve: null,
   shoe_size: null,
-  character_ids: []
+  character_ids: [],
+  costume_ids: []
 }
 
 export class Actor extends Role {
