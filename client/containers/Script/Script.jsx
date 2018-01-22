@@ -45,7 +45,8 @@ export class Script extends React.Component {
   scenePositions = {}
 
   componentDidMount() {
-    window.addEventListener('scroll', throttle(this.handleScroll, 400))
+    window.addEventListener('scroll', throttle(this.handleScroll, 100))
+    // window.addEventListener('scroll', this.handleScroll)
     this.loading = true
     Promise.all([
       this.props.resourceStore.loadLines(),
@@ -67,9 +68,7 @@ export class Script extends React.Component {
       this.currentLine = findNearest(window.pageYOffset, this.linePositions)
       this.sliderValue = null
     }
-    console.log(this.currentLine)
-    const pageYOffset = window.pageYOffset
-    this.enableStickyHeader = pageYOffset >= this.headerYOffset;
+    this.enableStickyHeader = window.pageYOffset >= this.headerYOffset;
   }
 
   handleSave(lineId) {
@@ -173,8 +172,8 @@ export class Script extends React.Component {
             </Header>
             <div
               ref={(node) => {
-                if (node) {
-                  this.headerYOffset = node.offsetTop + 10
+                if (node && !this.headerYOffset) {
+                  this.headerYOffset = node.offsetTop + 8
                 }
               }}
               className={classNames('line-navbar', {'sticky': this.enableStickyHeader})}
