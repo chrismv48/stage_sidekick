@@ -5,6 +5,7 @@ import {
   ROLE_RESOURCE, SCENE_RESOURCE
 } from "../constants";
 import {arrayMove} from "react-sortable-hoc";
+import {pluralizeResource} from "../helpers";
 
 export class ResourceStore {
 
@@ -104,28 +105,30 @@ export class ResourceStore {
   }
 
   _updateResourceFromServer(json, resource) {
-    const resourceModel = RESOURCES[resource].model
-    let entity = this[resource].find(entity => entity.id === json.id)
+    const pluralizedResource = pluralizeResource(resource)
+    const resourceModel = RESOURCES[pluralizedResource].model
+    let entity = this[pluralizedResource].find(entity => entity.id === json.id)
 
     if (!entity) {
       entity = new resourceModel(this)
       entity.updateFromObject(json)
-      this[resource].push(entity)
+      this[pluralizedResource].push(entity)
     } else {
       entity.updateFromObject(json)
     }
   }
 
   updateOrderIndex(resource, oldIndex, newIndex) {
-    const newOrder = arrayMove(this[resource].map(resource => resource.id), oldIndex, newIndex)
+    const pluralizedResource = pluralizeResource(resource)
+    const newOrder = arrayMove(this[pluralizedResource].map(resource => resource.id), oldIndex, newIndex)
     transaction(() => {
-      for (let resource of this[`${resource}`]) {
+      for (let resource of this[`${pluralizedResource}`]) {
         resource.order_index = newOrder.indexOf(resource.id)
       }
-      this[resource] = sortBy(this[resource], resource => resource.order_index)
+      this[pluralizedResource] = sortBy(this[resource], resource => resource.order_index)
     })
     const payload = {order_index_swap: newOrder}
-    this._api(resource, 'POST', payload)
+    this._api(pluralizedResource, 'POST', payload)
   }
 
 }

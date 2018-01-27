@@ -63,7 +63,6 @@ export class Script extends React.Component {
   }
 
   handleScroll(event) {
-    console.log(`${window.pageYOffset} : ${this.headerYOffset}`)
     if (!this.autoScrolling) {
       this.currentLine = findNearest(window.pageYOffset, this.linePositions)
       this.sliderValue = null

@@ -2,6 +2,7 @@ import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
 import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const SceneFragmentContent = (scene) => {
   return (
@@ -49,6 +50,8 @@ class SceneFragment extends React.Component {
 }
 
 
-SceneFragment.propTypes = {};
+SceneFragment.propTypes = {
+  scene: PropTypes.object.isRequired
+};
 
 export default SceneFragment

@@ -12,7 +12,11 @@ const PLURALITY_RESOURCE_MAPPING = {
   'scene_id': 'scene_ids',
   'role_id': 'role_ids',
   'costume_id': 'costume_ids',
-  'costume_item_id': 'costume_item_ids'
+  'costume_item_id': 'costume_item_ids',
+  'line': 'lines',
+  'line_id': 'line_ids',
+  'actor': 'actors',
+  'actor_id': 'actor_ids'
 }
 
 export function swapPlurality(resource) {

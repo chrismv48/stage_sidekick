@@ -7,26 +7,23 @@ const FIELD_NAMES = {
   number: null,
   page_number: null,
   line_type: null,
-  status: null,
-  character_ids: [],
-  scene_id: null,
+  status: null
+}
+
+const RELATIONSHIPS = {
+  characters: 'lines',
+  scene: 'lines',
 }
 
 const RESOURCE = 'lines'
 
 export class Line extends BaseModel {
 
-  @computed get characters() {
-    return this.store && this.store.characters.filter(character => this.character_ids.includes(character.id))
-  }
-  @computed get scene() {
-    return this.store && this.store.scenes.find(scene => this.scene_id === scene.id)
-  }
-
-  constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {
-    super(store, field_names, resource)
+  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
+    super(store, field_names, relationships, resource)
     this.store = store
 
     super._initializeFields()
+    super._initializeRelationships()
   }
 }

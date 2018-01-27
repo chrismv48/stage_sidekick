@@ -14,6 +14,8 @@ export const COSTUME_RESOURCE = 'costumes'
 export const COSTUME_ITEM_RESOURCE = 'costume_items'
 export const LINE_RESOURCE = 'lines'
 
+
+
 export const RESOURCES = {
   [CHARACTER_RESOURCE]: {
     apiEndpoint: 'characters',

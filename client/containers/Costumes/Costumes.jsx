@@ -3,6 +3,7 @@ import './Costumes.scss'
 import {Grid, Header, Menu} from 'semantic-ui-react'
 import MultipleItemLayout from "components/MultipleItemLayout/MultipleItemLayout";
 import CostumePlot from "containers/CostumePlot/CostumePlot";
+import PieceList from 'containers/PieceList/PieceList'
 
 
 export class Costumes extends React.Component {
@@ -28,6 +29,12 @@ export class Costumes extends React.Component {
         <CostumePlot/>
       )
     }
+    if (activeTabName === 'Piece List') {
+      return (
+        <PieceList/>
+      )
+    }
+
   }
 
   render() {
@@ -46,13 +53,13 @@ export class Costumes extends React.Component {
                     {name: 'Costumes', key: 1},
                     {name: 'Costume Items', key: 2},
                     {name: 'Costume Plot', key: 3},
+                    {name: 'Piece List', key: 4},
                   ]}
             />
             {this.renderContent()}
 
             </Grid.Column>
         </Grid.Row>
-        {/*<Route path={`${this.props.match.url}/:costumeId`} component={Costume}/>*/}
       </Grid>
     );
   }

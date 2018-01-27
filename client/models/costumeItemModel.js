@@ -7,22 +7,26 @@ const FIELD_NAMES = {
   description: null,
   display_image: null,
   item_type: null,
-  costume_id: {},
+  care_instructions: null,
+  source: null,
+  cost: null,
+  notes: null,
   images: []
+}
+
+const RELATIONSHIPS = {
+  costume: 'costume_items',
 }
 
 const RESOURCE = 'costume_items'
 
 export class CostumeItem extends BaseModel {
 
-  @computed get costume() {
-    return this.store.costumes.find(costume => this.costume_id === costume.id)
-  }
-
-  constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {
-    super(store, field_names, resource)
+  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
+    super(store, field_names, relationships, resource)
     this.store = store
 
     super._initializeFields()
+    super._initializeRelationships()
   }
 }

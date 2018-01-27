@@ -4,7 +4,6 @@ import {computed} from "mobx";
 export const FIELD_NAMES = {
   id: null,
   description: null,
-  user_id: null,
   title: null,
   department: null,
   status: null,
@@ -17,6 +16,8 @@ export const FIELD_NAMES = {
   user: {}
 }
 
+const RELATIONSHIPS = {}
+
 const RESOURCE = 'roles'
 
 export class Role extends BaseModel {
@@ -25,10 +26,11 @@ export class Role extends BaseModel {
     return `${this.first_name} ${this.last_name}`
   }
 
-  constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {
-    super(store, field_names, resource)
+  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
+    super(store, field_names, relationships, resource)
     this.store = store
 
     super._initializeFields()
+    super._initializeRelationships()
   }
 }

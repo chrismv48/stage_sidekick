@@ -3,7 +3,7 @@ class LinesController < ApplicationController
   before_action :set_line, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:scene_id, :character_ids]
+  ASSOCIATIONS_TO_INCLUDE = [:scene, :characters]
 
   # GET /lines
   def index

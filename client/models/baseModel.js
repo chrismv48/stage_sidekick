@@ -1,7 +1,8 @@
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {get, isString, reject, remove, sortBy} from 'lodash'
+import {get, isArray, isEmpty, isObject, isString, reject, remove, sortBy} from 'lodash'
 import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
+import {addIdToResource, pluralizeResource} from "../helpers";
 
 export class BaseModel {
 
@@ -22,14 +23,16 @@ export class BaseModel {
     return primary_image ? primary_image.image_src.card.url : null
   }
 
-  constructor(store, field_names, resource) {
+  constructor(store, field_names, relationships, resource,) {
     this.store = store
     this.field_names = field_names
     this.resource = resource
+    this.relationships = relationships
 
     this.save = this.save.bind(this)
     this.asJson = this.asJson.bind(this)
     this._initializeFields = this._initializeFields.bind(this)
+    this._initializeRelationships = this._initializeRelationships.bind(this)
   }
 
   _initializeFields() {
@@ -51,12 +54,82 @@ export class BaseModel {
     }
   }
 
+  _initializeRelationships() {
+    for (let relationship of Object.keys(this.relationships)) {
+      const relationshipIdField = addIdToResource(relationship)
+      let idFieldDefaultValue
+      let defaultValue
+      if (pluralizeResource(relationship) === relationship) {
+        idFieldDefaultValue = []
+        defaultValue = []
+      } else {
+        idFieldDefaultValue = null
+        defaultValue = {}
+      }
+      extendObservable(this, {
+        [relationship]: defaultValue,
+        [`_${relationshipIdField}`]: idFieldDefaultValue,
+        get [relationshipIdField]() {
+          return this[`_${relationshipIdField}`]
+        },
+        set [relationshipIdField](newValue) {
+          if (this[`orig_${relationshipIdField}`] === undefined) {
+            this[`orig_${relationshipIdField}`] = this[`_${relationshipIdField}`]
+            this.modified = true
+          }
+          this[`_${relationshipIdField}`] = newValue
+        }
+      })
+    }
+  }
+
   updateFromObject(attributes) {
     transaction(() => {
       Object.keys(this.field_names).forEach(field => {
-        this[`_${field}`] = attributes[field]
+        if (attributes[field] !== undefined) {
+          this[`_${field}`] = attributes[field]
+        }
+      })
+      Object.entries(this.relationships).forEach(([relationship, backRef]) => {
+        let objectRelationship = attributes[relationship]
+        if (!isEmpty(objectRelationship)) {
+          const relationshipIdField = addIdToResource(relationship)
+          // we have to handle multiple vs single object relationships differently
+          if (isArray(objectRelationship)) {
+            objectRelationship.forEach(item => {
+              this.store._updateResourceFromServer(item, pluralizeResource(relationship))
+              const relationshipRef = this.store[pluralizeResource(relationship)].find(r => r.id === item.id)
+              this._updateBackRef(relationshipRef, backRef)
+            })
+
+            this[relationship] = this.store[pluralizeResource(relationship)].filter(entity => objectRelationship.map(r => r.id).includes(entity.id))
+            this[`_${relationshipIdField}`] = this[relationship].map(r => r.id)
+
+          } else {
+            this.store._updateResourceFromServer(objectRelationship, pluralizeResource(relationship))
+            this[relationship] = this.store[pluralizeResource(relationship)].find(entity => entity.id === objectRelationship.id)
+            this[`_${relationshipIdField}`] = this[relationship].id
+
+            const relationshipRef = this.store[pluralizeResource(relationship)].find(r => r.id === objectRelationship.id)
+            this._updateBackRef(relationshipRef, backRef)
+          }
+        }
       })
     })
+  }
+
+  _updateBackRef(relationshipRef, backRef) {
+    if (relationshipRef[backRef] === undefined) { return }
+
+    if (pluralizeResource(backRef) === backRef) {
+      if (!relationshipRef[backRef].map(r => r.id).includes(this.id)) {
+        relationshipRef[backRef].push(this)
+        relationshipRef[`_${addIdToResource(backRef)}`].push(this.id)
+      }
+    } else {
+      relationshipRef[backRef] = this
+      relationshipRef[`_${addIdToResource(backRef)}`] = this.id
+    }
   }
 
   addImage(imageUrl) {
@@ -79,7 +152,6 @@ export class BaseModel {
   }
 
   updateImageOrder(oldIndex, newIndex) {
-    debugger
     const newOrder = arrayMove(this.images.map(image => image.id), oldIndex, newIndex)
     transaction(() => {
       for (let image of this.images) {
@@ -91,7 +163,12 @@ export class BaseModel {
 
   asJson(modifiedOnly = true) {
     let json = {}
-    Object.keys(this.field_names).forEach(field => {
+    Object.keys(Object.assign({}, this.field_names, this.relationships)).forEach(field => {
+      if (field === 'costume') {
+      }
+      if (field in this.relationships) {
+        field = addIdToResource(field)
+      }
       if (modifiedOnly) {
         if (this[`orig_${field}`] !== undefined && this[`_${field}`] !== this[`orig_${field}`]) {
           json[field] = this[`_${field}`]
@@ -121,7 +198,6 @@ export class BaseModel {
       apiEndpoint += `/${this.id}`
     }
     let payload = this.asJson(true)
-    debugger
     if (_.isEmpty(payload)) return
 
     this.store._api(apiEndpoint, method, payload).then(

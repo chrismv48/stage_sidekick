@@ -7,29 +7,20 @@ const FIELD_NAMES = {
   title: null,
   description: null,
   display_image: null,
-  character_ids: [],
-  scene_ids: [],
-  costume_item_ids: [],
   costumes_characters_scenes: [],
   characters_scenes: [],
   images: []
 }
 
+const RELATIONSHIPS = {
+  characters: 'costumes',
+  scenes: 'scenes',
+  costume_items: 'costumes'
+}
+
 const RESOURCE = 'costumes'
 
 export class Costume extends BaseModel {
-
-  @computed get scenes() {
-    return this.store.scenes.filter(scene => this.scene_ids.includes(scene.id))
-  }
-
-  @computed get characters() {
-    return this.store.characters.filter(character => this.character_ids.includes(character.id))
-  }
-
-  @computed get costume_items() {
-    return this.store.costume_items.filter(costume_item => this.costume_item_ids.includes(costume_item.id))
-  }
 
   // Returns hash {character: [character_scenes]}
   @computed get characterScenesByCharacter() {
@@ -46,13 +37,14 @@ export class Costume extends BaseModel {
     return groupedCharacterScenes
   }
 
-  constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {
-    super(store, field_names, resource)
+  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
+    super(store, field_names, relationships, resource)
     this.store = store
 
     this.updateCostumeCharacterScenes = this.updateCostumeCharacterScenes.bind(this)
 
     super._initializeFields()
+    super._initializeRelationships()
   }
 
   updateCostumeCharacterScenes(characterId, characterSceneIds = []) {

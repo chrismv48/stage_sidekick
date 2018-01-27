@@ -2,13 +2,18 @@
 #
 # Table name: costume_items
 #
-#  id          :integer          not null, primary key
-#  costume_id  :integer
-#  title       :string
-#  description :string
-#  item_type   :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :integer          not null, primary key
+#  costume_id        :integer
+#  title             :string
+#  description       :string
+#  item_type         :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  care_instructions :string
+#  source            :string
+#  brand             :string
+#  cost              :float
+#  notes             :string
 #
 # Indexes
 #

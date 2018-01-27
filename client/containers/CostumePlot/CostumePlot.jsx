@@ -21,16 +21,16 @@ export class CostumePlot extends React.Component {
       this.props.resourceStore.loadCostumes(),
       this.props.resourceStore.loadCharacters(),
       this.props.resourceStore.loadScenes(),
-      this.props.resourceStore.loadRoles(),
+      this.props.resourceStore.loadActors(),
     ]).then(() => this.loading = false)
   }
 
   renderCharacter(characterId) {
-    const {characters, roles} = this.props.resourceStore
+    const {characters, actors} = this.props.resourceStore
     const character = characters.find(character => character.id === characterId)
-    const characterRole = isEmpty(character.actor_ids) ? {} : roles.find(role => role.id === character.actor_ids[0])
+    const characterActor = isEmpty(character.actor_ids) ? {} : actors.find(actor => actor.id === character.actor_ids[0])
     return (
-      <CharacterFragment character={character} actor={characterRole} />
+      <CharacterFragment character={character} actor={characterActor} />
     )
   }
 
@@ -86,9 +86,6 @@ export class CostumePlot extends React.Component {
     })
 
     const columns = characterColumn.concat(sceneColumns)
-
-    console.log(columns)
-    console.log(data)
 
     return (
       <Grid className="CostumePlot">

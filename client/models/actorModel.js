@@ -19,13 +19,19 @@ const FIELD_NAMES = {
   inseam: null,
   sleeve: null,
   shoe_size: null,
-  character_ids: [],
-  costume_ids: []
+  costumes_characters_scenes: []
+}
+
+const RELATIONSHIPS = {
+  characters: 'actors',
+  costumes: 'actors'
 }
 
 export class Actor extends Role {
 
-  constructor(store = null, field_names = FIELD_NAMES, resource = RESOURCE) {
-    super(store, field_names, resource)
+  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
+    super(store, field_names, relationships, resource)
+
+    // boilerplate constructor calls are handled by parent Role class
   }
 }

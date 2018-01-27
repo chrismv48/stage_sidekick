@@ -4,7 +4,7 @@ import './ResourceForm.scss'
 import {capitalize, get, isEmpty, isString, replace} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
 import {inject, observer} from "mobx-react";
-import {isObservableArray} from 'mobx'
+import {isObservable} from 'mobx'
 import {pluralizeResource} from "helpers";
 import {formFieldsByResource, relationshipIdToLabel, relationshipsByResource} from "../../../constants";
 
@@ -79,8 +79,7 @@ export class ResourceForm extends React.Component {
         // if no dropdown options are passed, we assume we need to use the relationships to generate them
         if (isEmpty(dropdownOptions)) {
           const multiple = pluralizeResource(fieldName) === fieldName
-          const value = isObservableArray(resource[fieldName]) ? resource[fieldName].toJS() : resource[fieldName]
-          // const value = resource[fieldName] ? resource[fieldName].toJS() : (multiple ? [] : '')
+          const value = isObservable(resource[fieldName]) ? resource[fieldName].toJS() : resource[fieldName]
           const relationshipLabel = relationshipIdToLabel[fieldName] || fieldName
           dropdownOptions = {
             multiple,
