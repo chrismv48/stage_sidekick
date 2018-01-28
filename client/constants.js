@@ -222,7 +222,7 @@ export const roleFormFields = [
     },
   },
   {
-    fieldName: 'role_type',
+    fieldName: 'status',
     label: 'Employment Type',
     inputType: 'dropdown',
     inputOptions: {

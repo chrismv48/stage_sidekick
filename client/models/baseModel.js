@@ -1,26 +1,39 @@
-import {computed, extendObservable, observable, transaction} from 'mobx'
+import {computed, extendObservable, isObservable, observable, transaction} from 'mobx'
 import {get, isArray, isEmpty, isObject, isString, reject, remove, sortBy} from 'lodash'
 import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource} from "../helpers";
+import {createViewModel} from 'mobx-utils'
 
 export class BaseModel {
 
   @observable modified = false // this can probably be computed?
 
   @computed get primaryImage() {
-    const primary_image = this._images.find(image => image.primary)
+    const primary_image = this.images.find(image => image.primary)
     return primary_image ? primary_image.image_src.url : null
   }
 
   @computed get avatar() {
-    const primary_image = this._images.find(image => image.primary)
+    const primary_image = this.images.find(image => image.primary)
     return primary_image ? primary_image.image_src.thumbnail.url : null
   }
 
   @computed get cardImage() {
-    const primary_image = this._images.find(image => image.primary)
+    const primary_image = this.images.find(image => image.primary)
     return primary_image ? primary_image.image_src.card.url : null
+  }
+
+  get viewModel() {
+    if (!this._viewModel) {
+      const viewModel = createViewModel(this)
+      this._viewModel = new Proxy(viewModel, handler)
+    }
+    return this._viewModel
+  }
+
+  set viewModel(newValue) {
+    this._viewModel = newValue
   }
 
   constructor(store, field_names, relationships, resource,) {
@@ -30,7 +43,6 @@ export class BaseModel {
     this.relationships = relationships
 
     this.save = this.save.bind(this)
-    this.asJson = this.asJson.bind(this)
     this._initializeFields = this._initializeFields.bind(this)
     this._initializeRelationships = this._initializeRelationships.bind(this)
   }
@@ -38,18 +50,8 @@ export class BaseModel {
   _initializeFields() {
     let resource = this
     for (const [field, default_value] of Object.entries(this.field_names)) {
-      extendObservable(resource, {[`_${field}`]: default_value})
-      Object.defineProperty(resource, field, {
-        get: function () {
-          return resource[`_${field}`]
-        },
-        set: function (newValue) {
-          if (resource[`orig_${field}`] === undefined) {
-            resource[`orig_${field}`] = resource[`_${field}`]
-            resource.modified = true
-          }
-          resource[`_${field}`] = newValue
-        }
+      extendObservable(resource, {
+        [field]: default_value
       })
     }
   }
@@ -68,17 +70,7 @@ export class BaseModel {
       }
       extendObservable(this, {
         [relationship]: defaultValue,
-        [`_${relationshipIdField}`]: idFieldDefaultValue,
-        get [relationshipIdField]() {
-          return this[`_${relationshipIdField}`]
-        },
-        set [relationshipIdField](newValue) {
-          if (this[`orig_${relationshipIdField}`] === undefined) {
-            this[`orig_${relationshipIdField}`] = this[`_${relationshipIdField}`]
-            this.modified = true
-          }
-          this[`_${relationshipIdField}`] = newValue
-        }
+        [relationshipIdField]: idFieldDefaultValue
       })
     }
   }
@@ -87,7 +79,7 @@ export class BaseModel {
     transaction(() => {
       Object.keys(this.field_names).forEach(field => {
         if (attributes[field] !== undefined) {
-          this[`_${field}`] = attributes[field]
+          this[field] = attributes[field]
         }
       })
       Object.entries(this.relationships).forEach(([relationship, backRef]) => {
@@ -103,12 +95,12 @@ export class BaseModel {
             })
 
             this[relationship] = this.store[pluralizeResource(relationship)].filter(entity => objectRelationship.map(r => r.id).includes(entity.id))
-            this[`_${relationshipIdField}`] = this[relationship].map(r => r.id)
+            this[relationshipIdField] = this[relationship].map(r => r.id)
 
           } else {
             this.store._updateResourceFromServer(objectRelationship, pluralizeResource(relationship))
             this[relationship] = this.store[pluralizeResource(relationship)].find(entity => entity.id === objectRelationship.id)
-            this[`_${relationshipIdField}`] = this[relationship].id
+            this[relationshipIdField] = this[relationship].id
 
             const relationshipRef = this.store[pluralizeResource(relationship)].find(r => r.id === objectRelationship.id)
             this._updateBackRef(relationshipRef, backRef)
@@ -124,28 +116,28 @@ export class BaseModel {
     if (pluralizeResource(backRef) === backRef) {
       if (!relationshipRef[backRef].map(r => r.id).includes(this.id)) {
         relationshipRef[backRef].push(this)
-        relationshipRef[`_${addIdToResource(backRef)}`].push(this.id)
+        relationshipRef[addIdToResource(backRef)].push(this.id)
       }
     } else {
       relationshipRef[backRef] = this
-      relationshipRef[`_${addIdToResource(backRef)}`] = this.id
+      relationshipRef[addIdToResource(backRef)] = this.id
     }
   }
 
   addImage(imageUrl) {
-    this.images = [{
+    this.viewModel.images = [{
       image_src: { url: imageUrl},
       name: null,
       id: null
-    }].concat(this.images.toJS())
+    }].concat(this.viewModel.images.toJS())
   }
 
   removeImage(imageUrl) {
-    this.images = reject(this.images, image => image.image_src.url === imageUrl)
+    this.viewModel.images = reject(this.viewModel.images, image => image.image_src.url === imageUrl)
   }
 
   setPrimaryImage(imageId) {
-    this.images = this.images.map(image => {
+    this.viewModel.images = this.viewModel.images.toJS().map(image => {
       image.primary = image.id === imageId;
       return image
     })
@@ -161,35 +153,31 @@ export class BaseModel {
     })
   }
 
-  asJson(modifiedOnly = true) {
-    let json = {}
-    Object.keys(Object.assign({}, this.field_names, this.relationships)).forEach(field => {
-      if (field === 'costume') {
-      }
-      if (field in this.relationships) {
-        field = addIdToResource(field)
-      }
-      if (modifiedOnly) {
-        if (this[`orig_${field}`] !== undefined && this[`_${field}`] !== this[`orig_${field}`]) {
-          json[field] = this[`_${field}`]
-        }
-      } else {
-        json[field] = this[`_${field}`]
-      }
-    })
-    return json
-  }
-
   revert() {
-    Object.keys(this.field_names).forEach(field => {
-      if (this[`orig_${field}`]) {
-        this[`_${field}`] = this[`orig_${field}`]
-      }
-    })
+    delete this._viewModel
     this.modified = false
   }
 
+  getDirty() {
+    const payload = {}
+    Object.keys(Object.assign({}, this.field_names, this.relationships)).forEach(field => {
+      if (field in this.relationships) {
+        field = addIdToResource(field)
+      }
+      if (this.viewModel.isPropertyDirty(field)) {
+        payload[field] = this.viewModel[field]
+      }
+    })
+    return payload
+  }
+
   save() {
+    if (!this.viewModel.isDirty) {
+      return
+    }
+
+    let payload = this.getDirty()
+
     let method = 'POST'
     let apiEndpoint = RESOURCES[this.resource].apiEndpoint
 
@@ -197,8 +185,6 @@ export class BaseModel {
       method = 'PUT'
       apiEndpoint += `/${this.id}`
     }
-    let payload = this.asJson(true)
-    if (_.isEmpty(payload)) return
 
     this.store._api(apiEndpoint, method, payload).then(
       response => {
@@ -207,9 +193,8 @@ export class BaseModel {
             this.store._updateResourceFromServer(json, this.resource)
           })
         })
-        // Clean up staged resource reference
-        const resourceObj = RESOURCES[this.resource]
-        this.store[`${resourceObj.singularized}Staged`] = undefined
+        // Remove view model
+        delete this._viewModel
         this.modified = false
       })
   }
@@ -230,6 +215,21 @@ export class BaseModel {
     )
     remove(this.store[this.resource], (n) => n.id === this.id)
   }
-
-
 }
+
+const handler = {
+  get: function (target, name) {
+    if (!(name in target)) {
+      return target.model[name]
+    } else {
+      return target[name]
+    }
+  },
+  apply: function (target, name, args) {
+    if (!(name in target)) {
+      return target.model.call(name, args)
+    } else {
+      return target.call(name, args)
+    }
+  }
+};

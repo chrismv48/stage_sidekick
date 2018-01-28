@@ -13,11 +13,10 @@ export class EditableField extends React.Component {
 
   @computed get resource() {
     const {resourceStore, resourceId, resource} = this.props
-    return resourceStore[resource].find(resource => resource.id === resourceId)
+    return resourceStore.getStagedResource(resource, resourceId)
   }
 
   @observable editing = false
-
 
   renderDisplayMode() {
     const {fieldType} = this.props
@@ -77,7 +76,7 @@ export class EditableField extends React.Component {
             this.editing = true
           }}
           onChange={(e) => this.resource[this.props.field] = e.target.value}
-          value={this.resource[this.props.field] || ''}
+          value={this.resource[`staged_${this.props.field}`] || ''}
         >
         </TextArea>
         <div style={{float: 'right'}}>
@@ -98,7 +97,7 @@ export class EditableField extends React.Component {
         className='edit-input text-input'
         onChange={(e) => this.resource[this.props.field] = e.target.value}
         onBlur={this.handleOnBlur}
-        value={this.resource[this.props.field] || ''}
+        value={this.resource[`staged_${this.props.field}`] || ''}
         type='text'
         size='mini'
         fluid

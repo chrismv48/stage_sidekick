@@ -64,7 +64,7 @@ class Line extends React.Component {
           <Dropdown icon='ellipsis horizontal' pointing='right'>
             <Dropdown.Menu>
               <Dropdown.Item icon='share' text='Insert above' onClick={() => handleInsertAbove()}/>
-              <Dropdown.Item icon='edit' text='Edit' />
+              <Dropdown.Item icon='edit' text='Edit' onClick={() => handleEdit(this.line.id)} />
               <Dropdown.Item icon='trash' text='Delete' onClick={() => handleDelete()} />
             </Dropdown.Menu>
           </Dropdown>

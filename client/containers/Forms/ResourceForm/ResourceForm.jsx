@@ -4,23 +4,26 @@ import './ResourceForm.scss'
 import {capitalize, get, isEmpty, isString, replace} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
 import {inject, observer} from "mobx-react";
-import {isObservable} from 'mobx'
+import {isObservable, observable} from 'mobx'
 import {pluralizeResource} from "helpers";
 import {formFieldsByResource, relationshipIdToLabel, relationshipsByResource} from "../../../constants";
+import PropTypes from 'prop-types'
 
 @inject('resourceStore') @observer
 export class ResourceForm extends React.Component {
+
+  @observable loading = true
 
   componentDidMount() {
     const {resourceId, resourceName} = this.props
     const relationships = relationshipsByResource[resourceName]
 
-    // Change this to resolve eventually?
-    this.props.resourceStore.loadResource(resourceName, resourceId)
-
-    relationships.forEach(relationship =>
-      this.props.resourceStore.loadResource(relationship)
-    )
+    Promise.all([
+      this.props.resourceStore.loadResource(resourceName, resourceId),
+      relationships.forEach(relationship =>
+        this.props.resourceStore.loadResource(relationship)
+      )
+    ]).then(() => this.loading = false)
   }
 
   generateRelationshipOptions = (relationshipLabel, textField) => {
@@ -120,11 +123,10 @@ export class ResourceForm extends React.Component {
   }
 
   render() {
-    const {isLoading} = this.props.resourceStore
-    if (isLoading) {
+    if (this.loading) {
       return (
         <Segment basic>
-          <Dimmer active={isLoading} inverted>
+          <Dimmer active inverted>
             <Loader inverted>Loading</Loader>
           </Dimmer>
         </Segment>
@@ -139,7 +141,10 @@ export class ResourceForm extends React.Component {
   }
 }
 
-ResourceForm.propTypes = {};
+ResourceForm.propTypes = {
+  resourceId: PropTypes.number,
+  resourceName: PropTypes.string.isRequired
+};
 
 
 export default ResourceForm

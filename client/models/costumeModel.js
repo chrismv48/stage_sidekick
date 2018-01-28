@@ -25,7 +25,7 @@ export class Costume extends BaseModel {
   // Returns hash {character: [character_scenes]}
   @computed get characterScenesByCharacter() {
     let groupedCharacterScenes = {}
-    for (const costumeCharacterScene of this.costumes_characters_scenes) {
+    for (const costumeCharacterScene of this.staged_costumes_characters_scenes) {
       const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
       if (characterId in groupedCharacterScenes) {
         groupedCharacterScenes[characterId].push(characterSceneId)

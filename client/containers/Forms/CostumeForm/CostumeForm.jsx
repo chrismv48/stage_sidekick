@@ -105,30 +105,31 @@ export class CostumeForm extends React.Component {
       <Segment basic>
         <Form>
           <ImageUpload
-            images={costumeStaged.images.toJS()}
+            images={costumeStaged.staged_images.toJS()}
             handleAddImage={(imageUrl) => costumeStaged.addImage(imageUrl)}
             handleRemoveImage={(imageUrl) => costumeStaged.removeImage(imageUrl)}
             handleChangePrimary={(imageId) => costumeStaged.setPrimaryImage(imageId)}
+            handleOnSort={({oldIndex, newIndex}) => costumeStaged.updateImageOrder(oldIndex, newIndex)}
           />
           <Form.Field>
             <label>Title</label>
             <input
-              value={costumeStaged.title || ""}
-              onChange={(e) => costumeStaged.title = e.target.value}/>
+              value={costumeStaged.staged_title || ""}
+              onChange={(e) => costumeStaged.staged_title = e.target.value}/>
           </Form.Field>
           <Form.Field>
             <label>Description</label>
             <textarea
-              value={costumeStaged.description || ""}
-              onChange={(e) => costumeStaged.description = e.target.value}
+              value={costumeStaged.staged_description || ""}
+              onChange={(e) => costumeStaged.staged_description = e.target.value}
             />
           </Form.Field>
           <Form.Field>
             <label>Costume items</label>
             <Dropdown fluid multiple selection
                       options={this.costumeItemOptions || []}
-                      value={costumeStaged.costume_item_ids.toJS() || []}
-                      onChange={(e, data) => costumeStaged.costume_item_ids = data.value}
+                      value={costumeStaged.staged_costume_item_ids.toJS() || []}
+                      onChange={(e, data) => costumeStaged.staged_costume_item_ids = data.value}
             />
           </Form.Field>
 

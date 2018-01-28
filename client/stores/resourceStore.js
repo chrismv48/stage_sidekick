@@ -71,7 +71,7 @@ export class ResourceStore {
 
   getStagedResource(resource, id = null) {
     if (id) {
-      return this[resource].find(resource => resource.id === id)
+      return this[resource].find(resource => resource.id === id).viewModel
     }
     const resourceObj = RESOURCES[resource]
     const stagedResource = `${resourceObj.singularized}Staged`
@@ -79,7 +79,7 @@ export class ResourceStore {
       this[stagedResource] = new resourceObj.model(this)
     }
 
-    return this[stagedResource]
+    return this[stagedResource].viewModel
   }
 
   loadResource(resource, idOrIds = null, params = null) {
