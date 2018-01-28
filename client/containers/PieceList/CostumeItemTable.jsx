@@ -56,14 +56,15 @@ export class CostumeItemTable extends React.Component {
             const costumeItem = costume_items.find(costume_item => costume_item.id === costumeItemId)
             return (
               <Table.Row key={costumeItemId}>
-                <Table.Cell singleLine>
+                <Table.Cell singleLine textAlign='center'>
                   <div>
-                  <Button size='mini' compact primary icon='edit' onClick={(e) => {
-                    e.preventDefault();
-                  }}/>
-                  <Button size='mini' compact negative icon='remove' onClick={(e) => {
-                    e.preventDefault();
-                  }}/>
+                    <Button size='mini' compact primary icon='edit'
+                            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+                              resourceName: 'costume_items',
+                              resourceId: costumeItemId
+                            })}
+                    />
+                  <Button size='mini' compact negative icon='remove' onClick={() => costumeItem.destroy()} />
                   </div>
                 </Table.Cell>
                 {columns.map(column => {

@@ -1,5 +1,5 @@
 import {computed, extendObservable, isObservable, observable, transaction} from 'mobx'
-import {get, isArray, isEmpty, isObject, isString, reject, remove, sortBy} from 'lodash'
+import {get, isArray, isEmpty, isObject, isString, pull, reject, remove, sortBy} from 'lodash'
 import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource} from "../helpers";
@@ -213,6 +213,21 @@ export class BaseModel {
         })
       }
     )
+    // Remove references from relationships
+    Object.entries(this.relationships).forEach(([relationship, backRef]) => {
+      const pluralizedRelationship = pluralizeResource(relationship)
+      debugger
+      this.store[pluralizedRelationship].forEach(entity => {
+        if (pluralizeResource(backRef) === backRef) {
+          debugger
+          remove(entity[backRef], (n) => n.id === this.id)
+          pull(entity[addIdToResource(backRef)], this.id)
+        } else {
+          entity[backRef] = {}
+          entity[addIdToResource(backRef)] = null
+        }
+      })
+    })
     remove(this.store[this.resource], (n) => n.id === this.id)
   }
 }
