@@ -1,7 +1,7 @@
 import {Button, Header, Modal} from "semantic-ui-react";
 import React from "react";
 import {inject, observer} from "mobx-react";
-import {isEmpty} from "lodash";
+import {assign, isEmpty} from "lodash";
 import CostumeForm from "containers/Forms/CostumeForm/CostumeForm";
 import ResourceForm from "containers/Forms/ResourceForm/ResourceForm";
 import {computed} from "mobx";
@@ -13,12 +13,17 @@ const RESOURCE_FORM_COMPONENTS = {
   'roles': ResourceForm,
   'costumes': CostumeForm,
   'costume_items': ResourceForm,
-  // 'actors': ActorForm
   'actors': ResourceForm
 }
 
 @inject('resourceStore', 'uiStore') @observer
 export default class ResourceModal extends React.Component {
+
+  componentWillMount() {
+    const {initializeWith} = this.props
+    const resourceStaged = this.resourceStaged
+    assign(resourceStaged, initializeWith)
+  }
 
   @computed get resourceStaged() {
     const {resourceName, resourceId} = this.props

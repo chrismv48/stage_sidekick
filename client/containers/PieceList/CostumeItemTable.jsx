@@ -1,7 +1,6 @@
 import React from 'react';
 import './PieceList.scss'
 import {Button, Icon, Table} from 'semantic-ui-react'
-import {isEmpty, uniq} from "lodash";
 import 'react-table/react-table.css'
 import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
@@ -25,6 +24,10 @@ const columns = [
     accessor: 'source'
   },
   {
+    Header: 'Brand',
+    accessor: 'brand'
+  },
+  {
     Header: 'Notes',
     accessor: 'notes'
   },
@@ -39,6 +42,8 @@ export class CostumeItemTable extends React.Component {
 
   render() {
     const { costumeItemIds, resourceStore: {costume_items} } = this.props
+    const costumeItems = costume_items.filter(costume_item => costumeItemIds.includes(costume_item.id))
+    const costumeId = costumeItems.length > 0 ? costumeItems[0].costume_id : null
     return (
       <Table compact celled definition size='small'>
         <Table.Header fullWidth>
@@ -52,16 +57,15 @@ export class CostumeItemTable extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {costumeItemIds.map(costumeItemId => {
-            const costumeItem = costume_items.find(costume_item => costume_item.id === costumeItemId)
+          {costumeItems.map(costumeItem => {
             return (
-              <Table.Row key={costumeItemId}>
+              <Table.Row key={costumeItem}>
                 <Table.Cell singleLine textAlign='center'>
                   <div>
                     <Button size='mini' compact primary icon='edit'
                             onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
                               resourceName: 'costume_items',
-                              resourceId: costumeItemId
+                              resourceId: costumeItem
                             })}
                     />
                   <Button size='mini' compact negative icon='remove' onClick={() => costumeItem.destroy()} />
@@ -88,7 +92,10 @@ export class CostumeItemTable extends React.Component {
                 labelPosition='left'
                 primary
                 size='small'
-                onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {resourceName: 'costume_items', resourceId: null})}
+                onClick={() => this.props.uiStore.showModal(
+                  'RESOURCE_MODAL',
+                  {resourceName: 'costume_items', resourceId: null, initializeWith: {costume_id: costumeId}}
+                )}
               >
                 <Icon name='add' /> Add piece
               </Button>

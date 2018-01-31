@@ -9,6 +9,7 @@ const FIELD_NAMES = {
   item_type: null,
   care_instructions: null,
   source: null,
+  brand: null,
   cost: null,
   notes: null,
   images: []
