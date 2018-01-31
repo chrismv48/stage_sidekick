@@ -6,7 +6,7 @@ import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
-import {find, get} from 'lodash'
+import {find} from 'lodash'
 import {EditableField} from "../../components/EditableField/EditableField";
 import EditIcon from "../../components/EditIcon/EditIcon";
 import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
@@ -73,7 +73,6 @@ export class Costume extends React.Component {
         </Segment>
       )
     }
-
     return (
       <Grid className="Costume">
         <Grid.Column>

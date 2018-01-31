@@ -193,6 +193,26 @@ export const costumeItemFormFields = [
     inputType: 'dropdown',
     dropdownText: 'title',
   },
+  {
+    fieldName: 'care_instructions',
+    inputType: 'text',
+  },
+  {
+    fieldName: 'source',
+    inputType: 'text',
+  },
+  {
+    fieldName: 'brand',
+    inputType: 'text',
+  },
+  {
+    fieldName: 'notes',
+    inputType: 'text',
+  },
+  {
+    fieldName: 'cost',
+    inputType: 'text',
+  },
 ]
 
 export const roleFormFields = [
