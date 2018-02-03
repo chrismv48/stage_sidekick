@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Button, Dimmer, Dropdown, Grid, Header, Loader, Segment} from 'semantic-ui-react'
+import {Button, Dropdown, Grid, Header, Segment} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import Line from "components/Line/Line";
 import classNames from 'classnames'
 import {compact, throttle, uniq} from 'lodash'
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 function findNearest(target, numbers) {
   for (let key in Object.keys(numbers).sort()) {
@@ -153,11 +154,7 @@ export class Script extends React.Component {
   render() {
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
 

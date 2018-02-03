@@ -65,7 +65,7 @@ export class CostumeItemTable extends React.Component {
                     <Button size='mini' compact primary icon='edit'
                             onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
                               resourceName: 'costume_items',
-                              resourceId: costumeItem
+                              resourceId: costumeItem.id
                             })}
                     />
                   <Button size='mini' compact negative icon='remove' onClick={() => costumeItem.destroy()} />

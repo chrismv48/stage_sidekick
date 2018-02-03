@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
-import {Button, Dimmer, Grid, Header, Icon, Image, Loader, Search, Segment, Table} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Image, Search, Table} from "semantic-ui-react";
 import './Directory.scss'
 import {inject, observer} from "mobx-react/index";
 import {observable} from 'mobx'
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class Directory extends React.Component {
@@ -17,11 +18,7 @@ export class Directory extends React.Component {
   render() {
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
 

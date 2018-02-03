@@ -1,12 +1,13 @@
 import React from 'react';
 import './PieceList.scss'
-import {Dimmer, Grid, Image, Loader, Segment} from 'semantic-ui-react'
-import {isEmpty, uniq} from "lodash";
+import {Grid, Image} from 'semantic-ui-react'
+import {uniq} from "lodash";
 import 'react-table/react-table.css'
 import SceneFragment from "components/Fragment/SceneFragment";
 import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
 import CostumeItemTable from "./CostumeItemTable";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class PieceList extends React.Component {
@@ -55,7 +56,7 @@ export class PieceList extends React.Component {
       <div className='character-actor-container'>
         <Image style={{maxHeight: 200}} centered rounded src={character.primaryImage}/>
         <div style={{marginTop: 10}}>
-          <a href={`/character/${character.id}`}>
+          <a href={`/characters/${character.id}`}>
             <strong>{character.name}</strong>
           </a>
         </div>
@@ -95,11 +96,7 @@ export class PieceList extends React.Component {
   render() {
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
-import {Dimmer, Loader} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import {computed, observable} from "mobx";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 const faker = require('faker');
 
@@ -65,9 +65,7 @@ export class SceneCardGroup extends React.Component {
 
     if (this.loading) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <ContentLoader/>
       )
     }
 

@@ -1,17 +1,18 @@
 import React from 'react';
 import './Actor.scss'
-import {Dimmer, Grid, Header, Image, List, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Grid, Header, Image, List, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
-import {capitalize, find, get, replace} from 'lodash'
+import {capitalize, replace} from 'lodash'
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "../../components/EditableField/EditableField";
 import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 import EditIcon from "components/EditIcon/EditIcon";
 import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
 import {CostumeCardGroup} from "containers/CardGroups/CostumeCardGroup";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
@@ -65,11 +66,7 @@ export class Actor extends React.Component {
     const { characters, scenes } = this.props.resourceStore
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
     return (

@@ -70,6 +70,7 @@ export class ResourceStore {
   }
 
   getStagedResource(resource, id = null) {
+    debugger
     if (id) {
       return this[resource].find(resource => resource.id === id).viewModel
     }

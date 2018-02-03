@@ -1,6 +1,6 @@
 import React from 'react';
 import './Costume.scss'
-import {Dimmer, Grid, Header, Image, Item, Label, List, Loader, Segment, Tab,} from 'semantic-ui-react'
+import {Grid, Header, Image, Item, Label, List, Tab,} from 'semantic-ui-react'
 import CardGroup from "components/CardGroup/CardGroup";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
@@ -11,6 +11,7 @@ import {EditableField} from "../../components/EditableField/EditableField";
 import EditIcon from "../../components/EditIcon/EditIcon";
 import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
 import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class Costume extends React.Component {
@@ -66,11 +67,7 @@ export class Costume extends React.Component {
     const { costume_items, characters, scenes, roles } = this.props.resourceStore
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
     return (

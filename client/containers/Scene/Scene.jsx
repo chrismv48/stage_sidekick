@@ -1,7 +1,6 @@
 import React from 'react';
 import './Scene.scss'
-import {Dimmer, Grid, Header, Image, Loader, Segment, Tab,} from 'semantic-ui-react'
-import {get} from "lodash";
+import {Grid, Header, Image, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {computed, observable} from "mobx";
@@ -10,6 +9,7 @@ import EditIcon from "components/EditIcon/EditIcon";
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "components/EditableField/EditableField";
 import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class Scene extends React.Component {
@@ -62,11 +62,7 @@ export class Scene extends React.Component {
     const {characters, roles} = this.props.resourceStore
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
 

@@ -1,13 +1,14 @@
 import React from 'react';
-import {Dimmer, Dropdown, Form, Loader, Segment} from "semantic-ui-react";
+import {Dropdown, Form} from "semantic-ui-react";
 import './ResourceForm.scss'
-import {capitalize, get, isEmpty, isString, replace} from "lodash";
+import {capitalize, isEmpty, isString, replace} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
 import {inject, observer} from "mobx-react";
 import {isObservable, observable} from 'mobx'
 import {pluralizeResource} from "helpers";
 import {formFieldsByResource, relationshipIdToLabel, relationshipsByResource} from "../../../constants";
 import PropTypes from 'prop-types'
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject('resourceStore') @observer
 export class ResourceForm extends React.Component {
@@ -125,11 +126,7 @@ export class ResourceForm extends React.Component {
   render() {
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader/>
       )
     }
 

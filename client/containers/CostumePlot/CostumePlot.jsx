@@ -1,6 +1,6 @@
 import React from 'react';
 import './CostumePlot.scss'
-import {Dimmer, Grid, Loader, Segment,} from 'semantic-ui-react'
+import {Grid,} from 'semantic-ui-react'
 import {isEmpty} from "lodash";
 import 'react-table/react-table.css'
 import ReactTable from "react-table";
@@ -9,6 +9,7 @@ import CharacterFragment from "components/Fragment/CharacterFragment";
 import CostumeFragment from "components/Fragment/CostumeFragment";
 import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class CostumePlot extends React.Component {
@@ -47,11 +48,7 @@ export class CostumePlot extends React.Component {
     const {characters, scenes} = this.props.resourceStore
     if (this.loading) {
       return (
-        <Segment basic>
-          <Dimmer active={true} inverted>
-            <Loader inverted>Loading</Loader>
-          </Dimmer>
-        </Segment>
+        <ContentLoader />
       )
     }
 

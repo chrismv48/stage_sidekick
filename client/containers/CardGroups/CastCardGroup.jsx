@@ -1,9 +1,10 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
 import {observable} from 'mobx'
-import {Dimmer, Header, Loader} from "semantic-ui-react";
+import {Header} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class CastCardGroup extends React.Component {
@@ -57,9 +58,7 @@ export class CastCardGroup extends React.Component {
     const {actors} = this.props.resourceStore
     if (this.loading) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <ContentLoader/>
       )
     }
 

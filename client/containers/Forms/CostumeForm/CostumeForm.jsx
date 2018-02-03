@@ -1,10 +1,11 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
 import {computed, createTransformer, observable} from 'mobx'
-import {Dimmer, Dropdown, Form, Icon, Loader, Segment} from "semantic-ui-react";
+import {Dropdown, Form, Icon, Segment} from "semantic-ui-react";
 import './CostumeForm.scss'
-import {get, pullAll} from "lodash";
+import {pullAll} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
+import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
 export class CostumeForm extends React.Component {
@@ -93,9 +94,7 @@ export class CostumeForm extends React.Component {
 
     if (this.loading) {
       return (
-        <Dimmer active={true} inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
+        <ContentLoader/>
       )
     }
     const characterScenesByCharacter = this.costumeStaged.characterScenesByCharacter
