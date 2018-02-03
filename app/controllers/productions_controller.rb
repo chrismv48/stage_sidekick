@@ -48,7 +48,7 @@ class ProductionsController < ApplicationController
         last_name: user.last_name,
         email: user.email,
         phone_number: user.phone_number,
-        role_type: role.role_type,
+        type: role.type,
         title: role.title,
         department: role.department,
         staff: role.production_id.nil?,

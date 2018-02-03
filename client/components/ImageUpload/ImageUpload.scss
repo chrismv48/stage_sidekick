@@ -1,0 +1,26 @@
+.image-segment {
+  position: relative;
+  margin: 0 10px 10px 0 !important;
+}
+
+.image-remove-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px;
+  cursor: pointer;
+  opacity: 0.5 !important;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap
+}
+
+.sortableHelper {
+  z-index: 1000;
+}

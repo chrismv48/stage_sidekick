@@ -1,0 +1,31 @@
+# == Schema Information
+#
+# Table name: images
+#
+#  id             :integer          not null, primary key
+#  name           :string           not null
+#  primary        :boolean          default(FALSE), not null
+#  image_src      :string           not null
+#  size           :string
+#  imageable_type :string
+#  imageable_id   :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  order_index    :integer
+#
+# Indexes
+#
+#  index_images_on_imageable_type_and_imageable_id  (imageable_type,imageable_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

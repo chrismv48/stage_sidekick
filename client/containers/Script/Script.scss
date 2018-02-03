@@ -1,0 +1,65 @@
+.Script {
+  .line-type-icon {
+    opacity: 0.6;
+    margin-left: 5px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .add-line-text {
+    font-style: italic;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .lines-container {
+    margin-top: 15px;
+    margin-left: 3px;
+  }
+
+  .line-navbar {
+    display: flex;
+    align-items: center;
+
+    .line-slider-container {
+      flex: 2;
+      text-align: center;
+    }
+
+    .scene-selection-container {
+      flex: 3;
+    }
+
+    .add-line-button {
+      flex: 1;
+    }
+  }
+
+  .sticky {
+    position: fixed;
+    top: 45px;
+    background: white;
+    z-index: 2;
+    width: 100%;
+    margin-left: -25px;
+    box-shadow: 1px 0 1px grey;
+    padding: 10px 0 10px 25px;
+    backface-visibility: hidden // might mitigate jumpiness when scrolling?
+  }
+
+  .sticky + .lines-container {
+    padding-top: 50px;
+  }
+
+  .line-slider {
+    margin: 0 6px;
+    cursor: pointer;
+  }
+
+  .current-scene-label {
+    opacity: 0.5;
+    font-size: 10pt;
+  }
+}

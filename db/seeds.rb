@@ -18,9 +18,9 @@ production = Production.create(
   start_date: Time.zone.today + 3.months
 )
 
-job_titles = ['Producer', 'Director', 'Administration', 'Actor', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
+job_titles = ['Producer', 'Director', 'Administration', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
 scene_settings = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Beach', 'Indoors']
-departments = ['Production', 'Lighting', 'Costumes', 'Acting', 'Administration']
+departments = ['Production', 'Lighting', 'Costumes', 'Administration']
 statuses = ['Full-time', 'Contractor', 'Part-time']
 costume_item_types = ['Jeans', 'Shirt', 'Skirt', 'Dress', 'Shoes', 'Belt', 'Hat']
 
@@ -28,12 +28,13 @@ users = User.create(20.times.collect {|i| {
   first_name: Faker::Name.first_name,
   last_name: Faker::Name.last_name,
   email: Faker::Internet.email,
-  phone_number: Faker::PhoneNumber.cell_phone,
+  # phone_number: Faker::PhoneNumber.cell_phone,
+  phone_number: Faker::Base.numerify('(###) ###-####'),
   username: Faker::Internet.user_name,
   default_title: job_titles.sample
 }})
 
-roles = Role.create(users.map {|user| {
+roles = Role.create(users[0..14].map {|user| {
   user_id: user.id,
   first_name: user.first_name,
   last_name: user.last_name,
@@ -41,66 +42,91 @@ roles = Role.create(users.map {|user| {
   venue_id: venue.id,
   title: user.default_title,
   department: departments.sample,
-  role_type: statuses.sample,
+  status: statuses.sample,
   start_date: Faker::Date.between(2.years.ago, Date.today),
-  remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
 }})
 
-# characters = Character.create(10.times.collect {|i| {
-#   name: Faker::Name.first_name,
-#   description: Faker::ChuckNorris.fact,
-#   production_id: production.id,
-#   actors: [roles.sample],
-#   order_index: i,
-#   remote_display_image_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}"
-# }})
+roles.each do |role|
+  Image.create({
+                 imageable: role,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: true
+               })
+end
+
+actors = Actor.create(users[15..-1].map {|user| {
+  user_id: user.id,
+  first_name: user.first_name,
+  last_name: user.last_name,
+  production_id: production.id,
+  venue_id: venue.id,
+  title: 'Actor',
+  department: 'Acting',
+  status: 'Contractor',
+  start_date: Faker::Date.between(2.years.ago, Date.today),
+}})
+
+actors.each do |actor|
+  Image.create({
+                 imageable: actor,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: true
+               })
+end
+
+actors.each do |actor|
+  Image.create({
+                 imageable: actor,
+                 remote_image_src_url: "https://source.unsplash.com/collection/888877&sig=#{rand(1..1000)}",
+                 primary: false
+               })
+end
 
 characters = [
   Character.create(
     name: 'Titania',
     description: "Titania is a character in William Shakespeare's play A Midsummer Night's Dream. In the play, she is the queen of the fairies. Due to Shakespeare's influence, later fiction has often used the name \"Titania\" for fairy queen characters.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 1,
     production_id: production.id,
-    remote_display_image_url: 'https://i.pinimg.com/736x/9b/51/d4/9b51d419edbb97546bc7dcca3de66fe7--fairy-queen-michelle-pfeiffer.jpg'
   ),
   Character.create(
     name: 'Oberon',
     description: "Oberon is a king of the fairies in medieval and Renaissance literature. He is best known as a character in William Shakespeare's play A Midsummer Night's Dream, in which he is Consort to Titania, Queen of the Fairies.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 2,
     production_id: production.id,
-    remote_display_image_url: 'http://legacy.shadowandact.com/wp-content/uploads/2016/05/976.jpg'
   ),
   Character.create(
     name: 'Hermia',
     description: "Hermia is caught in a romantic accident where she loves one man, Lysander, but is loved by Demetrius, whose feelings she does not return.",
-    actors: [roles.sample],
+    actors: [actors.sample],
     order_index: 3,
     production_id: production.id,
-    remote_display_image_url: 'https://www.yorknotes.com/images/onlineguides/a-level/A-Midsummer-Nights-Dream/Hermia.jpg'
   ),
   Character.create(
     name: 'Puck',
     description: "Puck is a clever, mischievous elf, sprite or jester that personifies the wise knave. In the play, Shakespeare introduces Puck as the \"shrewd and knavish sprite\" and \"that merry wanderer of the night\".",
-    actors: [roles.sample],
-    order_index: 3,
+    actors: [actors.sample],
+    order_index: 4,
     production_id: production.id,
-    remote_display_image_url: 'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'
   )
 ]
 
+character_images = [
+  'https://i.pinimg.com/736x/9b/51/d4/9b51d419edbb97546bc7dcca3de66fe7--fairy-queen-michelle-pfeiffer.jpg',
+  'http://legacy.shadowandact.com/wp-content/uploads/2016/05/976.jpg',
+  'https://www.yorknotes.com/images/onlineguides/a-level/A-Midsummer-Nights-Dream/Hermia.jpg',
+  'http://owl.irkutsk.ru/PICS/ART/PALANTIR98_FANTASY/plf98-060_a_midsummer_nights_dream.jpg'
+]
 
-# scenes = Scene.create(8.times.collect {|i| {
-#   title: Faker::Movie.quote,
-#   production_id: production.id,
-#   description: Faker::ChuckNorris.fact,
-#   order_index: i,
-#   length_in_minutes: rand(5..30),
-#   setting: scene_settings.sample,
-#   characters: characters.shuffle[1..rand(1..5)],
-#   remote_display_image_url: "https://source.unsplash.com/collection/139346&sig=#{rand(1..1000)}"
-# }})
+character_images.each_with_index do |character_image, i|
+  Image.create({
+                 imageable: characters[i],
+                 remote_image_src_url: character_image,
+                 primary: true
+               })
+end
 
 scenes = [
   Scene.create(
@@ -111,7 +137,6 @@ scenes = [
     length_in_minutes: 20,
     setting: 'Indoors',
     character_ids: [1, 2],
-    remote_display_image_url: "http://www.uky.edu/~jsreid2/ENG340/Grieve5.jpg"
   ),
   Scene.create(
     title: "Athens. A room in Quince's house",
@@ -121,16 +146,21 @@ scenes = [
     length_in_minutes: 15,
     setting: 'Indoors',
     character_ids: [3, 4],
-    remote_display_image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJxu6vCFQCPQrE3XSH6CAQQ7Dsjdcx0nUEHmbBMh56IDBc6VDo"
   )
 ]
 
-# costumes = Costume.create(characters.map {|character| {
-#   title: "#{character.name} costume",
-#   description: Faker::Hipster.sentences(rand(1..3)).join(' '),
-#   production_id: production.id,
-#   remote_display_image_url: "https://source.unsplash.com/collection/268237&sig=#{rand(1..1000)}"
-# }})
+scene_images = [
+  "http://www.uky.edu/~jsreid2/ENG340/Grieve5.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJxu6vCFQCPQrE3XSH6CAQQ7Dsjdcx0nUEHmbBMh56IDBc6VDo"
+]
+
+scene_images.each_with_index do |scene_image, i|
+  Image.create({
+                 remote_image_src_url: scene_image,
+                 imageable: scenes[i],
+                 primary: true
+               })
+end
 
 costumes = [
   Costume.create(
@@ -138,42 +168,60 @@ costumes = [
     description: 'Ethereal dark gown full of mystery and splendor',
     character_ids: [1],
     production_id: production.id,
-    remote_display_image_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg"
   ),
   Costume.create(
     title: "Oberon being a boss",
     description: 'Sweet leather vest underneath frilly coat thing',
     character_ids: [2],
     production_id: production.id,
-    remote_display_image_url: "http://i.telegraph.co.uk/multimedia/archive/01243/PD26354744_A-Midsu_1243845i.jpg"
   ),
   Costume.create(
     title: "Classic Puck",
     description: 'Fur legs and skin colored spandex shirt',
     character_ids: [3],
     production_id: production.id,
-    remote_display_image_url: "http://vignette3.wikia.nocookie.net/amidsummernightsdream/images/b/b6/Puck.png/revision/latest?cb=20120520073630"
   )
 ]
 
-# costumes.each do |costume|
-#   costume.characters_scenes = CharactersScene.order("RANDOM()").limit(rand(1..3))
-#   CostumeItem.create(rand(3..5).times.collect {|i| {
-#     title: "#{costume.title} #{costume_item_types.sample}",
-#     description: Faker::Hipster.sentences(rand(1..3)).join(' '),
-#     costume_id: costume.id,
-#     item_type: costume_item_types.sample,
-#     remote_display_image_url: "https://source.unsplash.com/collection/1051&sig=#{rand(1..1000)}"
-#   }}
-#   )
-# end
+costume_images = [
+  "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg",
+  "http://i.telegraph.co.uk/multimedia/archive/01243/PD26354744_A-Midsu_1243845i.jpg",
+  "http://vignette3.wikia.nocookie.net/amidsummernightsdream/images/b/b6/Puck.png/revision/latest?cb=20120520073630"
+]
 
-CostumeItem.create(
+costume_images.each_with_index do |costume_image, i|
+  Image.create({
+                 remote_image_src_url: costume_image,
+                 imageable: costumes[i],
+                 primary: true
+               })
+end
+
+CostumesCharactersScene.create(
+  costume_id: 1,
+  characters_scene_id: 1,
+  character_id: 1
+)
+
+costume_item = CostumeItem.create(
     title: "Titania's gown",
     description: 'Gown made of fairy dust and AMEX points',
     costume_id: 1,
     item_type: 'Dress',
-    remote_display_image_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg"
   )
 
+Image.create({
+               remote_image_src_url: "https://pre00.deviantart.net/3970/th/pre/i/2013/119/f/6/titania__queen_of_faeries_by_theironring-d63h4th.jpg",
+               imageable: costume_item,
+               primary: true
+             })
 
+lines = Line.create(39.times.collect {|i| {
+  number: i + 1,
+  production_id: 1,
+  page_number: (i % 10) + 1,
+  line_type: ['line', 'song', 'action'].sample,
+  content: Faker::Lorem.sentence(3, true, 25),
+  characters: [Character.order("RANDOM()").first],
+  scene: Scene.find(i / 20 + 1)
+}})

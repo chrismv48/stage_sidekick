@@ -1,0 +1,21 @@
+.empty-field {
+  font-style: italic;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.text-input {
+  line-height: 0.9em;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.display-mode {
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+  }
+}

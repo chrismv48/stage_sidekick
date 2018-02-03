@@ -10,10 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170905233233) do
+ActiveRecord::Schema.define(version: 20180122195149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actor_measurements", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "gender"
+    t.float    "height"
+    t.float    "weight"
+    t.string   "ethnicity"
+    t.string   "eye_color"
+    t.string   "hair_color"
+    t.float    "chest"
+    t.float    "waist"
+    t.float    "hips"
+    t.float    "neck"
+    t.float    "inseam"
+    t.float    "sleeve"
+    t.float    "shoe_size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_actor_measurements_on_user_id", using: :btree
+  end
 
   create_table "characters", force: :cascade do |t|
     t.string   "name",          limit: 50,   null: false
@@ -23,18 +43,15 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.datetime "updated_at",                 null: false
     t.integer  "production_id",              null: false
     t.integer  "order_index"
-    t.string   "display_image"
   end
 
-  create_table "characters_costumes", force: :cascade do |t|
+  create_table "characters_lines", force: :cascade do |t|
+    t.integer  "line_id",      null: false
     t.integer  "character_id", null: false
-    t.integer  "costume_id",   null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.integer  "scene_id"
-    t.index ["character_id"], name: "index_characters_costumes_on_character_id", using: :btree
-    t.index ["costume_id"], name: "index_characters_costumes_on_costume_id", using: :btree
-    t.index ["scene_id"], name: "index_characters_costumes_on_scene_id", using: :btree
+    t.index ["character_id"], name: "index_characters_lines_on_character_id", using: :btree
+    t.index ["line_id"], name: "index_characters_lines_on_line_id", using: :btree
   end
 
   create_table "characters_roles", force: :cascade do |t|
@@ -60,9 +77,13 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.string   "title"
     t.string   "description"
     t.string   "item_type"
-    t.string   "display_image"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "care_instructions"
+    t.string   "source"
+    t.string   "brand"
+    t.float    "cost"
+    t.string   "notes"
     t.index ["costume_id"], name: "index_costume_items_on_costume_id", using: :btree
   end
 
@@ -72,7 +93,6 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.integer  "production_id",              null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.string   "display_image"
     t.index ["production_id"], name: "index_costumes_on_production_id", using: :btree
   end
 
@@ -85,6 +105,33 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.index ["character_id"], name: "index_costumes_characters_scenes_on_character_id", using: :btree
     t.index ["characters_scene_id"], name: "index_costumes_characters_scenes_on_characters_scene_id", using: :btree
     t.index ["costume_id"], name: "index_costumes_characters_scenes_on_costume_id", using: :btree
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string   "name",                           null: false
+    t.boolean  "primary",        default: false, null: false
+    t.string   "image_src",                      null: false
+    t.string   "size"
+    t.string   "imageable_type"
+    t.integer  "imageable_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "order_index"
+    t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
+  end
+
+  create_table "lines", force: :cascade do |t|
+    t.integer  "production_id", null: false
+    t.integer  "scene_id"
+    t.integer  "number"
+    t.integer  "page_number"
+    t.string   "line_type"
+    t.string   "content"
+    t.string   "status"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["production_id"], name: "index_lines_on_production_id", using: :btree
+    t.index ["scene_id"], name: "index_lines_on_scene_id", using: :btree
   end
 
   create_table "productions", force: :cascade do |t|
@@ -105,15 +152,15 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.string   "title"
     t.string   "department"
     t.string   "status"
-    t.string   "role_type"
     t.date     "start_date"
     t.date     "end_date"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "avatar"
-    t.string   "display_image"
+    t.string   "type"
+    t.integer  "order_index"
+    t.string   "description"
     t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
     t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
     t.index ["venue_id"], name: "index_roles_on_venue_id", using: :btree
@@ -128,7 +175,6 @@ ActiveRecord::Schema.define(version: 20170905233233) do
     t.string   "setting",           limit: 30
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.string   "display_image"
     t.index ["production_id"], name: "index_scenes_on_production_id", using: :btree
   end
 

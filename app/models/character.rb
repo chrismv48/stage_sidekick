@@ -10,27 +10,40 @@
 #  updated_at    :datetime         not null
 #  production_id :integer          not null
 #  order_index   :integer
-#  display_image :string
 #
 
 class Character < ApplicationRecord
-
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (character) { "#{character.name}_#{Time.zone.now.to_i}" }
 
   has_many :costumes_characters_scenes, dependent: :destroy
 
   has_many :characters_scenes, dependent: :destroy
   has_many :scenes, through: :characters_scenes
 
-  # has_many :characters_costumes, dependent: :destroy
-  # has_many :costumes, through: :characters_costumes
+  has_many :costumes_characters_scenes, dependent: :destroy
+  has_many :costumes, through: :costumes_characters_scenes
 
   has_many :characters_roles, dependent: :destroy
   has_many :roles, through: :characters_roles
 
+  has_many :images, as: :imageable
+
+  # TODO there's probably a way to just create a relationship with actors directly
   alias_attribute :actors, :roles
+  alias_attribute :actor_ids, :role_ids
 
   after_create do |character|
-    self.order_index = self.id
+    if character.order_index.nil?
+      character.order_index = character.id
+      character.save!
+    end
   end
+
+  def primary_image(default_to_non_primary = true)
+    if default_to_non_primary
+      self.images.order(primary: :desc)
+    else
+      self.images.find_by(primary: true)
+    end
+  end
+
 end

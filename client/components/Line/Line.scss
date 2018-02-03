@@ -1,0 +1,64 @@
+.Line {
+
+  .display-mode {
+
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+      border: 1px solid rgba(81, 203, 238, 1);
+
+      .edit-icon {
+        visibility: visible;
+      }
+    }
+
+    .edit-icon {
+      visibility: hidden;
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      z-index: 1;
+      color: grey;
+    }
+
+    .line-container {
+      display: flex;
+      margin: 10px 0;
+      padding: 5px;
+    }
+
+    .line-number {
+      align-self: center;
+      margin-right: 20px;
+      font-size: 24px;
+      text-align: center;
+      opacity: 0.5;
+      font-weight: 700;
+      flex-basis: 35px;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .character-line-avatar {
+      margin-right: 7px;
+    }
+
+    .line-type-icon {
+      opacity: 0.6;
+      margin-left: 5px;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .line-content {
+      margin-top: -5px;
+    }
+
+  }
+}

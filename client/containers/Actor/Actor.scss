@@ -1,0 +1,31 @@
+.Actor {
+  .profile-measurements-container {
+    display: flex;
+
+    .profile-container {
+      width: 250px;
+      margin-right: 50px;
+    }
+    .measurements-container {
+      width: 250px;
+    }
+  }
+
+  .field-container {
+    text-align: right;
+    width: 120px;
+    height: 20px;
+  }
+
+  .actor-list-item {
+    margin-bottom: 15px;
+  }
+
+  .header-image {
+    cursor: pointer;
+  }
+
+  .edit-images-link {
+    cursor: pointer;
+  }
+}

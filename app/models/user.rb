@@ -14,4 +14,6 @@
 #
 
 class User < ApplicationRecord
+  has_many :roles
+  has_one :actor_measurement
 end

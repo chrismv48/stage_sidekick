@@ -11,7 +11,6 @@
 #  setting           :string(30)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  display_image     :string
 #
 # Indexes
 #
@@ -19,9 +18,25 @@
 #
 
 class Scene < ApplicationRecord
-  mount_base64_uploader :display_image, ImageUploader, file_name: -> (scene) { "#{scene.title}_#{Time.zone.now.to_i}" }
 
   has_many :characters_scenes, dependent: :destroy
   has_many :characters, through: :characters_scenes
+
+  has_many :images, as: :imageable
+
+  after_create do |scene|
+    if scene.order_index.nil?
+      scene.order_index = scene.id
+      scene.save!
+    end
+  end
+
+  def primary_image(default_to_non_primary = true)
+    if default_to_non_primary
+      self.images.order(primary: :desc)
+    else
+      self.images.find_by(primary: true)
+    end
+  end
 
 end

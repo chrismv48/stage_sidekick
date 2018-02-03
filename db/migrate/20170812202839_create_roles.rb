@@ -14,11 +14,6 @@ class CreateRoles < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    drop_table :members
-
     add_column :users, :phone_number, :string, limit: 20
-
-    rename_column :members_characters, :member_id, :role_id
-    rename_table :members_characters, :characters_roles
   end
 end

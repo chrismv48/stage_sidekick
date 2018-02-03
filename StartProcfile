@@ -1,0 +1,2 @@
+web: npm run start:prod
+api: bundle exec rails server --port=3005 --environment=development

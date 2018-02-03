@@ -40,9 +40,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     afm (0.2.2)
-    annotate (2.6.5)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
+    annotate (2.7.2)
+      activerecord (>= 3.2, < 6.0)
+      rake (>= 10.4, < 13.0)
     arel (7.1.4)
     builder (3.2.3)
     byebug (9.0.6)
@@ -53,15 +53,38 @@ GEM
     carrierwave-base64 (2.5.3)
       carrierwave (>= 0.8.0)
       mime-types (~> 3.0)
+    coderay (1.1.2)
     concurrent-ruby (1.0.5)
     erubis (2.7.0)
+    excon (0.60.0)
     faker (1.8.4)
       i18n (~> 0.5)
     ffi (1.9.18)
+    figaro (1.1.1)
+      thor (~> 0.14)
+    fog-aws (2.0.0)
+      fog-core (~> 1.38)
+      fog-json (~> 1.0)
+      fog-xml (~> 0.1)
+      ipaddress (~> 0.8)
+    fog-core (1.45.0)
+      builder
+      excon (~> 0.58)
+      formatador (~> 0.2)
+    fog-json (1.0.2)
+      fog-core (~> 1.0)
+      multi_json (~> 1.10)
+    fog-xml (0.1.3)
+      fog-core
+      nokogiri (>= 1.5.11, < 2.0.0)
+    foreman (0.84.0)
+      thor (~> 0.19.1)
+    formatador (0.2.5)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     hashery (2.1.1)
     i18n (0.8.6)
+    ipaddress (0.8.3)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -73,11 +96,13 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mini_portile2 (2.2.0)
+    mini_magick (4.8.0)
+    mini_portile2 (2.3.0)
     minitest (5.10.3)
+    multi_json (1.12.2)
     nio4r (2.1.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
     pdf-reader (2.0.0)
       Ascii85 (~> 1.0.0)
       afm (~> 0.2.1)
@@ -85,6 +110,14 @@ GEM
       ruby-rc4
       ttfunk
     pg (0.18.4)
+    pry (0.11.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+    pry-byebug (3.4.3)
+      byebug (>= 9.0, < 9.1)
+      pry (~> 0.10)
+    pry-rails (0.3.6)
+      pry (>= 0.10.4)
     puma (3.9.1)
     rack (2.0.3)
     rack-cors (1.0.1)
@@ -151,9 +184,15 @@ DEPENDENCIES
   carrierwave (~> 1.0)
   carrierwave-base64
   faker
+  figaro
+  fog-aws
+  foreman (= 0.84.0)
   listen (~> 3.0.5)
   pdf-reader
+  mini_magick
   pg (~> 0.18.4)
+  pry-byebug
+  pry-rails
   puma (~> 3.0)
   rack-cors
   rails (~> 5.0.4)
@@ -162,6 +201,9 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+
+RUBY VERSION
+   ruby 2.2.4p230
 
 BUNDLED WITH
    1.16.0

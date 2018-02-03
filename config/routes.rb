@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :lines
+  resources :actors
   resources :roles
   resources :members
   resources :productions do
