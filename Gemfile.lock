@@ -188,8 +188,8 @@ DEPENDENCIES
   fog-aws
   foreman (= 0.84.0)
   listen (~> 3.0.5)
-  pdf-reader
   mini_magick
+  pdf-reader
   pg (~> 0.18.4)
   pry-byebug
   pry-rails
