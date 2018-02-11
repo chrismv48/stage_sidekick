@@ -70,7 +70,6 @@ export class ResourceStore {
   }
 
   getStagedResource(resource, id = null) {
-    debugger
     if (id) {
       return this[resource].find(resource => resource.id === id).viewModel
     }
@@ -109,7 +108,6 @@ export class ResourceStore {
     const pluralizedResource = pluralizeResource(resource)
     const resourceModel = RESOURCES[pluralizedResource].model
     let entity = this[pluralizedResource].find(entity => entity.id === json.id)
-
     if (!entity) {
       entity = new resourceModel(this)
       entity.updateFromObject(json)

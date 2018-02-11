@@ -1,0 +1,23 @@
+.ResourceTable {
+  .filters-container {
+    display: flex;
+    padding: 10px;
+    background-color: #f9fafb;
+    align-items: center;
+
+    .filter-item {
+      margin: 0 25px;
+
+      .remove-filter-icon {
+        opacity: 0.5;
+        cursor: pointer;
+        margin: 5px;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+
+  }
+}

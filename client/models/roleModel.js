@@ -1,7 +1,23 @@
 import {BaseModel} from "./baseModel";
 import {computed} from "mobx";
 
-export const FIELD_NAMES = {
+
+class Role extends BaseModel {
+
+  @computed get fullName() {
+    return `${this.first_name} ${this.last_name}`
+  }
+
+  constructor(store = null) {
+    super(store)
+    this.store = store
+
+    super._initializeFields()
+    super._initializeRelationships()
+  }
+}
+
+Role.FIELD_NAMES = {
   id: null,
   description: null,
   title: null,
@@ -16,21 +32,8 @@ export const FIELD_NAMES = {
   user: {}
 }
 
-const RELATIONSHIPS = {}
+Role.RELATIONSHIPS = {}
 
-const RESOURCE = 'roles'
+Role.RESOURCE = 'roles'
 
-export class Role extends BaseModel {
-
-  @computed get fullName() {
-    return `${this.first_name} ${this.last_name}`
-  }
-
-  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
-    super(store, field_names, relationships, resource)
-    this.store = store
-
-    super._initializeFields()
-    super._initializeRelationships()
-  }
-}
+export default Role

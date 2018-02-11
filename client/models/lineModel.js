@@ -1,7 +1,19 @@
 import {computed} from 'mobx'
 import {BaseModel} from "./baseModel";
 
-const FIELD_NAMES = {
+
+class Line extends BaseModel {
+
+  constructor(store = null) {
+    super(store)
+    this.store = store
+
+    super._initializeFields()
+    super._initializeRelationships()
+  }
+}
+
+Line.FIELD_NAMES = {
   id: null,
   content: null,
   number: null,
@@ -10,20 +22,12 @@ const FIELD_NAMES = {
   status: null
 }
 
-const RELATIONSHIPS = {
+Line.RELATIONSHIPS = {
   characters: 'lines',
   scene: 'lines',
 }
 
-const RESOURCE = 'lines'
+Line.RESOURCE = 'lines'
 
-export class Line extends BaseModel {
 
-  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
-    super(store, field_names, relationships, resource)
-    this.store = store
-
-    super._initializeFields()
-    super._initializeRelationships()
-  }
-}
+export default Line

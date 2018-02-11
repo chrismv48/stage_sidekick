@@ -1,7 +1,22 @@
+import React from 'react'
 import {computed} from 'mobx'
 import {BaseModel} from "./baseModel";
+import {Header, Icon, Image, Label} from "semantic-ui-react";
 
-const FIELD_NAMES = {
+
+class CostumeItem extends BaseModel {
+
+
+  constructor(store = null) {
+    super(store)
+    this.store = store
+
+    super._initializeFields()
+    super._initializeRelationships()
+  }
+}
+
+CostumeItem.FIELD_NAMES = {
   id: null,
   title: null,
   description: null,
@@ -15,19 +30,76 @@ const FIELD_NAMES = {
   images: []
 }
 
-const RELATIONSHIPS = {
+CostumeItem.RELATIONSHIPS = {
   costume: 'costume_items',
 }
 
-const RESOURCE = 'costume_items'
+CostumeItem.RESOURCE = 'costume_items'
 
-export class CostumeItem extends BaseModel {
-
-  constructor(store = null, field_names = FIELD_NAMES, relationships = RELATIONSHIPS, resource = RESOURCE) {
-    super(store, field_names, relationships, resource)
-    this.store = store
-
-    super._initializeFields()
-    super._initializeRelationships()
+CostumeItem.tableColumns = [
+  {
+    field: 'title',
+    header: 'Title',
+    renderCell: (costumeItem) => {
+      return (
+        <Header as='h5'>
+          <Image avatar src={costumeItem.avatar}/>
+          {' '}{costumeItem.title}
+        </Header>
+      )
+    },
+  },
+  {
+    field: 'costume',
+    header: 'Costume',
+    renderCell: (costumeItem) => {
+      const costume = costumeItem.costume
+      return (
+        <Label image key={costume.id}>
+          <Image avatar src={costume.avatar}/>
+          {costume.title}
+          <Icon name='delete'/>
+        </Label>
+      )
+    },
+    filterOptions: {
+      multiple: false,
+      field: 'costume_id',
+      options: (store) => {
+        return store.costumes.map(costume => {
+          return {text: costume.title, value: costume.id}
+        })
+      }
+    }
+  },
+  {
+    field: 'description',
+    header: 'Description'
+  },
+  {
+    field: 'item_type',
+    header: 'Item Type'
+  },
+  {
+    field: 'care_instructions',
+    header: 'Care Instructions'
+  },
+  {
+    field: 'source',
+    header: 'Source'
+  },
+  {
+    field: 'brand',
+    header: 'Brand'
+  },
+  {
+    field: 'cost',
+    header: 'Cost'
+  },
+  {
+    field: 'notes',
+    header: 'Notes'
   }
-}
+]
+
+export default CostumeItem

@@ -36,11 +36,25 @@ export class BaseModel {
     this._viewModel = newValue
   }
 
-  constructor(store, field_names, relationships, resource,) {
+  get RELATIONSHIPS() {
+    return this.constructor.RELATIONSHIPS
+  }
+
+  get FIELD_NAMES() {
+    return this.constructor.FIELD_NAMES
+  }
+
+  get RESOURCE() {
+    return this.constructor.RESOURCE
+  }
+
+  get tableColumns() {
+    return this.constructor.tableColumns
+  }
+
+
+  constructor(store) {
     this.store = store
-    this.field_names = field_names
-    this.resource = resource
-    this.relationships = relationships
 
     this.save = this.save.bind(this)
     this._initializeFields = this._initializeFields.bind(this)
@@ -49,7 +63,7 @@ export class BaseModel {
 
   _initializeFields() {
     let resource = this
-    for (const [field, default_value] of Object.entries(this.field_names)) {
+    for (const [field, default_value] of Object.entries(this.FIELD_NAMES)) {
       extendObservable(resource, {
         [field]: default_value
       })
@@ -57,7 +71,7 @@ export class BaseModel {
   }
 
   _initializeRelationships() {
-    for (let relationship of Object.keys(this.relationships)) {
+    for (let relationship of Object.keys(this.RELATIONSHIPS)) {
       const relationshipIdField = addIdToResource(relationship)
       let idFieldDefaultValue
       let defaultValue
@@ -77,12 +91,12 @@ export class BaseModel {
 
   updateFromObject(attributes) {
     transaction(() => {
-      Object.keys(this.field_names).forEach(field => {
+      Object.keys(this.FIELD_NAMES).forEach(field => {
         if (attributes[field] !== undefined) {
           this[field] = attributes[field]
         }
       })
-      Object.entries(this.relationships).forEach(([relationship, backRef]) => {
+      Object.entries(this.RELATIONSHIPS).forEach(([relationship, backRef]) => {
         let objectRelationship = attributes[relationship]
         if (!isEmpty(objectRelationship)) {
           const relationshipIdField = addIdToResource(relationship)
@@ -91,6 +105,8 @@ export class BaseModel {
             objectRelationship.forEach(item => {
               this.store._updateResourceFromServer(item, pluralizeResource(relationship))
               const relationshipRef = this.store[pluralizeResource(relationship)].find(r => r.id === item.id)
+              if (!relationshipRef) {
+              }
               this._updateBackRef(relationshipRef, backRef)
             })
 
@@ -160,8 +176,8 @@ export class BaseModel {
 
   getDirty() {
     const payload = {}
-    Object.keys(Object.assign({}, this.field_names, this.relationships)).forEach(field => {
-      if (field in this.relationships) {
+    Object.keys(Object.assign({}, this.FIELD_NAMES, this.RELATIONSHIPS)).forEach(field => {
+      if (field in this.RELATIONSHIPS) {
         field = addIdToResource(field)
       }
       if (this.viewModel.isPropertyDirty(field)) {
@@ -179,7 +195,7 @@ export class BaseModel {
     let payload = this.getDirty()
 
     let method = 'POST'
-    let apiEndpoint = RESOURCES[this.resource].apiEndpoint
+    let apiEndpoint = RESOURCES[this.RESOURCE].apiEndpoint
 
     if (this.id) {
       method = 'PUT'
@@ -189,8 +205,8 @@ export class BaseModel {
     this.store._api(apiEndpoint, method, payload).then(
       response => {
         transaction(() => {
-          response[this.resource].forEach(json => {
-            this.store._updateResourceFromServer(json, this.resource)
+          response[this.RESOURCE].forEach(json => {
+            this.store._updateResourceFromServer(json, this.RESOURCE)
           })
         })
         // Remove view model
@@ -201,20 +217,22 @@ export class BaseModel {
 
   destroy() {
     const method = 'delete'
-    const apiEndpoint = RESOURCES[this.resource].apiEndpoint + `/${this.id}`
+    const apiEndpoint = RESOURCES[this.RESOURCE].apiEndpoint + `/${this.id}`
 
     this.store._api(apiEndpoint, method).then(
       response => {
         transaction(() => {
-          if (!response[this.resource]) { return }
-          response[this.resource].forEach(json => {
-            this.store._updateResourceFromServer(json, this.resource)
+          if (!response[this.RESOURCE]) {
+            return
+          }
+          response[this.RESOURCE].forEach(json => {
+            this.store._updateResourceFromServer(json, this.RESOURCE)
           })
         })
       }
     )
     // Remove references from relationships
-    Object.entries(this.relationships).forEach(([relationship, backRef]) => {
+    Object.entries(this.RELATIONSHIPS).forEach(([relationship, backRef]) => {
       const pluralizedRelationship = pluralizeResource(relationship)
       this.store[pluralizedRelationship].forEach(entity => {
         if (pluralizeResource(backRef) === backRef) {
@@ -226,7 +244,7 @@ export class BaseModel {
         }
       })
     })
-    remove(this.store[this.resource], (n) => n.id === this.id)
+    remove(this.store[this.RESOURCE], (n) => n.id === this.id)
   }
 }
 

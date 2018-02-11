@@ -44,6 +44,7 @@ export class CostumeCardGroup extends React.Component {
 
   render() {
     const {costumes, isLoading} = this.props.resourceStore
+    let {showResourceSidebar, hideResourceSidebar} = this.props.uiStore
     if (isLoading) {
       return (
         <ContentLoader/>
@@ -64,7 +65,8 @@ export class CostumeCardGroup extends React.Component {
                 onDeleteCallback={(event) => this.handleDestroyCostume(event, costume)}
                 label='Costume'
                 key={`index-${i}`}
-                link={`/costumes/${costume.id}`}
+                // link={`/costumes/${costume.id}`}
+                handleOnClick={() => showResourceSidebar('costumes', costume.id)}
                 sortable={false}
                 index={i}
               />

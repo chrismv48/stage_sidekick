@@ -28,15 +28,16 @@ class DisplayCard extends React.Component {
   }
 
   render() {
-    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, flipped, index, sortable} = this.props
+    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, handleOnClick, flipped, index, sortable} = this.props
     const {showHoverState} = this.state
     return (
       <Card
         raised
         className={classNames("DisplayCard", {'hover': showHoverState})}
-        href={link}
+        // href={link}
         onMouseEnter={() => this.setState({showHoverState: true})}
         onMouseLeave={() => this.setState({showHoverState: false})}
+        onClick={() => handleOnClick()}
       >
         {
           showEditBar &&

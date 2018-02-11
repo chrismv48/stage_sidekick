@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {computed, observable} from 'mobx'
 import {observer} from "mobx-react";
-import {capitalize, replace} from "lodash";
 import {inject} from "mobx-react/index";
 import {Button, Form, Input, TextArea} from "semantic-ui-react";
 import classNames from 'classnames'
@@ -76,7 +75,7 @@ export class EditableField extends React.Component {
             this.editing = true
           }}
           onChange={(e) => this.resource[this.props.field] = e.target.value}
-          value={this.resource[`staged_${this.props.field}`] || ''}
+          value={this.resource[this.props.field] || ''}
         >
         </TextArea>
         <div style={{float: 'right'}}>
@@ -97,7 +96,7 @@ export class EditableField extends React.Component {
         className='edit-input text-input'
         onChange={(e) => this.resource[this.props.field] = e.target.value}
         onBlur={this.handleOnBlur}
-        value={this.resource[`staged_${this.props.field}`] || ''}
+        value={this.resource[this.props.field] || ''}
         type='text'
         size='mini'
         fluid

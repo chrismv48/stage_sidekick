@@ -3,6 +3,7 @@ import './Characters.scss'
 import {Grid, Header} from 'semantic-ui-react'
 
 import MultipleItemLayout from "components/MultipleItemLayout/MultipleItemLayout"
+import DisplayModeIcons from "../../components/DisplayModeIcons/DisplayModeIcons";
 
 export class Characters extends React.Component {
 
@@ -12,6 +13,9 @@ export class Characters extends React.Component {
         <Grid.Row>
           <Grid.Column>
             <Header as="h2" dividing>
+              <span style={{float: 'right'}}>
+                <DisplayModeIcons/>
+              </span>
               Characters
             </Header>
             <MultipleItemLayout resource='characters' resourceLabel='Characters'/>

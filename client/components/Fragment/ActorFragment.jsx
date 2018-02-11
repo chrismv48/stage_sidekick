@@ -2,19 +2,18 @@ import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
 import {Link} from 'react-router-dom'
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
-
-const CostumeFragmentContent = ({costume}) => {
+const ActorFragmentContent = ({actor}) => {
   return (
     <div className='fragment-container'>
       <div>
-        <Image avatar src={costume.avatar}/>
+        <Image avatar src={actor.avatar}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={`costumes/${costume.id}`} target="_blank">
-            {costume.title}
+          <Link to={`cast/${actor.id}`} target="_blank">
+            {actor.fullName}
           </Link>
         </Header>
       </div>
@@ -22,30 +21,32 @@ const CostumeFragmentContent = ({costume}) => {
   )
 }
 
-class CostumeFragment extends React.Component {
+class ActorFragment extends React.Component {
 
   render() {
-    const {costume, popup} = this.props
+    const {actor, popup} = this.props
 
-    if (!costume) {
+    if (!actor) {
       return null
     }
 
     if (!popup) {
-      return <CostumeFragmentContent costume={costume}/>
+      return (
+        <ActorFragmentContent actor={actor}/>
+      )
     }
 
     return (
       <Popup
-        trigger={CostumeFragmentContent(costume)}
+        trigger={() => <ActorFragmentContent actor={actor}/>}
         position='bottom center'
       >
         <Popup.Header>
-          {costume.title}
+          {actor.title}
         </Popup.Header>
         <Popup.Content>
           <div className='content-divider'><strong>Description</strong></div>
-          {costume.description}
+          {actor.description}
         </Popup.Content>
       </Popup>
     )
@@ -53,14 +54,13 @@ class CostumeFragment extends React.Component {
 }
 
 
-CostumeFragment.propTypes = {
-  costume: PropTypes.object.isRequired,
+ActorFragment.propTypes = {
+  actor: PropTypes.object.isRequired,
   popup: PropTypes.bool
-};
+}
 
-CostumeFragment.defaultProps = {
+ActorFragment.defaultProps = {
   popup: false
 }
 
-
-export default CostumeFragment
+export default ActorFragment

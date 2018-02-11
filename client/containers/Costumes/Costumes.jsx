@@ -4,37 +4,40 @@ import {Grid, Header, Menu} from 'semantic-ui-react'
 import MultipleItemLayout from "components/MultipleItemLayout/MultipleItemLayout";
 import CostumePlot from "containers/CostumePlot/CostumePlot";
 import PieceList from 'containers/PieceList/PieceList'
+import DisplayModeIcons from "components/DisplayModeIcons/DisplayModeIcons";
+import {observer} from 'mobx-react'
+import {observable} from 'mobx'
 
-
+@observer
 export class Costumes extends React.Component {
 
-  state = {
-    activeTabName: 'Costumes'
-  }
+  @observable activeTabName = 'Costumes'
 
   renderContent() {
-    const {activeTabName} = this.state
-    if (activeTabName === 'Costumes') {
+    if (this.activeTabName === 'Costumes') {
       return (
         <MultipleItemLayout resource='costumes' resourceLabel='Costumes'/>
       )
     }
-    if (activeTabName === 'Costume Items') {
+    if (this.activeTabName === 'Costume Items') {
       return (
         <MultipleItemLayout resource='costume_items' resourceLabel='Costume Items'/>
       )
     }
-    if (activeTabName === 'Costume Plot') {
+    if (this.activeTabName === 'Costume Plot') {
       return (
         <CostumePlot/>
       )
     }
-    if (activeTabName === 'Piece List') {
+    if (this.activeTabName === 'Piece List') {
       return (
         <PieceList/>
       )
     }
+  }
 
+  shouldDisplayIcons() {
+    return ['Costumes', 'Costume Items'].includes(this.activeTabName)
   }
 
   render() {
@@ -45,10 +48,10 @@ export class Costumes extends React.Component {
             <Header as="h2" dividing>
               Costumes
             </Header>
-
+            <div className='tab-menu-container'>
             <Menu tabular
                   defaultActiveIndex={0}
-                  onItemClick={(e, {name}) => this.setState({activeTabName: name})}
+                  onItemClick={(e, {name}) => this.activeTabName = name}
                   items={[
                     {name: 'Costumes', key: 1},
                     {name: 'Costume Items', key: 2},
@@ -56,6 +59,12 @@ export class Costumes extends React.Component {
                     {name: 'Piece List', key: 4},
                   ]}
             />
+              {this.shouldDisplayIcons() &&
+              < span className='display-mode-icons'>
+                <DisplayModeIcons/>
+                </span>
+              }
+            </div>
             {this.renderContent()}
 
             </Grid.Column>

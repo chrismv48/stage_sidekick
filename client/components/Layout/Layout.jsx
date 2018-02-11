@@ -2,8 +2,36 @@ import React, {Component} from 'react';
 import {Divider, Icon, Menu} from "semantic-ui-react";
 import './Layout.scss'
 import {Link} from "react-router-dom";
+import {inject, observer} from "mobx-react/index";
+import {RESOURCES} from "../../constants";
+import {observable} from "mobx";
 
+@inject("resourceStore", "uiStore") @observer
 class Layout extends Component {
+
+  renderItemSidebar() {
+    let {selectedResourceId, selectedResource, hideResourceSidebar} = this.props.uiStore
+    if (!selectedResourceId) {
+      return null
+    }
+
+    const resource = RESOURCES[selectedResource]
+    const Resource = resource.component
+    const otherProps = {
+      [`${resource.singularized}Id`]: selectedResourceId
+    }
+
+    return (
+      <div className='item-detail-sidebar'>
+        <div className='item-detail-body'>
+          <Icon name='remove circle' className='hide-sidebar-icon'
+                onClick={() => hideResourceSidebar()}/>
+          <Resource {...otherProps} />
+        </div>
+      </div>
+    )
+
+  }
 
   render() {
     const { thisPage } = this.props
@@ -91,7 +119,10 @@ class Layout extends Component {
           </div>
         </div>
         <div className="content-container">
-          {this.props.children}
+          <div className="body-container">
+            {this.props.children}
+          </div>
+          {this.renderItemSidebar()}
         </div>
       </div>
     );

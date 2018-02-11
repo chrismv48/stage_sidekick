@@ -2,7 +2,7 @@ class ActorsController < ApplicationController
   before_action :set_actor, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:characters, :costumes, :images, :costumes_characters_scenes]
+  ASSOCIATIONS_TO_INCLUDE = [:characters, :costumes, :scenes, :images, :costumes_characters_scenes, :user]
 
   # GET /actors
   def index

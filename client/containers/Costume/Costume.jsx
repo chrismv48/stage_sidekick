@@ -20,7 +20,7 @@ export class Costume extends React.Component {
   @observable showLightbox = false
 
   @computed get costumeId() {
-    return parseInt(this.props.match.params.costumeId)
+    return this.props.costumeId || parseInt(this.props.match.params.costumeId)
   }
 
   @computed get costume() {

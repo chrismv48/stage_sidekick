@@ -4,7 +4,7 @@ import './Fragment.scss'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-const SceneFragmentContent = (scene) => {
+const SceneFragmentContent = ({scene}) => {
   return (
     <div className='fragment-container'>
       <div>
@@ -25,10 +25,17 @@ const SceneFragmentContent = (scene) => {
 class SceneFragment extends React.Component {
 
   render() {
-    const {scene} = this.props
+    const {scene, popup} = this.props
+
+    if (!popup) {
+      return (
+        <SceneFragmentContent scene={scene}/>
+      )
+    }
+
     return (
       <Popup
-        trigger={SceneFragmentContent(scene)}
+        trigger={() => <SceneFragmentContent scene={scene} />}
         position='bottom center'
       >
         <Popup.Header>
@@ -51,7 +58,12 @@ class SceneFragment extends React.Component {
 
 
 SceneFragment.propTypes = {
-  scene: PropTypes.object.isRequired
+  scene: PropTypes.object.isRequired,
+  popup: PropTypes.bool
 };
+
+SceneFragment.defaultProps = {
+  popup: false
+}
 
 export default SceneFragment

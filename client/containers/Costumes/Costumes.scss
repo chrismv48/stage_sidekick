@@ -1,2 +1,11 @@
 .Costumes {
+  .tab-menu-container {
+    position: relative;
+
+    .display-mode-icons {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
 }

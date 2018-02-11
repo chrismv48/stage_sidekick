@@ -2,8 +2,9 @@ import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
 import {Link} from 'react-router-dom'
+import PropTypes from "prop-types";
 
-const CharacterItemContent = (character, actor) => {
+const CharacterFragmentContent = ({character, actor}) => {
   return (
     <div className='fragment-container'>
       <div>
@@ -14,7 +15,9 @@ const CharacterItemContent = (character, actor) => {
           <Link to={`characters/${character.id}`} target="_blank">
             {character.name}
           </Link>
+          {actor &&
           <Header.Subheader>Played by <a href={`/cast/${actor.id}`}>{actor.fullName}</a></Header.Subheader>
+          }
         </Header>
       </div>
     </div>
@@ -25,10 +28,15 @@ const CharacterItemContent = (character, actor) => {
 class CharacterFragment extends React.Component {
 
   render() {
-    const {character, actor} = this.props
+    const {character, actor, popup} = this.props
+
+    if (!popup) {
+      return <CharacterFragmentContent character={character} actor={actor}/>
+    }
+
     return (
       <Popup
-        trigger={CharacterItemContent(character, actor)}
+        trigger={() => <CharacterFragmentContent character={character} actor={actor} />}
         position='bottom center'
       >
         <Popup.Header>
@@ -47,6 +55,14 @@ class CharacterFragment extends React.Component {
 }
 
 
-CharacterFragment.propTypes = {};
+CharacterFragment.propTypes = {
+  character: PropTypes.object.isRequired,
+  actor: PropTypes.object,
+  popup: PropTypes.bool
+}
+
+CharacterFragment.defaultProps = {
+  popup: false
+}
 
 export default CharacterFragment

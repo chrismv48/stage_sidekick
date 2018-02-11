@@ -1,10 +1,14 @@
-import {Scene} from "./models/sceneModel";
-import {Character} from "./models/characterModel";
-import {Role} from "./models/roleModel";
-import {Costume} from "./models/costumeModel";
-import {CostumeItem} from "./models/costumeItemModel";
-import {Actor} from "./models/actorModel";
-import {Line} from "./models/lineModel";
+import SceneModel from "./models/sceneModel";
+import CharacterModel from "./models/characterModel";
+import RoleModel from "./models/roleModel";
+import CostumeModel from "./models/costumeModel";
+import CostumeItemModel from "./models/costumeItemModel";
+import ActorModel from "./models/actorModel";
+import LineModel from "./models/lineModel";
+import Character from "./containers/Character/Character";
+import Scene from "./containers/Scene/Scene";
+import Costume from "./containers/Costume/Costume";
+import Actor from "./containers/Actor/Actor";
 
 export const CHARACTER_RESOURCE = 'characters'
 export const SCENE_RESOURCE = 'scenes'
@@ -14,50 +18,52 @@ export const COSTUME_RESOURCE = 'costumes'
 export const COSTUME_ITEM_RESOURCE = 'costume_items'
 export const LINE_RESOURCE = 'lines'
 
-
-
 export const RESOURCES = {
   [CHARACTER_RESOURCE]: {
     apiEndpoint: 'characters',
     pluralized: 'characters',
     singularized: 'character',
-    model: Character
+    model: CharacterModel,
+    component: Character
   },
   [SCENE_RESOURCE]: {
     apiEndpoint: 'scenes',
     pluralized: 'scenes',
     singularized: 'scene',
-    model: Scene
+    model: SceneModel,
+    component: Scene
   },
   [ROLE_RESOURCE]: {
     apiEndpoint: 'roles',
     pluralized: 'roles',
     singularized: 'role',
-    model: Role
+    model: RoleModel
   },
   [COSTUME_RESOURCE]: {
     apiEndpoint: 'costumes',
     pluralized: 'costumes',
     singularized: 'costume',
-    model: Costume
+    model: CostumeModel,
+    component: Costume
   },
   [COSTUME_ITEM_RESOURCE]: {
     apiEndpoint: 'costume_items',
     pluralized: 'costume_items',
     singularized: 'costume_item',
-    model: CostumeItem
+    model: CostumeItemModel
   },
   [ACTOR_RESOURCE]: {
     apiEndpoint: 'actors',
     pluralized: 'actors',
     singularized: 'actor',
-    model: Actor
+    model: ActorModel,
+    component: Actor
   },
   [LINE_RESOURCE]: {
     apiEndpoint: 'lines',
     pluralized: 'lines',
     singularized: 'line',
-    model: Line
+    model: LineModel
   }
 }
 

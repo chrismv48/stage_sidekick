@@ -21,7 +21,7 @@ export class Actor extends React.Component {
   @observable showLightbox = false
 
   @computed get actorId() {
-    return parseInt(this.props.match.params.actorId)
+    return parseInt(this.props.actorId || this.props.match.params.actorId)
   }
 
   @computed get actor() {
@@ -63,7 +63,6 @@ export class Actor extends React.Component {
 
 
   render() {
-    const { characters, scenes } = this.props.resourceStore
     if (this.loading) {
       return (
         <ContentLoader/>
@@ -75,7 +74,7 @@ export class Actor extends React.Component {
             <Image
               src={this.actor.primaryImage}
               onClick={() => this.showLightbox = true}
-              size={'large'}
+              size='medium'
               className='header-image'
             />
           <a
