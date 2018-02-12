@@ -3,6 +3,11 @@ import {computed} from 'mobx'
 import {BaseModel} from "./baseModel";
 import {Header, Icon, Image, Label} from "semantic-ui-react";
 
+const sourceOptions = [
+  'Stock',
+  'Internet',
+  'Rental'
+]
 
 class CostumeItem extends BaseModel {
 
@@ -86,7 +91,15 @@ CostumeItem.tableColumns = [
   },
   {
     field: 'source',
-    header: 'Source'
+    header: 'Source',
+    filterOptions: {
+      multiple: true,
+      options: (store) => {
+        return sourceOptions.map(source => {
+          return {text: source, value: source}
+        })
+      }
+    }
   },
   {
     field: 'brand',
