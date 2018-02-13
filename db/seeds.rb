@@ -20,7 +20,7 @@ production = Production.create(
 
 job_titles = ['Producer', 'Director', 'Administration', 'Costume Designer', 'Lighting Technician', 'Sound Technician', 'Assistant Costume Designer', 'Wardrobe Supervisor']
 scene_settings = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Beach', 'Indoors']
-departments = ['Production', 'Lighting', 'Costumes', 'Administration']
+departments = ['Production', 'Lighting', 'Costumes', 'Administration', 'Stage']
 statuses = ['Full-time', 'Contractor', 'Part-time']
 costume_item_types = ['Jeans', 'Shirt', 'Skirt', 'Dress', 'Shoes', 'Belt', 'Hat']
 
@@ -224,4 +224,27 @@ lines = Line.create(39.times.collect {|i| {
   content: Faker::Lorem.sentence(3, true, 25),
   characters: [Character.order("RANDOM()").first],
   scene: Scene.find(i / 20 + 1)
+}})
+
+incomplete_notes = Note.create(10.times.collect {|i| {
+  department: departments.sample,
+  actor: actors.sample,
+  scene: scenes.sample,
+  noteable: [costumes.sample, costume_item].sample,
+  note: Faker::Lorem.sentence(3, true, 25),
+  priority: [1,2,3].sample,
+  status: ['Assigned', 'In Progress'].sample,
+  assignees: roles.sample([1,2].sample)
+}})
+
+complete_notes = Note.create(5.times.collect {|i| {
+  department: departments.sample,
+  scene: scenes.sample,
+  actor: actors.sample,
+  noteable: [costumes.sample, costume_item].sample,
+  note: Faker::Lorem.sentence(3, true, 25),
+  priority: [1,2,3].sample,
+  status: 'Complete',
+  assignees: roles.sample([1,2].sample),
+  completed_by: roles.sample
 }})

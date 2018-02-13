@@ -34,6 +34,8 @@ class Role < ApplicationRecord
 
   has_many :images, as: :imageable
 
+  has_many :notes, through: :roles_notes
+
   scope :actor, -> { where(title: 'Actor') }
 
   def primary_image(default_to_non_primary = true)

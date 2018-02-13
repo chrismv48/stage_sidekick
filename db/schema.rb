@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180122195149) do
+ActiveRecord::Schema.define(version: 20180213005549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,22 @@ ActiveRecord::Schema.define(version: 20180122195149) do
     t.index ["scene_id"], name: "index_lines_on_scene_id", using: :btree
   end
 
+  create_table "notes", force: :cascade do |t|
+    t.string   "category"
+    t.string   "department"
+    t.integer  "actor_id"
+    t.integer  "noteable_id"
+    t.string   "noteable_type"
+    t.string   "note"
+    t.string   "priority"
+    t.string   "status"
+    t.integer  "completed_by"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "scene_id"
+    t.index ["actor_id"], name: "index_notes_on_actor_id", using: :btree
+  end
+
   create_table "productions", force: :cascade do |t|
     t.string   "title",      limit: 50, null: false
     t.integer  "venue_id",              null: false
@@ -164,6 +180,15 @@ ActiveRecord::Schema.define(version: 20180122195149) do
     t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
     t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
     t.index ["venue_id"], name: "index_roles_on_venue_id", using: :btree
+  end
+
+  create_table "roles_notes", force: :cascade do |t|
+    t.integer  "role_id"
+    t.integer  "note_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["note_id"], name: "index_roles_notes_on_note_id", using: :btree
+    t.index ["role_id"], name: "index_roles_notes_on_role_id", using: :btree
   end
 
   create_table "scenes", force: :cascade do |t|

@@ -24,6 +24,7 @@ class CostumeItem < ApplicationRecord
 
   belongs_to :costume
   has_many :images, as: :imageable
+  has_many :notes, as: :noteable
 
   def primary_image(default_to_non_primary = true)
     if default_to_non_primary
