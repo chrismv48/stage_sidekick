@@ -1,13 +1,21 @@
 import {computed, observable, toJS, transaction} from 'mobx'
 import {difference, sortBy} from "lodash";
 import {
-  ACTOR_RESOURCE, CHARACTER_RESOURCE, COSTUME_ITEM_RESOURCE, COSTUME_RESOURCE, LINE_RESOURCE, RESOURCES,
-  ROLE_RESOURCE, SCENE_RESOURCE
+  ACTOR_RESOURCE, CHARACTER_RESOURCE, COSTUME_ITEM_RESOURCE, COSTUME_RESOURCE, LINE_RESOURCE, ROLE_RESOURCE,
+  SCENE_RESOURCE
 } from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {pluralizeResource} from "../helpers";
+import SceneModel from "models/sceneModel";
+import CharacterModel from "models/characterModel";
+import RoleModel from "models/roleModel";
+import CostumeModel from "models/costumeModel";
+import CostumeItemModel from "models/costumeItemModel";
+import ActorModel from "models/actorModel";
+import LineModel from "models/lineModel";
 
-export class ResourceStore {
+
+class ResourceStore {
 
   @observable characters = []
   @observable scenes = []
@@ -18,6 +26,10 @@ export class ResourceStore {
   @observable lines = []
 
   @observable isLoading = false
+
+  get resources() {
+    return this.constructor.resources
+  }
 
   constructor(api, rootStore) {
     this._api = api
@@ -73,10 +85,10 @@ export class ResourceStore {
     if (id) {
       return this[resource].find(resource => resource.id === id).viewModel
     }
-    const resourceObj = RESOURCES[resource]
-    const stagedResource = `${resourceObj.singularized}Staged`
+    const resourceObj = this.resources[resource]
+    const stagedResource = `${resourceObj.resourceSingular}Staged`
     if (!this[stagedResource]) {
-      this[stagedResource] = new resourceObj.model(this)
+      this[stagedResource] = new resourceObj(this)
     }
 
     return this[stagedResource].viewModel
@@ -106,7 +118,7 @@ export class ResourceStore {
 
   _updateResourceFromServer(json, resource) {
     const pluralizedResource = pluralizeResource(resource)
-    const resourceModel = RESOURCES[pluralizedResource].model
+    const resourceModel = this.resources[pluralizedResource]
     let entity = this[pluralizedResource].find(entity => entity.id === json.id)
     if (!entity) {
       entity = new resourceModel(this)
@@ -131,3 +143,15 @@ export class ResourceStore {
   }
 
 }
+
+ResourceStore.resources = {
+  'characters': CharacterModel,
+  'scenes': SceneModel,
+  'costumes': CostumeModel,
+  'actors': ActorModel,
+  'roles': RoleModel,
+  'lines': LineModel,
+  'costume_items': CostumeItemModel
+}
+
+export default ResourceStore

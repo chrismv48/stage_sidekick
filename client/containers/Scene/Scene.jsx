@@ -72,7 +72,7 @@ export class Scene extends React.Component {
           <Image
             src={this.scene.cardImage}
             onClick={() => this.showLightbox = true}
-            size={'large'}
+            size='medium'
             className='header-image'
           />
           <a
@@ -103,14 +103,14 @@ export class Scene extends React.Component {
 
         <Header as='h3' dividing>
           Characters
-          {this.scene.character_ids.length > 0 &&
+          {this.scene.characterIds.length > 0 &&
           <span style={{float:'right'}}>
               <EditIcon resource='scenes' resourceId={this.sceneId} />
             </span>
           }
         </Header>
-        {this.scene.character_ids.length > 0 ?
-          <CharacterCardGroup characterIds={this.scene.character_ids}/>
+        {this.scene.characterIds.length > 0 ?
+          <CharacterCardGroup characterIds={this.scene.characterIds}/>
           : this.renderEmptyContent()
         }
 

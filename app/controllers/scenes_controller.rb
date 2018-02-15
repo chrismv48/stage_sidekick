@@ -2,7 +2,7 @@ class ScenesController < ApplicationController
   before_action :set_scene, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:characters, :images]
+  ASSOCIATIONS_TO_INCLUDE = [:character_ids, :images]
 
   # GET /scenes
   def index

@@ -142,22 +142,22 @@ export class Actor extends React.Component {
 
           <Header as='h3' dividing>
             Characters
-            {this.actor.character_ids.length > 0 &&
+            {this.actor.characterIds.length > 0 &&
             <span style={{float:'right'}}>
               <EditIcon resource='actors' resourceId={this.actorId} />
             </span>
             }
           </Header>
-          {this.actor.character_ids.length > 0 ?
-            <CharacterCardGroup characterIds={this.actor.character_ids}/>
+          {this.actor.characterIds.length > 0 ?
+            <CharacterCardGroup characterIds={this.actor.characterIds}/>
             : this.renderEmptyContent()
           }
-          {this.actor.costume_ids.length > 0 &&
+          {this.actor.costumeIds.length > 0 &&
           <React.Fragment>
             <Header as='h3' dividing>
               Costumes
             </Header>
-            <CostumeCardGroup costumeIds={this.actor.character_ids}/>
+            <CostumeCardGroup costumeIds={this.actor.characterIds}/>
           </React.Fragment>
           }
 

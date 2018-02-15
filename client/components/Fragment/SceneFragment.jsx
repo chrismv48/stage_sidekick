@@ -35,7 +35,7 @@ class SceneFragment extends React.Component {
 
     return (
       <Popup
-        trigger={() => <SceneFragmentContent scene={scene} />}
+        trigger={SceneFragmentContent({scene})}
         position='bottom center'
       >
         <Popup.Header>

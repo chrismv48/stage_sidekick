@@ -29,16 +29,16 @@ export class CostumePlot extends React.Component {
   renderCharacter(characterId) {
     const {characters, actors} = this.props.resourceStore
     const character = characters.find(character => character.id === characterId)
-    const characterActor = isEmpty(character.actor_ids) ? {} : actors.find(actor => actor.id === character.actor_ids[0])
+    const characterActor = isEmpty(character.actorIds) ? {} : actors.find(actor => actor.id === character.actorIds[0])
     return (
-      <CharacterFragment character={character} actor={characterActor} />
+      <CharacterFragment popup character={character} actor={characterActor} />
     )
   }
 
   getCostumeByCharacterScene(characterId, sceneId) {
     const {costumes} = this.props.resourceStore
     for (let costume of costumes) {
-      if (costume.scene_ids.includes(parseInt(sceneId)) && costume.character_ids.includes(parseInt(characterId))) {
+      if (costume.sceneIds.includes(parseInt(sceneId)) && costume.characterIds.includes(parseInt(characterId))) {
         return costume
       }
     }
@@ -74,9 +74,9 @@ export class CostumePlot extends React.Component {
 
     const sceneColumns = scenes.map(scene => {
       return {
-        Header: () => <SceneFragment scene={scene}/>,
+        Header: () => <SceneFragment popup scene={scene}/>,
         accessor: `scene${scene.id}`,
-        Cell: ({value}) => <CostumeFragment costume={value}/>,
+        Cell: ({value}) => <CostumeFragment popup costume={value}/>,
         style: {whiteSpace: 'normal', padding: '15px'},
         headerStyle: {whiteSpace: 'normal', padding: '15px'},
       }

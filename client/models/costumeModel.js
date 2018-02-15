@@ -1,56 +1,17 @@
 import React from 'react'
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {BaseModel} from "./baseModel";
-import {isEmpty} from 'lodash'
+import BaseModel from "./baseModel";
 import CostumeFragment from "../components/Fragment/CostumeFragment";
 import {Icon, Image, Label} from "semantic-ui-react";
 
 class Costume extends BaseModel {
 
-  // Returns hash {character: [character_scenes]}
-  @computed get characterScenesByCharacter() {
-    let groupedCharacterScenes = {}
-    for (let costumeCharacterScene of this.costumes_characters_scenes) {
-      const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
-      if (characterId in groupedCharacterScenes) {
-        groupedCharacterScenes[characterId].push(characterSceneId)
-      }
-      else {
-        groupedCharacterScenes[characterId] = characterSceneId ? [characterSceneId] : []
-      }
-    }
-    return groupedCharacterScenes
-  }
-
   constructor(store = null) {
     super(store)
     this.store = store
 
-    this.updateCostumeCharacterScenes = this.updateCostumeCharacterScenes.bind(this)
-
     super._initializeFields()
     super._initializeRelationships()
-  }
-
-  updateCostumeCharacterScenes(characterId, characterSceneIds = []) {
-    transaction(() => {
-
-      // First delete all CCS's with this characterId because it's easier to overwrite then try to modify
-      this.costumes_characters_scenes = this.costumes_characters_scenes.filter(ccs => ccs.character_id !== characterId)
-      // remove(this.costumes_characters_scenes, (ccs) => ccs.character_id === characterId)
-
-      if (isEmpty(characterSceneIds)) {
-        characterSceneIds = [null]
-      }
-
-      characterSceneIds.forEach(characterSceneId =>
-        this.costumes_characters_scenes.push({
-          costume_id: this.id,
-          character_id: characterId,
-          characters_scene_id: characterSceneId
-        })
-      )
-    })
   }
 }
 
@@ -61,13 +22,17 @@ Costume.FIELD_NAMES = {
   display_image: null,
   costumes_characters_scenes: [],
   characters_scenes: [],
-  images: []
+  images: [],
+  character_ids: [],
+  scene_ids: [],
+  costume_item_ids: [],
+  updated_at: null
 }
 
 Costume.RELATIONSHIPS = {
-  characters: 'costumes',
-  scenes: 'scenes',
-  costume_items: 'costumes'
+  'characters': 'costumes',
+  'scenes': 'costumes',
+  'costume_items': 'costume'
 }
 
 Costume.RESOURCE = 'costumes'
@@ -78,7 +43,7 @@ Costume.tableColumns = [
     header: 'Title',
     renderCell: (costume) => {
       return (
-        <span onClick={() => costume.store.rootStore.uiStore.showResourceSidebar(costume.id, costume.RESOURCE)}>
+        <span onClick={() => costume.store.rootStore.uiStore.showResourceSidebar(costume.id, costume.resource)}>
           <CostumeFragment costume={costume}/>
         </span>
       )
@@ -104,8 +69,8 @@ Costume.tableColumns = [
       return (
         <Label.Group>
           {costume.characters_scenes.map(character_scene => {
-            const character = costume.store.characters.find(character => character.id === character_scene.character_id)
-            const scene = costume.store.scenes.find(scene => scene.id === character_scene.scene_id)
+            const character = costume.characters.find(character => character.id === character_scene.character_id)
+            const scene = costume.scenes.find(scene => scene.id === character_scene.scene_id)
             return (
               <Label as='a' image key={character_scene.id}>
                 <Image avatar src={character.avatar}/>

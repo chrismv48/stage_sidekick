@@ -37,7 +37,7 @@ class CostumeFragment extends React.Component {
 
     return (
       <Popup
-        trigger={CostumeFragmentContent(costume)}
+        trigger={CostumeFragmentContent({costume})}
         position='bottom center'
       >
         <Popup.Header>
@@ -54,7 +54,7 @@ class CostumeFragment extends React.Component {
 
 
 CostumeFragment.propTypes = {
-  costume: PropTypes.object.isRequired,
+  costume: PropTypes.object,
   popup: PropTypes.bool
 };
 

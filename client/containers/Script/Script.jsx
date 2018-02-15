@@ -132,7 +132,7 @@ export class Script extends React.Component {
 
   generateSceneOptions() {
     const {lines, scenes} = this.props.resourceStore
-    const sceneIds = uniq(compact(lines.map(line => line.scene_id)))
+    const sceneIds = uniq(compact(lines.map(line => line.sceneId)))
     return sceneIds.map(sceneId => {
       const scene = scenes.find(scene => scene.id === sceneId)
       return {
@@ -147,7 +147,7 @@ export class Script extends React.Component {
     const {lines} = this.props.resourceStore
     const currentLine = lines.find(line => line.number === parseInt(this.currentLine))
     if (currentLine) {
-      return currentLine.scene_id
+      return currentLine.sceneId
     }
   }
 
@@ -209,14 +209,14 @@ export class Script extends React.Component {
                   if (i === 0) {
                     return true
                   }
-                  return (lines[i - 1].scene_id !== line.scene_id)
+                  return (lines[i - 1].sceneId !== line.sceneId)
                 }
                 return (
                   <React.Fragment key={i}>
                     {shouldRenderSceneHeader() &&
                     <div ref={(elem) => {
                       if (elem) {
-                        this.scenePositions[line.scene_id] = elem.offsetTop
+                        this.scenePositions[line.sceneId] = elem.offsetTop
                       }
                       }}>
                       <Header as='h2' content={line.scene.title}/>

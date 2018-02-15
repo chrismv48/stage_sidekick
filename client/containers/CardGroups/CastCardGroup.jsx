@@ -22,7 +22,7 @@ export class CastCardGroup extends React.Component {
 
   generateCardFrontDescription = (actor) => {
 
-    const characterTags = actor.character_ids.map(characterId => {
+    const characterTags = actor.characterIds.map(characterId => {
       const character = this.props.resourceStore.characters.find(character => character.id === characterId)
       return (<a key={character.id} href={`characters/${characterId}`}>{character.name}</a>)
     })

@@ -2,10 +2,10 @@ import React from 'react';
 import Role from "models/roleModel";
 import ActorFragment from "../components/Fragment/ActorFragment";
 import {Icon, Image, Label} from "semantic-ui-react";
+import {computed} from "mobx";
 
 
 class Actor extends Role {
-
 
   constructor(store = null) {
     super(store)
@@ -32,13 +32,17 @@ Actor.FIELD_NAMES = {
   inseam: null,
   sleeve: null,
   shoe_size: null,
-  costumes_characters_scenes: []
+  costumes_characters_scenes: [],
+  character_ids: [],
+  costume_ids: [],
+  scene_ids: [],
+  updated_at: null
 }
 
 Actor.RELATIONSHIPS = {
-  characters: 'actors',
-  costumes: 'actors',
-  scenes: 'actors',
+  'characters': 'actors',
+  'costumes': 'actors',
+  'scenes': 'actors',
 }
 
 Actor.tableColumns = [
@@ -47,7 +51,7 @@ Actor.tableColumns = [
     header: 'Name',
     renderCell: (actor) => {
       return (
-        <span onClick={() => actor.store.rootStore.uiStore.showResourceSidebar(actor.id, actor.RESOURCE)}>
+        <span onClick={() => actor.store.rootStore.uiStore.showResourceSidebar(actor.id, actor.resource)}>
           <ActorFragment actor={actor}/>
         </span>
       )

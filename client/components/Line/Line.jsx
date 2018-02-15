@@ -98,9 +98,9 @@ class Line extends React.Component {
   generateSceneCharacterOptions() {
     let characters
 
-    if (this.lineStaged.scene_id) {
-      const scene = this.props.resourceStore.scenes.find(scene => scene.id === this.lineStaged.scene_id)
-      characters = this.props.resourceStore.characters.filter(character => scene.character_ids.includes(character.id))
+    if (this.lineStaged.sceneId) {
+      const scene = this.props.resourceStore.scenes.find(scene => scene.id === this.lineStaged.sceneId)
+      characters = this.props.resourceStore.characters.filter(character => scene.characterIds.includes(character.id))
     } else {
       characters = this.props.resourceStore.characters
     }
@@ -137,15 +137,15 @@ class Line extends React.Component {
             <Form.Select
               label='Scene'
               options={this.generateSceneOptions()}
-              value={this.lineStaged.scene_id}
-              onChange={(event, data) => this.lineStaged.scene_id = data.value}
+              value={this.lineStaged.sceneId}
+              onChange={(event, data) => this.lineStaged.sceneId = data.value}
             />
             <Form.Select
               label='Character(s)'
               multiple
               options={this.generateSceneCharacterOptions()}
-              value={this.lineStaged.character_ids.toJS()}
-              onChange={(event, data) => {this.lineStaged.character_ids = data.value}}
+              value={this.lineStaged.characterIds.toJS()}
+              onChange={(event, data) => {this.lineStaged.characterIds = data.value}}
             />
             <Form.Select
               label='Line Type'

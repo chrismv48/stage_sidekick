@@ -1,10 +1,11 @@
 import React from 'react'
 import {computed, transaction} from 'mobx'
-import {BaseModel} from "./baseModel";
+import BaseModel from "./baseModel";
 import SceneFragment from "components/Fragment/SceneFragment";
 import {Icon, Image, Label} from "semantic-ui-react";
 
 class Scene extends BaseModel {
+
 
   constructor(store = null) {
     super(store)
@@ -22,11 +23,13 @@ Scene.FIELD_NAMES = {
   length_in_minutes: null,
   setting: null,
   order_index: null,
-  images: []
+  images: [],
+  character_ids: [],
+  updated_at: null
 }
 
 Scene.RELATIONSHIPS = {
-  characters: 'scenes',
+  'characters': 'scenes'
 }
 
 Scene.RESOURCE = 'scenes'
@@ -37,7 +40,7 @@ Scene.tableColumns = [
     header: 'Scene',
     renderCell: (scene) => {
       return (
-        <span onClick={() => scene.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.RESOURCE)}>
+        <span onClick={() => scene.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}>
           <SceneFragment scene={scene}/>
         </span>
       )

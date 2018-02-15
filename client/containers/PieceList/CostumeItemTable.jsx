@@ -41,9 +41,8 @@ const columns = [
 export class CostumeItemTable extends React.Component {
 
   render() {
-    const { costumeItemIds, resourceStore: {costume_items} } = this.props
-    const costumeItems = costume_items.filter(costume_item => costumeItemIds.includes(costume_item.id))
-    const costumeId = costumeItems.length > 0 ? costumeItems[0].costume_id : null
+    const { costumeId, resourceStore: {costumes} } = this.props
+    const costume = costumes.find(costume => costume.id === costumeId)
     return (
       <Table compact celled definition size='small'>
         <Table.Header fullWidth>
@@ -57,9 +56,9 @@ export class CostumeItemTable extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {costumeItems.map(costumeItem => {
+          {costume.costume_items.map(costumeItem => {
             return (
-              <Table.Row key={costumeItem}>
+              <Table.Row key={costumeItem.id}>
                 <Table.Cell singleLine textAlign='center'>
                   <div>
                     <Button size='mini' compact primary icon='edit'
@@ -108,7 +107,7 @@ export class CostumeItemTable extends React.Component {
 }
 
 CostumeItemTable.propTypes = {
-  costumeItemIds: PropTypes.array.isRequired
+  costumeId: PropTypes.number.isRequired
 };
 
 export default CostumeItemTable;

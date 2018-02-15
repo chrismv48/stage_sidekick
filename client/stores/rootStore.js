@@ -1,6 +1,6 @@
 import Api from 'api/api'
 
-import {ResourceStore} from "./resourceStore";
+import ResourceStore from "./resourceStore";
 import {UiStore} from "./uiStore";
 
 export default class RootStore {

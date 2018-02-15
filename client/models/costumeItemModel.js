@@ -1,6 +1,6 @@
 import React from 'react'
 import {computed} from 'mobx'
-import {BaseModel} from "./baseModel";
+import BaseModel from "./baseModel";
 import {Header, Icon, Image, Label} from "semantic-ui-react";
 
 const sourceOptions = [
@@ -10,7 +10,6 @@ const sourceOptions = [
 ]
 
 class CostumeItem extends BaseModel {
-
 
   constructor(store = null) {
     super(store)
@@ -31,12 +30,13 @@ CostumeItem.FIELD_NAMES = {
   source: null,
   brand: null,
   cost: null,
-  notes: null,
-  images: []
+  images: [],
+  updated_at: null,
+  costume_id:  null
 }
 
 CostumeItem.RELATIONSHIPS = {
-  costume: 'costume_items',
+  'costume': 'costume_items'
 }
 
 CostumeItem.RESOURCE = 'costume_items'

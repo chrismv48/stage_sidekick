@@ -67,7 +67,7 @@ export class Character extends React.Component {
       )
     }
 
-    const characterRole = isEmpty(this.character.actor_ids) ? {} : roles.find(role => role.id === this.character.actor_ids[0])
+    const characterRole = isEmpty(this.character.actorIds) ? {} : roles.find(role => role.id === this.character.actorIds[0])
 
     return (
       <Grid className="Character">
@@ -75,7 +75,7 @@ export class Character extends React.Component {
           <Image
             src={this.character.primaryImage}
             onClick={() => this.showLightbox = true}
-            size={'large'}
+            size='medium'
             className='header-image'
           />
           <a
@@ -105,14 +105,14 @@ export class Character extends React.Component {
 
           <Header as='h3' dividing>
             Scenes
-            {this.character.scene_ids.length > 0 &&
+            {this.character.sceneIds.length > 0 &&
             <span style={{float: 'right'}}>
               <EditIcon resource='characters' resourceId={this.characterId}/>
             </span>
             }
           </Header>
-          {this.character.scene_ids.length > 0 ?
-            <SceneCardGroup sceneIds={this.character.scene_ids}/>
+          {this.character.sceneIds.length > 0 ?
+            <SceneCardGroup sceneIds={this.character.sceneIds}/>
             : this.renderEmptyContent()
           }
           <Header as='h3' dividing>

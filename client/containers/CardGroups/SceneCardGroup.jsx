@@ -44,7 +44,7 @@ export class SceneCardGroup extends React.Component {
   generateCardExtra = (scene) => {
     return (
       <p style={{textAlign: 'center'}}>
-        {`${scene.character_ids && scene.character_ids.length} Characters`}
+        {`${scene.characterIds && scene.characterIds.length} Characters`}
       </p>
     )
   }

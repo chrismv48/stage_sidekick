@@ -27,6 +27,21 @@ export class Costume extends React.Component {
     return this.props.resourceStore.costumes.find(costume => costume.id === this.costumeId)
   }
 
+  // Returns hash {character: [character_scenes]}
+  @computed get characterScenesByCharacter() {
+    let groupedCharacterScenes = {}
+    for (let costumeCharacterScene of this.costume.costumes_characters_scenes) {
+      const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
+      if (characterId in groupedCharacterScenes) {
+        groupedCharacterScenes[characterId].push(characterSceneId)
+      }
+      else {
+        groupedCharacterScenes[characterId] = characterSceneId ? [characterSceneId] : []
+      }
+    }
+    return groupedCharacterScenes
+  }
+
   componentDidMount() {
     this.loading = true
     Promise.all([
@@ -76,7 +91,7 @@ export class Costume extends React.Component {
           <Image
             src={this.costume.primaryImage}
             onClick={() => this.showLightbox = true}
-            size={'large'}
+            size='medium'
             className='header-image'
           />
           <a
@@ -102,7 +117,7 @@ export class Costume extends React.Component {
           <EditableField resource='costumes' resourceId={this.costumeId} field='description' fieldType='textarea'/>
           <Header as='h3' dividing>
             Costume Items
-            {this.costume.costume_item_ids.length > 0 &&
+            {this.costume.costumeItemIds.length > 0 &&
             <span style={{float: 'right'}}>
               <EditIcon resource='costumes' resourceId={this.costumeId}/>
             </span>
@@ -110,27 +125,27 @@ export class Costume extends React.Component {
           </Header>
 
           <CardGroup resource={'costume_items'}>
-            {this.costume.costume_item_ids.length > 0 ?
-              <CostumeItemCardGroup costumeItemIds={this.costume.costume_item_ids}/>
+            {this.costume.costumeItemIds.length > 0 ?
+              <CostumeItemCardGroup costumeItemIds={this.costume.costumeItemIds}/>
               : this.renderEmptyContent()
             }
           </CardGroup>
           <Header as='h3' dividing>
             Character Scenes
-            {this.costume.characterScenesByCharacter.length > 0 &&
+            {this.characterScenesByCharacter.length > 0 &&
             <span style={{float: 'right'}}>
               <EditIcon resource='costumes' resourceId={this.costumeId}/>
             </span>
             }
           </Header>
           <Item.Group divided>
-            {this.costume.characterScenesByCharacter.length > 0 && this.renderEmptyContent()}
+            {this.characterScenesByCharacter.length > 0 && this.renderEmptyContent()}
 
-            {Object.keys(this.costume.characterScenesByCharacter).map(characterId => {
+            {Object.keys(this.characterScenesByCharacter).map(characterId => {
               characterId = parseInt(characterId)
               const character = characters.find(character => character.id === characterId)
-              const characterRole = roles.find(role => role.id === character.actor_ids[0])
-              const characterSceneIds = this.costume.characterScenesByCharacter[characterId]
+              const characterRole = roles.find(role => role.id === character.actorIds[0])
+              const characterSceneIds = this.characterScenesByCharacter[characterId]
               return (
                 <Item key={characterId}>
                   <Item.Image src={character.cardImage}/>

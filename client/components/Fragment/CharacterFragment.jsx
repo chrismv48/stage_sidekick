@@ -36,7 +36,7 @@ class CharacterFragment extends React.Component {
 
     return (
       <Popup
-        trigger={() => <CharacterFragmentContent character={character} actor={actor} />}
+        trigger={<CharacterFragmentContent character={character} actor={actor} />}
         position='bottom center'
       >
         <Popup.Header>

@@ -15,7 +15,7 @@ const SortableImage = SortableElement(({image, handleChangePrimary, handleRemove
       <Form.Field>
         <Radio
           value={`option${image.id}`}
-          onChange={() => handleChangePrimary(image.id)}
+          onChange={() => handleChangePrimary(image.image_src.url)}
           name='primary-image-radio'
           checked={image.primary}
           label=' '

@@ -29,10 +29,10 @@ export class PieceList extends React.Component {
     const {actors, costumes, costume_items, characters} = this.props.resourceStore
     const pieceList = []
     for (let costume of costumes) {
-      const costumeCharacterIds = costume.character_ids.length > 0 ? uniq(costume.character_ids) : [null]
+      const costumeCharacterIds = costume.characterIds.length > 0 ? uniq(costume.characterIds) : [null]
       for (let characterId of costumeCharacterIds) {
         const character = characters.find(character => character.id === characterId) || {}
-        const characterActorIds = character.actor_ids && uniq(character.actor_ids).length > 0 ? character.actor_ids : [null]
+        const characterActorIds = character.actorIds && uniq(character.actorIds).length > 0 ? character.actorIds : [null]
 
         for (let actorId of characterActorIds) {
           const actor = actors.find(actor => actor.id === actorId)
@@ -41,8 +41,8 @@ export class PieceList extends React.Component {
           entry.costume = costume
           entry.character = character
           entry.actor = actor
-          entry.scene_ids = costume.characters_scenes.filter(character_scene => character_scene.character_id === characterId).map(char_scene => char_scene.scene_id)
-          entry.costume_item_ids = costume.costume_item_ids
+          entry.sceneIds = costume.characters_scenes.filter(character_scene => character_scene.character_id === characterId).map(char_scene => char_scene.scene_id)
+          entry.costumeItemIds = costume.costumeItemIds.slice()
           pieceList.push(entry)
         }
       }
@@ -67,7 +67,7 @@ export class PieceList extends React.Component {
     )
   }
 
-  renderCostumeColumn(costume, scene_ids) {
+  renderCostumeColumn(costume, sceneIds) {
     return (
       <div className='costume-container'>
         <Image style={{maxHeight: 200}} centered rounded src={costume.primaryImage}/>
@@ -76,10 +76,10 @@ export class PieceList extends React.Component {
             <a href={`/costumes/${costume.id}`}>{costume.title}</a>
           </strong>
         </div>
-        {scene_ids.length > 0 &&
+        {sceneIds.length > 0 &&
         <div>
           <div style={{textAlign: 'left', marginTop: 10}}><strong>Scenes</strong></div>
-          {scene_ids.map((sceneId, i) => {
+          {sceneIds.map((sceneId, i) => {
             const scene = this.props.resourceStore.scenes.find(scene => scene.id === sceneId)
             return (
               <SceneFragment key={i} scene={scene}/>
@@ -105,17 +105,17 @@ export class PieceList extends React.Component {
       <Grid className='PieceList'>
         <Grid.Column>
           {
-            pieceList.map(({costume, character, actor, scene_ids, costume_item_ids}, i) => {
+            pieceList.map(({costume, character, actor, sceneIds, costumeItemIds}, i) => {
               return (
                 <div key={i} className='piece-container'>
                   <div className='character-actor-column column'>
                     {this.renderCharacterColumn(character, actor)}
                   </div>
                   <div className='costume-column column'>
-                    {this.renderCostumeColumn(costume, scene_ids)}
+                    {this.renderCostumeColumn(costume, sceneIds)}
                   </div>
                   <div className='table-column column'>
-                    <CostumeItemTable costumeItemIds={costume_item_ids}/>
+                    <CostumeItemTable costumeId={costume.id} />
                   </div>
                 </div>
               )

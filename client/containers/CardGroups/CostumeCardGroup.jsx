@@ -22,8 +22,8 @@ export class CostumeCardGroup extends React.Component {
   }
 
   generateCardExtra = (costume) => {
-    const num_scenes = costume.scene_ids.length
-    const num_characters = costume.character_ids.length
+    const num_scenes = costume.sceneIds.length
+    const num_characters = costume.characterIds.length
     let sentence = ''
     if (num_scenes > 0 && num_characters > 0) {
       sentence = `Worn in ${num_scenes} ${num_scenes > 1 ? 'scenes' : 'scene'} by ${num_characters} ${num_characters > 1 ? 'characters' : 'character'}`

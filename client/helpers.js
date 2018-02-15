@@ -40,3 +40,5 @@ export function addIdToResource(resource) {
     return singularizedResource + '_ids'
   }
 }
+
+

@@ -6,7 +6,6 @@ import {computed, isObservableArray, observable} from "mobx";
 import PropTypes from 'prop-types'
 import {get, intersection, isEmpty, orderBy} from 'lodash'
 import ContentLoader from "components/ContentLoader/ContentLoader";
-import {RESOURCES} from "../../../constants";
 import {pluralizeResource} from "../../../helpers";
 
 @inject("resourceStore", "uiStore") @observer
@@ -24,8 +23,8 @@ export class ResourceTable extends React.Component {
   @observable activeFilters = new Map()
 
   @computed get model() {
-    const {resource} = this.props
-    return RESOURCES[resource].model
+    const {resourceStore: {resources}, resource} = this.props
+    return resources[resource]
   }
 
   @computed get rows() {
@@ -51,14 +50,12 @@ export class ResourceTable extends React.Component {
   }
 
   @computed get visibleRows() {
-    debugger
     return this.rows.filter(row => {
       return this.activeFilters.entries().map(([field, filteredValue]) => {
 
         // just convert everything into an array so we can do a single comparison statement
         filteredValue = isObservableArray(filteredValue) ? filteredValue : [filteredValue]
         let rowValue = isObservableArray(row[field]) ? row[field] : [row[field]]
-        debugger
         return !isEmpty(intersection(filteredValue, rowValue))
       }).every(condition => condition)
     })
@@ -97,7 +94,6 @@ export class ResourceTable extends React.Component {
   }
 
   handleFilterChange(field, value) {
-    debugger
     if (!value || value.length === 0) {
       this.activeFilters.delete(field)
     } else {
@@ -108,12 +104,9 @@ export class ResourceTable extends React.Component {
   componentDidMount() {
     const {resource} = this.props
     this.loading = true
-    Promise.all([
-      this.props.resourceStore.loadResource(resource),
-      Object.keys(this.model.RELATIONSHIPS).forEach(relationship =>
-        this.props.resourceStore.loadResource(pluralizeResource(relationship))
-      )
-    ]).then(() => this.loading = false)
+    const loadRelationships = Object.keys(this.model.RELATIONSHIPS).map(relationship => this.props.resourceStore.loadResource(pluralizeResource(relationship)))
+    loadRelationships.push(this.props.resourceStore.loadResource(resource))
+    Promise.all(loadRelationships).then(() => this.loading = false)
   }
 
   render() {

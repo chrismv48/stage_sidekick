@@ -1,9 +1,9 @@
 import React from 'react';
 import {inject, observer} from "mobx-react";
-import {computed, createTransformer, observable} from 'mobx'
+import {computed, createTransformer, observable, transaction} from 'mobx'
 import {Dropdown, Form, Icon, Segment} from "semantic-ui-react";
 import './CostumeForm.scss'
-import {pullAll} from "lodash";
+import {isEmpty, pullAll} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
@@ -57,11 +57,46 @@ export class CostumeForm extends React.Component {
     })
   }
 
+  // Returns hash {character: [character_scenes]}
+  @computed get characterScenesByCharacter() {
+    let groupedCharacterScenes = {}
+    for (let costumeCharacterScene of this.costumeStaged.costumes_characters_scenes) {
+      const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
+      if (characterId in groupedCharacterScenes) {
+        groupedCharacterScenes[characterId].push(characterSceneId)
+      }
+      else {
+        groupedCharacterScenes[characterId] = characterSceneId ? [characterSceneId] : []
+      }
+    }
+    return groupedCharacterScenes
+  }
+
+  updateCostumeCharacterScenes(characterId, characterSceneIds = []) {
+    transaction(() => {
+      // First delete all CCS's with this characterId because it's easier to overwrite then try to modify
+      this.costumeStaged.costumes_characters_scenes = this.costumeStaged.costumes_characters_scenes.filter(ccs => ccs.character_id !== characterId)
+      // remove(this.costumes_characters_scenes, (ccs) => ccs.character_id === characterId)
+
+      if (isEmpty(characterSceneIds)) {
+        characterSceneIds = [null]
+      }
+
+      characterSceneIds.forEach(characterSceneId =>
+        this.costumeStaged.costumes_characters_scenes.push({
+          costume_id: this.id,
+          character_id: characterId,
+          characters_scene_id: characterSceneId
+        })
+      )
+    })
+  }
+
   // Need to take all characters and subtract characters already selected in other character dropdowns
   generateCharacterOptions = createTransformer((characterId) => {
     const {characters} = this.props.resourceStore
     // I guess JavaScript converts all keys into strings?
-    const selectedCharacterIds = Object.keys(this.costumeStaged.characterScenesByCharacter).map(id => parseInt(id))
+    const selectedCharacterIds = Object.keys(this.characterScenesByCharacter).map(id => parseInt(id))
     let characterOptions = pullAll(characters.map(character => character.id), selectedCharacterIds)
     if (characterId && characterId > 0) {
       characterOptions.push(characterId)
@@ -78,12 +113,12 @@ export class CostumeForm extends React.Component {
   })
 
   handleCharacterSceneSelection = (event, characterScenes, characterId) => {
-    this.costumeStaged.updateCostumeCharacterScenes(characterId, characterScenes)
+    this.updateCostumeCharacterScenes(characterId, characterScenes)
   }
 
   handleCharacterSelection = (event, characterId, prevCharacterId) => {
     if (characterId === prevCharacterId) return
-    this.costumeStaged.updateCostumeCharacterScenes(characterId)
+    this.updateCostumeCharacterScenes(characterId)
   }
 
   handleDeleteCharacterScene = (characterId) => {
@@ -97,44 +132,42 @@ export class CostumeForm extends React.Component {
         <ContentLoader/>
       )
     }
-    const characterScenesByCharacter = this.costumeStaged.characterScenesByCharacter
     let costumeStaged = this.costumeStaged
-
     return (
       <Segment basic>
         <Form>
           <ImageUpload
-            images={costumeStaged.staged_images.toJS()}
+            images={costumeStaged.images.toJS()}
             handleAddImage={(imageUrl) => costumeStaged.addImage(imageUrl)}
             handleRemoveImage={(imageUrl) => costumeStaged.removeImage(imageUrl)}
-            handleChangePrimary={(imageId) => costumeStaged.setPrimaryImage(imageId)}
+            handleChangePrimary={(imageUrl) => costumeStaged.setPrimaryImage(imageUrl)}
             handleOnSort={({oldIndex, newIndex}) => costumeStaged.updateImageOrder(oldIndex, newIndex)}
           />
           <Form.Field>
             <label>Title</label>
             <input
-              value={costumeStaged.staged_title || ""}
-              onChange={(e) => costumeStaged.staged_title = e.target.value}/>
+              value={costumeStaged.title || ""}
+              onChange={(e) => costumeStaged.title = e.target.value}/>
           </Form.Field>
           <Form.Field>
             <label>Description</label>
             <textarea
-              value={costumeStaged.staged_description || ""}
-              onChange={(e) => costumeStaged.staged_description = e.target.value}
+              value={costumeStaged.description || ""}
+              onChange={(e) => costumeStaged.description = e.target.value}
             />
           </Form.Field>
           <Form.Field>
             <label>Costume items</label>
             <Dropdown fluid multiple selection
                       options={this.costumeItemOptions || []}
-                      value={costumeStaged.staged_costume_item_ids.toJS() || []}
-                      onChange={(e, data) => costumeStaged.staged_costume_item_ids = data.value}
+                      value={costumeStaged.costumeItemIds.slice()}
+                      onChange={(e, data) => costumeStaged.costumeItemIds = data.value}
             />
           </Form.Field>
 
-          {Object.keys(characterScenesByCharacter).map((characterId) => {
+          {Object.keys(this.characterScenesByCharacter).map((characterId) => {
               characterId = parseInt(characterId)
-              const characterScenesIds = characterScenesByCharacter[characterId]
+              const characterScenesIds = this.characterScenesByCharacter[characterId]
               return (
                 <Form.Group inline key={characterId}>
                   <Form.Field>

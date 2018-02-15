@@ -1,6 +1,6 @@
 import React from 'react'
 import {computed, extendObservable, observable, transaction} from 'mobx'
-import {BaseModel} from "./baseModel";
+import BaseModel from "./baseModel";
 import CharacterFragment from "components/Fragment/CharacterFragment";
 import {Icon, Image, Label} from "semantic-ui-react";
 
@@ -22,15 +22,20 @@ Character.FIELD_NAMES = {
   type: null,
   order_index: null,
   characters_scenes: [],
-  images: []
+  images: [],
+  scene_ids: [],
+  actor_ids: [],
+  costume_ids: [],
+  updated_at: null
 }
 
 Character.RESOURCE = 'characters'
 
+// relationship: backRef provides information about the relationship type
 Character.RELATIONSHIPS = {
-  scenes: 'characters',
-  actors: 'characters',
-  costumes: 'characters',
+  'scenes': 'characters',
+  'actors': 'characters',
+  'costumes': 'characters'
 }
 
 Character.tableColumns = [
@@ -38,9 +43,8 @@ Character.tableColumns = [
     field: 'name',
     header: 'Name',
     renderCell: (character) => {
-      debugger
       return (
-        <span onClick={() => character.store.rootStore.uiStore.showResourceSidebar(character.id, character.RESOURCE)}>
+        <span onClick={() => character.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}>
           <CharacterFragment character={character}/>
         </span>
       )
@@ -132,9 +136,6 @@ Character.tableColumns = [
       }
     }
   }
-
-
-
 ]
 
 export default Character

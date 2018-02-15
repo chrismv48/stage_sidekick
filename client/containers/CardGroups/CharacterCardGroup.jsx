@@ -47,7 +47,7 @@ export class CharacterCardGroup extends React.Component {
   generateCardExtra = (character) => {
     return (
       <p onClick={(event) => this.onFlipCard(event, character.id)}
-         style={{textAlign: 'center'}}>{`${character.scene_ids && character.scene_ids.length} Scenes`}</p>
+         style={{textAlign: 'center'}}>{`${character.sceneIds && character.sceneIds.length} Scenes`}</p>
     )
   }
 

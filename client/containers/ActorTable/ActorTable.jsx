@@ -36,7 +36,7 @@ export class ActorTable extends React.Component {
   @computed get visibleRows() {
     return this.actors.filter(actor => {
       return [
-        !isEmpty(this.selectedSceneIds) ? !isEmpty(intersection(actor.scene_ids, this.selectedSceneIds)) : true,
+        !isEmpty(this.selectedSceneIds) ? !isEmpty(intersection(actor.sceneIds, this.selectedSceneIds)) : true,
         this.selectedGender ? actor.gender === this.selectedGender : true
       ].every(condition => condition)
     })

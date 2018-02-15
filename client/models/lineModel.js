@@ -1,5 +1,5 @@
 import {computed} from 'mobx'
-import {BaseModel} from "./baseModel";
+import BaseModel from "./baseModel";
 
 
 class Line extends BaseModel {
@@ -19,12 +19,15 @@ Line.FIELD_NAMES = {
   number: null,
   page_number: null,
   line_type: null,
-  status: null
+  status: null,
+  scene_id: null,
+  character_ids: [],
+  updated_at: null
 }
 
 Line.RELATIONSHIPS = {
-  characters: 'lines',
-  scene: 'lines',
+  'characters': 'lines',
+  'scene': 'lines'
 }
 
 Line.RESOURCE = 'lines'
