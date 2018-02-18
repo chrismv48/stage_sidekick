@@ -21,7 +21,7 @@
 class Image < ApplicationRecord
   mount_base64_uploader :image_src, ImageUploader, file_name: -> (image) {"#{image.imageable_type}_#{image.imageable_id}_#{Time.zone.now.to_i}"}
 
-  belongs_to :imageable, polymorphic: true, optional: true
+  belongs_to :imageable, polymorphic: true, optional: true, touch: true
 
   after_initialize :init
 

@@ -75,7 +75,6 @@ class Note extends BaseModel {
     this.store = store
 
     super._initializeFields()
-    // super._initializeRelationships()
   }
 }
 

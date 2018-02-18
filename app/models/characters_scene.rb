@@ -15,8 +15,8 @@
 #
 
 class CharactersScene < ApplicationRecord
-  belongs_to :character
-  belongs_to :scene
+  belongs_to :character, touch: true
+  belongs_to :scene, touch: true
   has_many :costumes_characters_scenes, dependent: :destroy
 
 end

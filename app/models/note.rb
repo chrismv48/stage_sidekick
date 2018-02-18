@@ -25,10 +25,10 @@
 class Note < ApplicationRecord
   has_many :roles_notes
   has_many :assignees, through: :roles_notes, source: :role
-  belongs_to :noteable, polymorphic: true
-  belongs_to :actor, optional: true
-  belongs_to :scene, optional: true
-  belongs_to :completed_by, class_name: 'Role', foreign_key: :completed_by_role_id, optional: true
+  belongs_to :noteable, polymorphic: true, touch: true
+  belongs_to :actor, optional: true, touch: true
+  belongs_to :scene, optional: true, touch: true
+  belongs_to :completed_by, class_name: 'Role', foreign_key: :completed_by_role_id, optional: true, touch: true
 
   def assignee_ids
     return self.assignees.pluck(:id)

@@ -38,7 +38,7 @@ class Actor < Role
 
   has_many :images, as: :imageable
 
-  belongs_to :user
+  belongs_to :user, touch: true
   has_one :actor_measurement, through: :user
 
   after_create do |actor|

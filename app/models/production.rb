@@ -17,7 +17,7 @@
 #
 
 class Production < ApplicationRecord
-  belongs_to :venue
+  belongs_to :venue, touch: true
   has_many :roles
 
 end

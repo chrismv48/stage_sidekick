@@ -28,9 +28,9 @@
 
 class Role < ApplicationRecord
 
-  belongs_to :user
-  belongs_to :production
-  belongs_to :venue
+  belongs_to :user, touch: true
+  belongs_to :production, touch: true
+  belongs_to :venue, touch: true
 
   has_many :images, as: :imageable
 

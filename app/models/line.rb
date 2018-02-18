@@ -20,8 +20,8 @@
 #
 
 class Line < ApplicationRecord
-  belongs_to :scene
-  belongs_to :production
+  belongs_to :scene, touch: true
+  belongs_to :production, touch: true
 
   # the has many relationship with characters is necessary because some lines are spoken (sang) in unison.
   has_many :characters_lines
