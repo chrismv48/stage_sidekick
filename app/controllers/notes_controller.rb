@@ -2,7 +2,7 @@ class NotesController < ApplicationController
   before_action :set_note, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:assignees, :noteable, :actor, :scene]
+  ASSOCIATIONS_TO_INCLUDE = [:assignee_ids]
 
   # GET /notes
   def index
@@ -61,6 +61,26 @@ class NotesController < ApplicationController
 
   def parse_params
     params.permit!
-    @note_params = params.slice(*Note.attribute_names, :actor_id, :scene_id)
+    @note_params = params.slice(*Note.attribute_names, :actor_id, :scene_id, :assignee_ids)
   end
+
+  # had to override the default build_json_response method because the noteable association was returning a nested `notes` section
+  # for just costume items (no idea why)
+  # def build_json_response(entity, associations)
+  #   serialized = entity.as_json(include: [
+  #     {
+  #       noteable: {
+  #         except: :notes
+  #       }
+  #     },
+  #     :actor,
+  #     :scene,
+  #     :assignees
+  #   ])
+  #   serialized = serialized.kind_of?(Array) ? serialized : [serialized]
+  #   {
+  #     controller_name => serialized
+  #   }
+  # end
+
 end

@@ -34,7 +34,9 @@ class Role < ApplicationRecord
 
   has_many :images, as: :imageable
 
+  has_many :roles_notes
   has_many :notes, through: :roles_notes
+  has_many :completed_notes, class_name: 'Note', foreign_key: :completed_by_role_id
 
   scope :actor, -> { where(title: 'Actor') }
 

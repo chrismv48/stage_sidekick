@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {computed, observable} from 'mobx'
+import {computed, isObservableArray, observable} from 'mobx'
 import {observer} from "mobx-react";
 import {inject} from "mobx-react/index";
-import {Button, Form, Input, TextArea} from "semantic-ui-react";
+import {Button, Dropdown, Form, Input, TextArea} from "semantic-ui-react";
 import classNames from 'classnames'
 import './EditableField.scss'
 
@@ -17,17 +17,17 @@ export class EditableField extends React.Component {
 
   @observable editing = false
 
-  renderDisplayMode() {
-    const {fieldType} = this.props
-    switch (fieldType) {
-      case "text":
-        return this.renderTextDisplayMode()
-      case "textarea":
-        return this.renderTextareaDisplayMode()
-      default:
-        return this.renderTextDisplayMode()
-    }
-  }
+  // renderDisplayMode() {
+  //   const {fieldType} = this.props
+  //   switch (fieldType) {
+  //     case "text":
+  //       return this.renderTextDisplayMode()
+  //     case "textarea":
+  //       return this.renderTextareaDisplayMode()
+  //     default:
+  //       return this.renderTextDisplayMode()
+  //   }
+  // }
 
   renderEditMode() {
     const {fieldType} = this.props
@@ -36,34 +36,37 @@ export class EditableField extends React.Component {
         return this.renderTextEditMode()
       case "textarea":
         return this.renderTextareaEditMode()
+      case "dropdown":
+        return this.renderDropdownEditMode()
       default:
         return this.renderTextEditMode()
     }
   }
 
-  renderTextareaDisplayMode() {
-    return (
-      <p className='display-input textarea-input'>
-        {
-          this.resource[this.props.field] ?
-            this.resource[this.props.field] :
-            <span className='empty-field'>Click to edit</span>
-        }
-      </p>
-    )
-  }
+  // renderTextareaDisplayMode() {
+  //   return (
+  //     <p className='display-input textarea-input'>
+  //       {
+  //         this.resource[this.props.field] ?
+  //           this.resource[this.props.field] :
+  //           <span className='empty-field'>Click to edit</span>
+  //       }
+  //     </p>
+  //   )
+  // }
 
-  renderTextDisplayMode() {
-    return (
-      <Input transparent className='display-input text-input'>
-        {
-          this.resource[this.props.field] ?
-            this.resource[this.props.field] :
-            <span className='empty-field'>Click to edit</span>
-        }
-      </Input>
-    )
-  }
+  // renderTextDisplayMode() {
+  //   const {field, renderField} = this.props
+  //   return (
+  //     <Input transparent className='display-input text-input'>
+  //       {
+  //         this.resource[this.props.field] ?
+  //           this.resource[this.props.field] :
+  //           <span className='empty-field'>Click to edit</span>
+  //       }
+  //     </Input>
+  //   )
+  // }
 
   renderTextareaEditMode() {
     return (
@@ -99,13 +102,40 @@ export class EditableField extends React.Component {
         value={this.resource[this.props.field] || ''}
         type='text'
         size='mini'
-        fluid
         action
       >
         <input/>
-        <Button size='mini' compact icon='checkmark' onMouseDown={this.saveChange}/>
-        <Button size='mini' compact icon='remove' onMouseDown={this.handleDiscardInput}/>
+        <Button size='mini' icon='checkmark' onMouseDown={this.saveChange}/>
+        <Button size='mini' icon='remove' onMouseDown={this.handleDiscardInput}/>
       </Input>
+    )
+  }
+
+  renderDropdownEditMode() {
+    const {dropdownOptions, field} = this.props
+    let dropdownValue = this.resource[field]
+    dropdownValue = isObservableArray(dropdownValue) ? dropdownValue.slice() : dropdownValue
+    debugger
+    return (
+      <div>
+        <Dropdown
+          selection
+          search
+          value={dropdownValue}
+          // compact
+          onChange={(event, data) => this.resource[field] = data.value}
+          {...dropdownOptions}
+        />
+        <span>
+          <Button
+            style={{borderRadius: 0}}
+            attached='left'
+            icon='checkmark'
+            onMouseDown={this.saveChange}
+          />
+          <Button attached='right' icon='remove' onMouseDown={this.handleDiscardInput}/>
+        </span>
+      </div>
     )
   }
 
@@ -122,19 +152,19 @@ export class EditableField extends React.Component {
     }
   }
 
-  handleDiscardInput= () => {
+  handleDiscardInput = () => {
     this.resource.revert()
     this.editing = false
   }
 
   render() {
+    const {children, field} = this.props
     return (
       <div
         className={classNames('field-wrapper', this.editing ? 'edit-mode' : 'display-mode')}
         onClick={() => this.editing = true}
       >
-        {this.editing ? this.renderEditMode() : this.renderDisplayMode()}
-        {/*{this.renderEditMode()}*/}
+        {this.editing ? this.renderEditMode() : (children || this.resource[field])}
       </div>
     )
   }
@@ -145,5 +175,7 @@ EditableField.propTypes = {
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.number.isRequired,
   field: PropTypes.string.isRequired,
-  fieldType: PropTypes.string
+  fieldType: PropTypes.string,
+  renderField: PropTypes.func,
+  dropdownOptions: PropTypes.object
 }

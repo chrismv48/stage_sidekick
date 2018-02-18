@@ -5,6 +5,7 @@ import CostumeModel from "./models/costumeModel";
 import CostumeItemModel from "./models/costumeItemModel";
 import ActorModel from "./models/actorModel";
 import LineModel from "./models/lineModel";
+import NoteModel from "./models/noteModel";
 import Character from "./containers/Character/Character";
 import Scene from "./containers/Scene/Scene";
 import Costume from "./containers/Costume/Costume";
@@ -17,6 +18,8 @@ export const ACTOR_RESOURCE = 'actors'
 export const COSTUME_RESOURCE = 'costumes'
 export const COSTUME_ITEM_RESOURCE = 'costume_items'
 export const LINE_RESOURCE = 'lines'
+export const NOTE_RESOURCE = 'notes'
+
 
 export const RESOURCES = {
   [CHARACTER_RESOURCE]: {
@@ -64,7 +67,14 @@ export const RESOURCES = {
     pluralized: 'lines',
     singularized: 'line',
     model: LineModel
+  },
+  [NOTE_RESOURCE]: {
+    apiEndpoint: 'notes',
+    pluralized: 'notes',
+    singularized: 'notes',
+    model: NoteModel
   }
+
 }
 
 // FORM CONSTANTS

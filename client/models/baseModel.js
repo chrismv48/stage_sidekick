@@ -107,7 +107,6 @@ class BaseModel {
         get [relationship]() {
           const results = this.store[pluralizedRelationship].filter(item => {
             const primaryRefIds = isObservableArray(this[relationshipId]) ? this[relationshipId] : [this[relationshipId]]
-
             const backRefIds = isObservableArray(item[backRefId]) ? item[backRefId] : [item[backRefId]]
 
             if (this.updated_at > item.updated_at) {
@@ -176,7 +175,6 @@ class BaseModel {
 
   revert() {
     this.viewModel.reset()
-    delete this['_viewModel']
     this.modified = false
   }
 
@@ -215,8 +213,6 @@ class BaseModel {
             this.store._updateResourceFromServer(json, this.resource)
           })
         })
-        // Remove view model
-        delete this['_viewModel']
         this.modified = false
       })
   }

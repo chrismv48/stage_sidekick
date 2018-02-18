@@ -12,6 +12,27 @@ class Actor extends Role {
 
     // boilerplate constructor calls are handled by parent Role class
   }
+
+  dropdownItem(options) {
+    return (
+      {
+        image: {src: this.avatar, circular: true},
+        text: this.fullName,
+        value: this.id,
+        key: this.id,
+        ...options
+      }
+    )
+  }
+
+  label(options) {
+    return (
+      <Label as='a' image key={this.id} {...options}>
+        <img src={this.avatar}/>
+        {this.fullName}
+      </Label>
+    )
+  }
 }
 
 Actor.RESOURCE = 'actors'

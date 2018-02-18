@@ -13,6 +13,7 @@ import CostumeModel from "models/costumeModel";
 import CostumeItemModel from "models/costumeItemModel";
 import ActorModel from "models/actorModel";
 import LineModel from "models/lineModel";
+import NoteModel from "models/noteModel";
 
 
 class ResourceStore {
@@ -24,6 +25,7 @@ class ResourceStore {
   @observable costumes = []
   @observable costume_items = []
   @observable lines = []
+  @observable notes = []
 
   @observable isLoading = false
 
@@ -52,6 +54,11 @@ class ResourceStore {
     }
     this.loadResource(resource, notFoundIds)
   }
+
+  loadNotes(idOrIds = null) {
+    return this.loadResource('notes', idOrIds)
+  }
+
 
   loadCharacters(idOrIds = null) {
     return this.loadResource(CHARACTER_RESOURCE, idOrIds)
@@ -151,7 +158,8 @@ ResourceStore.resources = {
   'actors': ActorModel,
   'roles': RoleModel,
   'lines': LineModel,
-  'costume_items': CostumeItemModel
+  'costume_items': CostumeItemModel,
+  'notes': NoteModel
 }
 
 export default ResourceStore

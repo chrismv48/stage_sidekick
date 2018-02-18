@@ -14,6 +14,28 @@ class Scene extends BaseModel {
     super._initializeFields()
     super._initializeRelationships()
   }
+
+  dropdownItem(options) {
+    return (
+      {
+        image: {src: this.avatar, circular: true},
+        // content: this.title,
+        text: this.title,
+        value: this.id,
+        key: this.id,
+        ...options
+      }
+    )
+  }
+
+  label(options) {
+    return (
+      <Label as='a' image key={this.id} {...options}>
+        <img src={this.avatar}/>
+        {this.title}
+      </Label>
+    )
+  }
 }
 
 Scene.FIELD_NAMES = {
@@ -25,6 +47,7 @@ Scene.FIELD_NAMES = {
   order_index: null,
   images: [],
   character_ids: [],
+  note_ids: [],
   updated_at: null
 }
 

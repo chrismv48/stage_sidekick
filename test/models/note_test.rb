@@ -2,19 +2,20 @@
 #
 # Table name: notes
 #
-#  id            :integer          not null, primary key
-#  category      :string
-#  department    :string
-#  actor_id      :integer
-#  noteable_id   :integer
-#  noteable_type :string
-#  note          :string
-#  priority      :string
-#  status        :string
-#  completed_by  :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  scene_id      :integer
+#  id                   :integer          not null, primary key
+#  category             :string
+#  department           :string
+#  actor_id             :integer
+#  noteable_id          :integer
+#  noteable_type        :string
+#  description          :string
+#  priority             :string
+#  status               :string
+#  completed_by_role_id :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  scene_id             :integer
+#  title                :string
 #
 # Indexes
 #

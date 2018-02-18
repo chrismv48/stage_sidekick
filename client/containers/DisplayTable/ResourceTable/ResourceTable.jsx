@@ -105,7 +105,7 @@ export class ResourceTable extends React.Component {
     const {resource} = this.props
     this.loading = true
     const loadRelationships = Object.keys(this.model.RELATIONSHIPS).map(relationship => this.props.resourceStore.loadResource(pluralizeResource(relationship)))
-    loadRelationships.push(this.props.resourceStore.loadResource(resource))
+    loadRelationships.push(this.props.resourceStore.loadResource(pluralizeResource(resource)))
     Promise.all(loadRelationships).then(() => this.loading = false)
   }
 
@@ -117,7 +117,6 @@ export class ResourceTable extends React.Component {
     }
     const {showResourceSidebar} = this.props.uiStore
     const {resource} = this.props
-
     return (
       <div className='ResourceTable'>
         <div className='filters-container'>

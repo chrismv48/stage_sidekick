@@ -11,12 +11,13 @@ class Layout extends Component {
 
   renderItemSidebar() {
     let {selectedResourceId, selectedResource, hideResourceSidebar} = this.props.uiStore
-    if (!selectedResourceId) {
+
+    const resource = RESOURCES[selectedResource] || {}
+    const Resource = resource['component']
+    if (!selectedResourceId || !Resource) {
       return null
     }
 
-    const resource = RESOURCES[selectedResource]
-    const Resource = resource.component
     const otherProps = {
       [`${resource.singularized}Id`]: selectedResourceId
     }

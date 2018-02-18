@@ -1,5 +1,7 @@
+import React from 'react'
 import BaseModel from "./baseModel";
 import {computed} from "mobx";
+import {Label} from "semantic-ui-react";
 
 
 class Role extends BaseModel {
@@ -15,6 +17,30 @@ class Role extends BaseModel {
     super._initializeFields()
     super._initializeRelationships()
   }
+
+  dropdownItem(options) {
+    return (
+      {
+        image: {src: this.avatar, circular: true},
+        // content: this.title,
+        text: this.fullName,
+        value: this.id,
+        key: this.id,
+        ...options
+      }
+    )
+  }
+
+  label(options) {
+    return (
+      <Label as='a' image key={this.id} {...options}>
+        <img src={this.avatar}/>
+        {this.fullName}
+      </Label>
+    )
+  }
+
+
 }
 
 Role.FIELD_NAMES = {
@@ -29,7 +55,10 @@ Role.FIELD_NAMES = {
   first_name: null,
   last_name: null,
   images: [],
-  user: {}
+  user: {},
+  note_ids: [],
+  completed_note_ids: [],
+  updated_at: null,
 }
 
 Role.RELATIONSHIPS = {}

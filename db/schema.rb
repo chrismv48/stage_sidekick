@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180213005549) do
+ActiveRecord::Schema.define(version: 20180218145037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,13 +140,14 @@ ActiveRecord::Schema.define(version: 20180213005549) do
     t.integer  "actor_id"
     t.integer  "noteable_id"
     t.string   "noteable_type"
-    t.string   "note"
+    t.string   "description"
     t.string   "priority"
     t.string   "status"
-    t.integer  "completed_by"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "completed_by_role_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "scene_id"
+    t.string   "title"
     t.index ["actor_id"], name: "index_notes_on_actor_id", using: :btree
   end
 

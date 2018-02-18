@@ -13,6 +13,19 @@ class Costume extends BaseModel {
     super._initializeFields()
     super._initializeRelationships()
   }
+
+  dropdownItem(options) {
+    return (
+      {
+        image: {src: this.avatar, circular: true},
+        text: this.title,
+        value: this.id,
+        key: this.id,
+        ...options
+      }
+    )
+  }
+
 }
 
 Costume.FIELD_NAMES = {
@@ -26,7 +39,8 @@ Costume.FIELD_NAMES = {
   character_ids: [],
   scene_ids: [],
   costume_item_ids: [],
-  updated_at: null
+  updated_at: null,
+  note_ids: []
 }
 
 Costume.RELATIONSHIPS = {

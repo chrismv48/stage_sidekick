@@ -13,6 +13,18 @@ class Character extends BaseModel {
     super._initializeFields()
     super._initializeRelationships()
   }
+
+  dropdownItem(options) {
+    return (
+      {
+        image: {src: this.avatar, circular: true},
+        text: this.name,
+        value: this.id,
+        key: this.id,
+        ...options
+      }
+    )
+  }
 }
 
 Character.FIELD_NAMES = {

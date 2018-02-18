@@ -2,7 +2,7 @@ class CostumesController < ApplicationController
   before_action :set_costume, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:character_ids, :scene_ids, :costume_item_ids, :costumes_characters_scenes, :characters_scenes, :images]
+  ASSOCIATIONS_TO_INCLUDE = [:character_ids, :scene_ids, :costume_item_ids, :note_ids, :costumes_characters_scenes, :characters_scenes, :images]
 
   # GET /costumes
   def index
@@ -56,12 +56,10 @@ class CostumesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_costume
       @costume = Costume.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def costume_params
       params.permit!
       costume_params = params.slice(
