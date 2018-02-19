@@ -21,7 +21,8 @@ class Scene < ApplicationRecord
 
   has_many :characters_scenes, dependent: :destroy
   has_many :characters, through: :characters_scenes
-
+  has_many :costumes_characters_scenes
+  has_many :costumes, through: :costumes_characters_scenes
   has_many :images, as: :imageable
 
   after_create do |scene|

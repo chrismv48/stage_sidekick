@@ -10,7 +10,6 @@ export class UiStore {
   @observable displayMode = 'cards'
 
   constructor(rootStore) {
-    console.log('uiStore initializing!')
     this.rootStore = rootStore
 
     this.hideModal = this.hideModal.bind(this)

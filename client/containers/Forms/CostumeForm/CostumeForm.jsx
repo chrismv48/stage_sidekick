@@ -33,15 +33,13 @@ export class CostumeForm extends React.Component {
   }
 
   generateSceneOptions = createTransformer((characterId) => {
-    const {characters, scenes} = this.props.resourceStore
+    const {characters} = this.props.resourceStore
     const character = characters.find(character => character.id === characterId)
-    const {characters_scenes: characterScenes = []} = character
-    return characterScenes.map(characterScene => {
-      const scene = scenes.find(scene => scene.id === characterScene.scene_id)
+    return character.scenes.map(scene => {
       return {
-        key: characterScene.id,
+        key: scene.id,
         text: scene.title,
-        value: characterScene.id,
+        value: scene.id,
       }
     })
   })
@@ -57,36 +55,36 @@ export class CostumeForm extends React.Component {
     })
   }
 
-  // Returns hash {character: [character_scenes]}
-  @computed get characterScenesByCharacter() {
+  // Returns hash {character: [scenes]}
+  @computed get scenesByCharacter() {
     let groupedCharacterScenes = {}
     for (let costumeCharacterScene of this.costumeStaged.costumes_characters_scenes) {
-      const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
+      const {scene_id: sceneId, character_id: characterId} = costumeCharacterScene
       if (characterId in groupedCharacterScenes) {
-        groupedCharacterScenes[characterId].push(characterSceneId)
+        groupedCharacterScenes[characterId].push(sceneId)
       }
       else {
-        groupedCharacterScenes[characterId] = characterSceneId ? [characterSceneId] : []
+        groupedCharacterScenes[characterId] = sceneId ? [sceneId] : []
       }
     }
     return groupedCharacterScenes
   }
 
-  updateCostumeCharacterScenes(characterId, characterSceneIds = []) {
+  updateCostumeCharacterScenes(characterId, sceneIds = []) {
     transaction(() => {
       // First delete all CCS's with this characterId because it's easier to overwrite then try to modify
       this.costumeStaged.costumes_characters_scenes = this.costumeStaged.costumes_characters_scenes.filter(ccs => ccs.character_id !== characterId)
       // remove(this.costumes_characters_scenes, (ccs) => ccs.character_id === characterId)
 
-      if (isEmpty(characterSceneIds)) {
-        characterSceneIds = [null]
+      if (isEmpty(sceneIds)) {
+        sceneIds = [null]
       }
 
-      characterSceneIds.forEach(characterSceneId =>
+      sceneIds.forEach(sceneId =>
         this.costumeStaged.costumes_characters_scenes.push({
           costume_id: this.id,
           character_id: characterId,
-          characters_scene_id: characterSceneId
+          scene_id: sceneId
         })
       )
     })
@@ -96,7 +94,7 @@ export class CostumeForm extends React.Component {
   generateCharacterOptions = createTransformer((characterId) => {
     const {characters} = this.props.resourceStore
     // I guess JavaScript converts all keys into strings?
-    const selectedCharacterIds = Object.keys(this.characterScenesByCharacter).map(id => parseInt(id))
+    const selectedCharacterIds = Object.keys(this.scenesByCharacter).map(id => parseInt(id))
     let characterOptions = pullAll(characters.map(character => character.id), selectedCharacterIds)
     if (characterId && characterId > 0) {
       characterOptions.push(characterId)
@@ -165,9 +163,9 @@ export class CostumeForm extends React.Component {
             />
           </Form.Field>
 
-          {Object.keys(this.characterScenesByCharacter).map((characterId) => {
+          {Object.keys(this.scenesByCharacter).map((characterId) => {
               characterId = parseInt(characterId)
-              const characterScenesIds = this.characterScenesByCharacter[characterId]
+              const sceneIds = this.scenesByCharacter[characterId]
               return (
                 <Form.Group inline key={characterId}>
                   <Form.Field>
@@ -183,7 +181,7 @@ export class CostumeForm extends React.Component {
                     <label>Scenes</label>
                     <Dropdown placeholder='Costume Scenes' fluid multiple selection
                               options={this.generateSceneOptions(characterId)}
-                              value={characterScenesIds}
+                              value={sceneIds}
                               id={`scenes-dropdown-${characterId}`}
                               onChange={(event, data) => this.handleCharacterSceneSelection(event, data.value, characterId)}
                     />

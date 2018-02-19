@@ -25,7 +25,6 @@ class Costume extends BaseModel {
       }
     )
   }
-
 }
 
 Costume.FIELD_NAMES = {
@@ -34,7 +33,6 @@ Costume.FIELD_NAMES = {
   description: null,
   display_image: null,
   costumes_characters_scenes: [],
-  characters_scenes: [],
   images: [],
   character_ids: [],
   scene_ids: [],
@@ -77,20 +75,20 @@ Costume.tableColumns = [
     defaultVisible: false
   },
   {
-    field: 'character_scenes',
+    field: 'costumes_characters_scenes',
     header: 'Character Scenes',
     renderCell: (costume) => {
       return (
         <Label.Group>
-          {costume.characters_scenes.map(character_scene => {
-            const character = costume.characters.find(character => character.id === character_scene.character_id)
-            const scene = costume.scenes.find(scene => scene.id === character_scene.scene_id)
+          {costume.costumes_characters_scenes.map(costumes_characters_scene => {
+            const character = costume.characters.find(character => character.id === costumes_characters_scene.character_id)
+            const scene = costume.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
             return (
-              <Label as='a' image key={character_scene.id}>
+              <Label as='a' image key={costumes_characters_scene.id}>
                 <Image avatar src={character.avatar}/>
                 {character.name}
                 <Label.Detail>
-                  {scene.title}
+                  {scene && scene.title}
                   <Icon name='delete'/>
                 </Label.Detail>
               </Label>
@@ -99,7 +97,7 @@ Costume.tableColumns = [
         </Label.Group>
       )
     },
-    sortKey: 'characters_scenes.length'
+    sortKey: 'costumes_characters_scenes.length'
   },
   {
     field: 'characters',

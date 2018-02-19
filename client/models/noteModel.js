@@ -30,7 +30,6 @@ class Note extends BaseModel {
 
   @computed get assignees() {
     return this.store.roles.filter(role => {
-      debugger
       if (this.updated_at > role.updated_at) {
         return this.assignee_ids.includes(role.id)
       } else {
@@ -224,7 +223,6 @@ Note.tableColumns = [
     header: 'Assignees',
     renderCell: note => {
       const assignees = note.assignees
-      debugger
       const assigneeOptions = note.store.roles.map(role => role.dropdownItem())
       return (
         <EditableField

@@ -7,6 +7,7 @@ import PieceList from 'containers/PieceList/PieceList'
 import DisplayModeIcons from "components/DisplayModeIcons/DisplayModeIcons";
 import {observer} from 'mobx-react'
 import {observable} from 'mobx'
+import DressingList from "../DressingList/DressingList";
 
 @observer
 export class Costumes extends React.Component {
@@ -34,6 +35,13 @@ export class Costumes extends React.Component {
         <PieceList/>
       )
     }
+
+    if (this.activeTabName === 'Dressing List') {
+      return (
+        <DressingList/>
+      )
+    }
+
   }
 
   shouldDisplayIcons() {
@@ -57,6 +65,7 @@ export class Costumes extends React.Component {
                     {name: 'Costume Items', key: 2},
                     {name: 'Costume Plot', key: 3},
                     {name: 'Piece List', key: 4},
+                    {name: 'Dressing List', key: 5},
                   ]}
             />
               {this.shouldDisplayIcons() &&

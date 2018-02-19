@@ -6,7 +6,6 @@ import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
-import {find} from 'lodash'
 import {EditableField} from "../../components/EditableField/EditableField";
 import EditIcon from "../../components/EditIcon/EditIcon";
 import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
@@ -27,16 +26,16 @@ export class Costume extends React.Component {
     return this.props.resourceStore.costumes.find(costume => costume.id === this.costumeId)
   }
 
-  // Returns hash {character: [character_scenes]}
-  @computed get characterScenesByCharacter() {
+  // Returns hash {character: [scenes]}
+  @computed get scenesByCharacter() {
     let groupedCharacterScenes = {}
     for (let costumeCharacterScene of this.costume.costumes_characters_scenes) {
-      const {characters_scene_id: characterSceneId, character_id: characterId} = costumeCharacterScene
+      const {scene_id: sceneId, character_id: characterId} = costumeCharacterScene
       if (characterId in groupedCharacterScenes) {
-        groupedCharacterScenes[characterId].push(characterSceneId)
+        groupedCharacterScenes[characterId].push(sceneId)
       }
       else {
-        groupedCharacterScenes[characterId] = characterSceneId ? [characterSceneId] : []
+        groupedCharacterScenes[characterId] = sceneId ? [sceneId] : []
       }
     }
     return groupedCharacterScenes
@@ -132,20 +131,20 @@ export class Costume extends React.Component {
           </CardGroup>
           <Header as='h3' dividing>
             Character Scenes
-            {this.characterScenesByCharacter.length > 0 &&
+            {this.scenesByCharacter.length > 0 &&
             <span style={{float: 'right'}}>
               <EditIcon resource='costumes' resourceId={this.costumeId}/>
             </span>
             }
           </Header>
           <Item.Group divided>
-            {this.characterScenesByCharacter.length > 0 && this.renderEmptyContent()}
+            {this.scenesByCharacter.length > 0 && this.renderEmptyContent()}
 
-            {Object.keys(this.characterScenesByCharacter).map(characterId => {
+            {Object.keys(this.scenesByCharacter).map(characterId => {
               characterId = parseInt(characterId)
               const character = characters.find(character => character.id === characterId)
               const characterRole = roles.find(role => role.id === character.actorIds[0])
-              const characterSceneIds = this.characterScenesByCharacter[characterId]
+              const sceneIds = this.scenesByCharacter[characterId]
               return (
                 <Item key={characterId}>
                   <Item.Image src={character.cardImage}/>
@@ -162,11 +161,10 @@ export class Costume extends React.Component {
                         </Grid.Column>
                         <Grid.Column>
                           <h5>Scenes</h5>
-                          {characterSceneIds.map(characterSceneId => {
-                            const sceneId = find(this.costume.characters_scenes, {'id': characterSceneId}).scene_id
+                          {sceneIds.map(sceneId => {
                             const scene = scenes.find(scene => scene.id === sceneId)
                             return (
-                              <List key={characterSceneId}>
+                              <List key={sceneId}>
                                 <List.Item>
                                   <Image avatar src={scene.cardImage}/>
                                   <List.Content>

@@ -34,6 +34,7 @@ Character.FIELD_NAMES = {
   type: null,
   order_index: null,
   characters_scenes: [],
+  costumes_characters_scenes: [],
   images: [],
   scene_ids: [],
   actor_ids: [],

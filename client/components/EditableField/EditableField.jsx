@@ -115,7 +115,6 @@ export class EditableField extends React.Component {
     const {dropdownOptions, field} = this.props
     let dropdownValue = this.resource[field]
     dropdownValue = isObservableArray(dropdownValue) ? dropdownValue.slice() : dropdownValue
-    debugger
     return (
       <div>
         <Dropdown

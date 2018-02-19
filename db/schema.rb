@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180218145037) do
+ActiveRecord::Schema.define(version: 20180218205020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,14 +97,15 @@ ActiveRecord::Schema.define(version: 20180218145037) do
   end
 
   create_table "costumes_characters_scenes", force: :cascade do |t|
-    t.integer  "costume_id",          null: false
-    t.integer  "characters_scene_id"
+    t.integer  "costume_id",   null: false
+    t.integer  "scene_id"
     t.integer  "character_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "order_index"
     t.index ["character_id"], name: "index_costumes_characters_scenes_on_character_id", using: :btree
-    t.index ["characters_scene_id"], name: "index_costumes_characters_scenes_on_characters_scene_id", using: :btree
     t.index ["costume_id"], name: "index_costumes_characters_scenes_on_costume_id", using: :btree
+    t.index ["scene_id"], name: "index_costumes_characters_scenes_on_scene_id", using: :btree
   end
 
   create_table "images", force: :cascade do |t|

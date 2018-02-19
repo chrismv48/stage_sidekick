@@ -17,9 +17,8 @@
 class Costume < ApplicationRecord
 
   has_many :costumes_characters_scenes, dependent: :destroy
-  has_many :characters_scenes, through: :costumes_characters_scenes
   has_many :characters, through: :costumes_characters_scenes
-  has_many :scenes, through: :characters_scenes
+  has_many :scenes, through: :costumes_characters_scenes
   has_many :costume_items
   has_many :images, as: :imageable
 

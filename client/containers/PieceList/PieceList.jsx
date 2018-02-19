@@ -41,7 +41,7 @@ export class PieceList extends React.Component {
           entry.costume = costume
           entry.character = character
           entry.actor = actor
-          entry.sceneIds = costume.characters_scenes.filter(character_scene => character_scene.character_id === characterId).map(char_scene => char_scene.scene_id)
+          entry.sceneIds = costume.costumes_characters_scenes.filter(ccs => ccs.character_id === characterId).map(ccs => ccs.scene_id)
           entry.costumeItemIds = costume.costumeItemIds.slice()
           pieceList.push(entry)
         }

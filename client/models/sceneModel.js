@@ -47,6 +47,7 @@ Scene.FIELD_NAMES = {
   order_index: null,
   images: [],
   character_ids: [],
+  costume_ids: [],
   note_ids: [],
   updated_at: null
 }

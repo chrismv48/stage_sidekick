@@ -108,7 +108,6 @@ class BaseModel {
           const results = this.store[pluralizedRelationship].filter(item => {
             const primaryRefIds = isObservableArray(this[relationshipId]) ? this[relationshipId] : [this[relationshipId]]
             const backRefIds = isObservableArray(item[backRefId]) ? item[backRefId] : [item[backRefId]]
-
             if (this.updated_at > item.updated_at) {
               return primaryRefIds.includes(item.id)
             } else {
