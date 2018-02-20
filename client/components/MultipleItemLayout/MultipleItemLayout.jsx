@@ -10,7 +10,7 @@ import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {SceneCardGroup} from "containers/CardGroups/SceneCardGroup";
 import {CastCardGroup} from "containers/CardGroups/CastCardGroup";
 import {observable} from "mobx";
-import ResourceTable from "containers/DisplayTable/ResourceTable/ResourceTable";
+import ResourceTable from "components/DisplayTable/ResourceTable/ResourceTable";
 
 const RESOURCE_CARD_GROUPS = {
   'characters': CharacterCardGroup,

@@ -19,7 +19,6 @@ const Api = (endpoint, method = 'get', payload = null, params = null) => {
   return fetch(`/api/${endpoint}`, fetchOptions)
     .then(response => {
       return response.json()
-        // .then(data => normalize(data))
     })
     .catch(error => {
       throw error;

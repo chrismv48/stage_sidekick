@@ -2,8 +2,8 @@ import {Button, Header, Modal} from "semantic-ui-react";
 import React from "react";
 import {inject, observer} from "mobx-react";
 import {assign, isEmpty} from "lodash";
-import CostumeForm from "containers/Forms/CostumeForm/CostumeForm";
-import ResourceForm from "containers/Forms/ResourceForm/ResourceForm";
+import CostumeForm from "components/Forms/CostumeForm/CostumeForm";
+import ResourceForm from "components/Forms/ResourceForm/ResourceForm";
 import {computed} from "mobx";
 import {RESOURCES} from "../../constants";
 

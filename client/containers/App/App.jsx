@@ -15,7 +15,7 @@ import React, {Component} from 'react';
 import {Provider} from "mobx-react";
 import {Route} from "react-router-dom";
 import DevTools from 'mobx-react-devtools'
-import RootModal from 'containers/Modals/RootModal'
+import RootModal from 'components/Modals/RootModal'
 
 import Layout from "components/Layout/Layout";
 import Dashboard from "containers/Dashboard/Dashboard";

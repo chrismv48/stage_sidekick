@@ -29,6 +29,8 @@ class ResourceStore {
 
   @observable isLoading = false
 
+  @observable setupAlerts = []
+
   get resources() {
     return this.constructor.resources
   }
@@ -59,7 +61,6 @@ class ResourceStore {
     return this.loadResource('notes', idOrIds)
   }
 
-
   loadCharacters(idOrIds = null) {
     return this.loadResource(CHARACTER_RESOURCE, idOrIds)
   }
@@ -86,6 +87,12 @@ class ResourceStore {
 
   loadLines(idOrIds = null) {
     return this.loadResource(LINE_RESOURCE, idOrIds)
+  }
+
+  loadSetupAlerts() {
+    return this._api('setup_alerts').then(results => {
+      this.setupAlerts = results
+    })
   }
 
   getStagedResource(resource, id = null) {

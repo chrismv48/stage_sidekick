@@ -1,5 +1,5 @@
 import {computed, extendObservable, isObservable, isObservableArray, observable, transaction} from 'mobx'
-import {camelCase, reject, remove, sortBy} from 'lodash'
+import {camelCase, compact, reject, remove, sortBy} from 'lodash'
 import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource} from "../helpers";
@@ -108,10 +108,10 @@ class BaseModel {
           const results = this.store[pluralizedRelationship].filter(item => {
             const primaryRefIds = isObservableArray(this[relationshipId]) ? this[relationshipId] : [this[relationshipId]]
             const backRefIds = isObservableArray(item[backRefId]) ? item[backRefId] : [item[backRefId]]
-            if (this.updated_at > item.updated_at) {
-              return primaryRefIds.includes(item.id)
-            } else {
+            if (compact(backRefIds).length > 0 && (this.updated_at < item.updated_at)) {
               return backRefIds.includes(this.id)
+            } else {
+              return primaryRefIds.includes(item.id)
             }
           })
           return isHasManyRelationship ? results : (results[0] || {})

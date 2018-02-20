@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/setup_alerts', to: 'setup_alerts#index'
   resources :notes
   resources :lines
   resources :actors
