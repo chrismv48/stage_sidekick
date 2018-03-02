@@ -55,7 +55,7 @@ export class CastCardGroup extends React.Component {
   }
 
   render() {
-    const {actors} = this.props.resourceStore
+    const {resourceStore: {actors}, uiStore: {showResourceSidebar}} = this.props
     if (this.loading) {
       return (
         <ContentLoader/>
@@ -74,6 +74,7 @@ export class CastCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditActor(event, actor)}
                 onDeleteCallback={(event) => this.handleDestroyActor(event, actor)}
                 label='Actor'
+                handleOnClick={() => showResourceSidebar('actors', actor.id)}
                 key={`index-${i}`}
                 sortable={true}
                 index={i}

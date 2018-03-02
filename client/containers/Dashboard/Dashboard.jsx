@@ -23,12 +23,11 @@ export default class Dashboard extends Component {
     const {scenes, characters} = this.props.resourceStore
     switch (alert.alert) {
       case "scenes_without_characters":
-        debugger
         return {
           title: `Scenes without characters (${alert.results.length})`,
-          content: <ul>{alert.results.map((result, i) => {
-            return (<li key={i}><a href={`/scenes/${result.id}`}>{result.title}</a></li>)
-          })}</ul>,
+          content: alert.results.map((result, i) => {
+            return <div key={i}><a href={`/scenes/${result.id}`}>{result.title}</a></div>
+          }),
           key: alert.alert
         }
       case "characters_without_scenes":
@@ -105,7 +104,6 @@ export default class Dashboard extends Component {
     }
     const panels = setupAlerts.map(alert => this.renderAlert(alert))
     const [affected_count, total_count] = this.calculateProgress(setupAlerts)
-    debugger
     return (
       <Grid className="Dashboard">
         <Grid.Column>

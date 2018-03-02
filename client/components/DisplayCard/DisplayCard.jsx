@@ -3,6 +3,7 @@ import {Card, Icon, Image} from "semantic-ui-react";
 import './DisplayCard.scss'
 import classNames from 'classnames'
 import {SortableHandle} from "react-sortable-hoc";
+import PropTypes from 'prop-types'
 
 
 const DragHandle = SortableHandle(() => <Icon size='large' style={{height: 'initial', cursor: 'move'}} name="move"
@@ -74,6 +75,17 @@ class DisplayCard extends React.Component {
   }
 }
 
-DisplayCard.propTypes = {};
+DisplayCard.propTypes = {
+  cardImage: PropTypes.string,
+  showEditBar: PropTypes.bool,
+  header: PropTypes.string.isRequired,
+  frontDescription: PropTypes.string,
+  onEditCallback: PropTypes.func,
+  onDeleteCallback: PropTypes.func,
+  label: PropTypes.string,
+  handleOnClick: PropTypes.func,
+  sortable: PropTypes.bool,
+  link: PropTypes.string
+};
 
 export default DisplayCard

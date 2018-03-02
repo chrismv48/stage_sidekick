@@ -37,7 +37,7 @@ export class Character extends React.Component {
 
   renderActivitySection() {
     const panes = [
-      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed/></Tab.Pane>},
+      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed resource='characters' resourceId={this.characterId} comments={this.character.comments}/></Tab.Pane>},
       {menuItem: 'Activity', render: () => <Tab.Pane><ActivityFeed/></Tab.Pane>},
     ]
 

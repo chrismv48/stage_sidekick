@@ -44,7 +44,7 @@ export class CostumeItemCardGroup extends React.Component {
         <ContentLoader/>
       )
     }
-
+    const {uiStore: {showResourceSidebar}} = this.props
     return (
       <CardGroup resource={'costume_items'}>
         {this.costume_items.map((costumeItem, i) => {
@@ -58,6 +58,7 @@ export class CostumeItemCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditCostumeItem(event, costumeItem)}
                 onDeleteCallback={(event) => this.handleDestroyCostumeItem(event, costumeItem)}
                 label='Costume Item'
+                handleOnClick={() => showResourceSidebar('costume_items', costumeItem.id)}
                 key={`index-${i}`}
                 sortable={false}
                 index={i}

@@ -6,10 +6,10 @@ import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
-import {EditableField} from "../../components/EditableField/EditableField";
-import EditIcon from "../../components/EditIcon/EditIcon";
+import {EditableField} from "components/EditableField/EditableField";
+import EditIcon from "components/EditIcon/EditIcon";
 import {CostumeItemCardGroup} from "../CardGroups/CostumeItemCardGroup";
-import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
@@ -54,7 +54,7 @@ export class Costume extends React.Component {
 
   renderActivitySection() {
     const panes = [
-      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed/></Tab.Pane>},
+      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed resource='costumes' resourceId={this.costumeId} comments={this.costume.comments}/></Tab.Pane>},
       {menuItem: 'Activity', render: () => <Tab.Pane><ActivityFeed/></Tab.Pane>},
     ]
 

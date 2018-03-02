@@ -50,7 +50,6 @@ export default class App extends Component {
         return resp.json()
       })
       .then((data) => {
-        console.log(data.greeting)
       })
   }
 

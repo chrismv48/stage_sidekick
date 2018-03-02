@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :comments
   get '/setup_alerts', to: 'setup_alerts#index'
   resources :notes
   resources :lines

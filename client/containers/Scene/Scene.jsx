@@ -8,7 +8,7 @@ import {inject, observer} from "mobx-react/index";
 import EditIcon from "components/EditIcon/EditIcon";
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "components/EditableField/EditableField";
-import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @inject("resourceStore", "uiStore") @observer
@@ -18,7 +18,7 @@ export class Scene extends React.Component {
   @observable showLightbox = false
 
   @computed get sceneId() {
-    return parseInt(this.props.match.params.sceneId)
+    return this.props.sceneId || parseInt(this.props.match.params.sceneId)
   }
 
   @computed get scene() {
@@ -36,7 +36,7 @@ export class Scene extends React.Component {
 
   renderActivitySection() {
     const panes = [
-      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed/></Tab.Pane>},
+      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed resource='scenes' resourceId={this.sceneId} comments={this.scene.comments}/></Tab.Pane>},
       {menuItem: 'Activity', render: () => <Tab.Pane><ActivityFeed/></Tab.Pane>},
     ]
 

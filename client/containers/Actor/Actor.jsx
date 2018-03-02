@@ -7,10 +7,10 @@ import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import {capitalize, replace} from 'lodash'
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
-import {EditableField} from "../../components/EditableField/EditableField";
+import {EditableField} from "components/EditableField/EditableField";
 import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 import EditIcon from "components/EditIcon/EditIcon";
-import ImgLightbox from "../../components/ImgLightbox/ImgLightbox";
+import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import {CostumeCardGroup} from "containers/CardGroups/CostumeCardGroup";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
@@ -39,7 +39,7 @@ export class Actor extends React.Component {
 
   @computed get renderActivitySection() {
     const panes = [
-      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed/></Tab.Pane>},
+      {menuItem: 'Comments', render: () => <Tab.Pane><CommentFeed resource='actors' resourceId={this.actorId} comments={this.actor.comments}/></Tab.Pane>},
       {menuItem: 'Activity', render: () => <Tab.Pane><ActivityFeed/></Tab.Pane>},
     ]
 

@@ -69,7 +69,7 @@ class CharactersController < ApplicationController
 
   def parse_params
     params.permit!
-    @character_params = params.slice(*Character.attribute_names, :character_ids, :actor_ids, :scene_ids)
+    @character_params = params.slice(*model_params, :character_ids, :actor_ids, :scene_ids)
   end
 
   def persist_order_index_swap

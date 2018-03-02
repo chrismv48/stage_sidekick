@@ -1,8 +1,8 @@
 import {computed, extendObservable, isObservable, isObservableArray, observable, transaction} from 'mobx'
-import {camelCase, compact, reject, remove, sortBy} from 'lodash'
+import {camelCase, compact, reject, remove, sortBy, upperFirst} from 'lodash'
 import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
-import {addIdToResource, pluralizeResource} from "../helpers";
+import {addIdToResource, pluralizeResource, singularizeResource} from "../helpers";
 import {createViewModel} from 'mobx-utils'
 
 class BaseModel {
@@ -140,6 +140,24 @@ class BaseModel {
     })
   }
 
+  addComment(content, roleId = 1) {
+    this.viewModel.comments = this.viewModel.comments.concat(
+      [{
+        id: null,
+        content: content,
+        role_id: roleId,
+        commentable_type: upperFirst(camelCase(singularizeResource(this.resource))),
+        commentable_id: this.id
+      }]
+    )
+    this.save()
+  }
+
+  removeComment(commentId) {
+    this.viewModel.comments = reject(this.viewModel.comments, comment => comment.id === commentId)
+    this.save()
+  }
+
   addImage(imageUrl) {
     this.viewModel.images = this.viewModel.images.concat(
       [{
@@ -175,6 +193,8 @@ class BaseModel {
   revert() {
     this.viewModel.reset()
     this.modified = false
+    delete this['_viewModel']
+    return this.viewModel
   }
 
   getDirty() {
@@ -212,8 +232,11 @@ class BaseModel {
             this.store._updateResourceFromServer(json, this.resource)
           })
         })
-        this.modified = false
       })
+
+    this.modified = false
+    delete this['_viewModel']
+    return this.viewModel
   }
 
   destroy() {

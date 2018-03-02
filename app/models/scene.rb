@@ -24,6 +24,8 @@ class Scene < ApplicationRecord
   has_many :costumes_characters_scenes
   has_many :costumes, through: :costumes_characters_scenes
   has_many :images, as: :imageable
+  has_many :comments, as: :commentable
+
 
   after_create do |scene|
     if scene.order_index.nil?

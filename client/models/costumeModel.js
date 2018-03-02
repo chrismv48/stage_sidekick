@@ -34,6 +34,7 @@ Costume.FIELD_NAMES = {
   display_image: null,
   costumes_characters_scenes: [],
   images: [],
+  comments: [],
   character_ids: [],
   scene_ids: [],
   costume_item_ids: [],

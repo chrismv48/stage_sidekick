@@ -1,0 +1,12 @@
+.Comment {
+  .discard {
+    font-size: 9pt;
+    opacity: 0.5;
+    margin: 10px;
+
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+  }
+}

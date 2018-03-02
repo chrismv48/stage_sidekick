@@ -62,6 +62,7 @@ export class SceneCardGroup extends React.Component {
   }
 
   render() {
+    const {uiStore: {showResourceSidebar}} = this.props
 
     if (this.loading) {
       return (
@@ -83,6 +84,7 @@ export class SceneCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditScene(event, scene)}
                 onDeleteCallback={(event) => this.handleDestroyScene(event, scene)}
                 label='Scene'
+                handleOnClick={() => showResourceSidebar('scenes', scene.id)}
                 key={`index-${i}`}
                 index={scene.order_index}
                 link={`/scenes/${scene.id}`}

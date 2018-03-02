@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import './Notes.scss'
 import {Grid, Header} from 'semantic-ui-react'
-import ResourceTable from "../../components/DisplayTable/ResourceTable/ResourceTable";
+import ResourceTable from "components/DisplayTable/ResourceTable/ResourceTable";
 import {inject, observer} from "mobx-react";
 import {computed, observable} from 'mobx'
 import ContentLoader from "components/ContentLoader/ContentLoader";

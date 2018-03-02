@@ -3,7 +3,7 @@ import './Characters.scss'
 import {Grid, Header} from 'semantic-ui-react'
 
 import MultipleItemLayout from "components/MultipleItemLayout/MultipleItemLayout"
-import DisplayModeIcons from "../../components/DisplayModeIcons/DisplayModeIcons";
+import DisplayModeIcons from "components/DisplayModeIcons/DisplayModeIcons";
 
 export class Characters extends React.Component {
 

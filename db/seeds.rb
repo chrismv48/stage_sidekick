@@ -248,3 +248,16 @@ complete_notes = Note.create(5.times.collect {|i| {
   assignees: roles.sample([1,2].sample),
   completed_by: roles.sample
 }})
+
+comments = Comment.create(20.times.collect {|i| {
+  content: Faker::Movie.quote,
+  commentable: [
+    Character.order("RANDOM()").first,
+    CostumeItem.order("RANDOM()").first,
+    Note.order("RANDOM()").first,
+    Scene.order("RANDOM()").first,
+    Costume.order("RANDOM()").first,
+    Scene.order("RANDOM()").first,
+    Actor.order("RANDOM()").first,
+  ].sample
+}})

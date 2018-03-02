@@ -1,83 +1,89 @@
 import React from 'react';
-import {Comment} from "semantic-ui-react";
+import {Button, Comment, Form} from "semantic-ui-react";
 import './CommentFeed.scss'
+import PropTypes from 'prop-types'
+import DisplayComment from 'components/Comment/Comment'
+import {computed, observable} from "mobx";
+import {inject, observer} from "mobx-react";
+import {cloneDeep, orderBy} from 'lodash'
 
-const faker = require('faker');
-
-
+@inject("resourceStore", "uiStore") @observer
 class CommentFeed extends React.Component {
+
+  @observable newComment = ''
+  @observable editingComment = null
+
+  @computed get resource() {
+    const { resource, resourceId, resourceStore } = this.props
+    return resourceStore.getStagedResource(resource, resourceId)
+  }
+
+  handleAddComment() {
+    this.resource.addComment(this.newComment)
+    this.newComment = ''
+  }
+
+  handleRemoveComment(commentId) {
+    this.resource.removeComment(commentId)
+  }
+
+  handleEditComment(commentId) {
+    this.editingComment = commentId
+  }
+
+  handleSaveChange() {
+    this.resource.save()
+    this.editingComment = null
+  }
+
+  handleDiscardChanges() {
+    this.resource.revert()
+    this.editingComment = null
+  }
+
+  handleOnChange(commentId, newValue) {
+    const comments = cloneDeep(this.resource.comments.slice())
+    let comment = comments.find(comment => commentId === comment.id)
+    comment.content = newValue
+    this.resource.comments = comments
+  }
 
   render() {
     return (
       <Comment.Group>
-        <Comment>
-          <Comment.Avatar src={faker.image.avatar()} />
-          <Comment.Content>
-            <Comment.Author as='a'>Matt</Comment.Author>
-            <Comment.Metadata>
-              <div>Today at 5:42PM</div>
-            </Comment.Metadata>
-            <Comment.Text>How artistic!</Comment.Text>
-            <Comment.Actions>
-              <Comment.Action>Reply</Comment.Action>
-            </Comment.Actions>
-          </Comment.Content>
-        </Comment>
-
-        <Comment>
-          <Comment.Avatar src={faker.image.avatar()} />
-          <Comment.Content>
-            <Comment.Author as='a'>Elliot Fu</Comment.Author>
-            <Comment.Metadata>
-              <div>Yesterday at 12:30AM</div>
-            </Comment.Metadata>
-            <Comment.Text>
-              <p>This has been very useful for my research. Thanks as well!</p>
-            </Comment.Text>
-            <Comment.Actions>
-              <Comment.Action>Reply</Comment.Action>
-            </Comment.Actions>
-          </Comment.Content>
-          <Comment.Group>
-            <Comment>
-              <Comment.Avatar src={faker.image.avatar()} />
-              <Comment.Content>
-                <Comment.Author as='a'>Jenny Hess</Comment.Author>
-                <Comment.Metadata>
-                  <div>Just now</div>
-                </Comment.Metadata>
-                <Comment.Text>
-                  Elliot you are always so right :)
-                </Comment.Text>
-                <Comment.Actions>
-                  <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-              </Comment.Content>
-            </Comment>
-          </Comment.Group>
-        </Comment>
-
-        <Comment>
-          <Comment.Avatar src={faker.image.avatar()} />
-          <Comment.Content>
-            <Comment.Author as='a'>Joe Henderson</Comment.Author>
-            <Comment.Metadata>
-              <div>5 days ago</div>
-            </Comment.Metadata>
-            <Comment.Text>
-              Dude, this is awesome. Thanks so much
-            </Comment.Text>
-            <Comment.Actions>
-              <Comment.Action>Reply</Comment.Action>
-            </Comment.Actions>
-          </Comment.Content>
-        </Comment>
+        {orderBy(this.resource.comments, 'id', 'asc').map(comment =>
+          <DisplayComment
+            key={comment.id}
+            comment={comment}
+            handleRemove={() => this.handleRemoveComment(comment.id)}
+            handleEdit={() => this.handleEditComment(comment.id)}
+            handleSaveChange={() => this.handleSaveChange()}
+            handleDiscardChanges={() => this.handleDiscardChanges()}
+            handleOnChange={(newValue) => this.handleOnChange(comment.id, newValue)}
+            editMode={comment.id === this.editingComment}
+          />
+        )}
+        <Form reply>
+          <Form.TextArea
+            value={this.newComment}
+            onChange={e => this.newComment = e.target.value}
+          />
+          <Button
+            content='Add Comment'
+            labelPosition='left'
+            icon='edit'
+            primary
+            onClick={() => this.handleAddComment()}
+          />
+        </Form>
       </Comment.Group>
     )
   }
 }
 
-
-CommentFeed.propTypes = {};
+CommentFeed.propTypes = {
+  resource: PropTypes.string.isRequired,
+  resourceId: PropTypes.number.isRequired,
+};
 
 export default CommentFeed

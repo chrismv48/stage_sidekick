@@ -37,6 +37,7 @@ class Actor < Role
   has_many :costumes, through: :characters
 
   has_many :images, as: :imageable
+  has_many :comments, as: :commentable
 
   belongs_to :user, touch: true
   has_one :actor_measurement, through: :user
