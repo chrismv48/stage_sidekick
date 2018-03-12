@@ -24,9 +24,9 @@ class Layout extends Component {
 
     return (
       <div className='item-detail-sidebar'>
+        <Icon name='remove circle' className='hide-sidebar-icon'
+              onClick={() => hideResourceSidebar()}/>
         <div className='item-detail-body'>
-          <Icon name='remove circle' className='hide-sidebar-icon'
-                onClick={() => hideResourceSidebar()}/>
           <Resource {...otherProps} />
         </div>
       </div>

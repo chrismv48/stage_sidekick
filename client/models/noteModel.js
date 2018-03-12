@@ -108,7 +108,31 @@ Note.RELATIONSHIPS = {
 Note.tableColumns = [
   {
     field: 'department',
-    header: 'Department'
+    header: 'Department',
+    renderCell: note => {
+      return (
+        <EditableField
+          resource='notes'
+          resourceId={note.id}
+          field='department'
+          fieldType='dropdown'
+          dropdownOptions={{
+            options: note.store.resources['actors'].DEPARTMENTS.map(n => {
+              return {text: n, value: n}
+            })
+          }}
+        />
+      )
+    },
+    filterOptions: {
+      multiple: true,
+      field: 'department',
+      compact: true,
+      options: (store) => store.resources['actors'].DEPARTMENTS.map(n => {
+        return {text: n, value: n}
+      })
+
+    }
   },
   {
     field: 'priority',
@@ -129,7 +153,25 @@ Note.tableColumns = [
           dropdownOptions={dropdownOptions}/>
       )
     },
+    filterOptions: {
+      multiple: true,
+      field: 'priority',
+      compact: true,
+      options: () => ['1', '2', '3'].map(n => {
+        return {text: n, value: n}
+      })
+    },
     cellProps: {singleLine: true}
+  },
+  {
+    field: 'title',
+    header: 'Note',
+    renderCell: note => {
+      return (
+        <EditableField resource='notes' resourceId={note.id} field='title'/>
+      )
+    },
+    cellProps: {width: 6}
   },
   {
     field: 'actor_id',
@@ -145,11 +187,18 @@ Note.tableColumns = [
           fieldType='dropdown'
           dropdownOptions={{options: actorOptions}}
         >
-          {actor && actor.label()}
+          {actor &&
+          <a href={`/actors/${actor.id}`}>
+            {actor.fullName}
+          </a>}
         </EditableField>
       )
     },
-    cellProps: {singleLine: true}
+    filterOptions: {
+      multiple: true,
+      field: 'actor_id',
+      options: (store) => store.actors.map(actor => actor.dropdownItem())
+    }
   },
   {
     field: 'scene_id',
@@ -165,11 +214,24 @@ Note.tableColumns = [
           fieldType='dropdown'
           dropdownOptions={{options: sceneOptions}}
         >
-          {scene && scene.label()}
+          {scene &&
+          <a href={`/scenes/${scene.id}`}>
+            {scene.title}
+          </a>}
         </EditableField>
       )
     },
-    cellProps: {singleLine: true}
+    filterOptions: {
+      multiple: true,
+      field: 'scene_id',
+      options: (store) => {
+        return store.scenes.map(scene => {
+          return {text: scene.title, value: scene.id}
+        })
+      }
+    }
+
+    // cellProps: {singleLine: true}
   },
   {
     field: 'noteableComposite',
@@ -210,15 +272,6 @@ Note.tableColumns = [
     cellProps: {singleLine: true}
   },
   {
-    field: 'title',
-    header: 'Title',
-    renderCell: note => {
-      return (
-        <EditableField resource='notes' resourceId={note.id} field='title' />
-      )
-    }
-  },
-  {
     field: 'assignee_ids',
     header: 'Assignees',
     renderCell: note => {
@@ -232,12 +285,22 @@ Note.tableColumns = [
           fieldType='dropdown'
           dropdownOptions={{options: assigneeOptions, multiple: true}}
         >
-          {assignees.map(role => role.label())}
+          {assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>{role.label()}</div>)}
         </EditableField>
       )
     },
     sortKey: 'assignees.length',
-    cellProps: {singleLine: true}
+    filterOptions: {
+      multiple: true,
+      field: 'assignee_ids',
+      options: (store) => {
+        return store.roles.map(role => {
+          return {text: role.fullName, value: role.id}
+        })
+      }
+    }
+
+    // cellProps: {singleLine: true}
   }
 ]
 

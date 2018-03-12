@@ -144,7 +144,7 @@ export class ResourceTable extends React.Component {
           </div>
           {this.columns.map(column => {
             if (column.filterOptions) {
-              const {multiple, options, field = column.field} = column.filterOptions
+              const {multiple, options, field = column.field, ...otherOptions} = column.filterOptions
               let dropdownValue = this.activeFilters.get(field) || (multiple ? [] : '')
               dropdownValue = isObservableArray(dropdownValue) ? dropdownValue.slice() : dropdownValue
               return (
@@ -157,6 +157,7 @@ export class ResourceTable extends React.Component {
                     options={options(this.props.resourceStore)}
                     value={dropdownValue}
                     onChange={(event, data) => this.handleFilterChange(field, data.value)}
+                    {...otherOptions}
                   />
                   {!multiple && this.activeFilters.get(field) &&
                   <Icon className='remove-filter-icon' name='remove circle' onClick={() => this.handleFilterChange(field, null)} />
@@ -166,54 +167,55 @@ export class ResourceTable extends React.Component {
             }
           })}
         </div>
-        <Table
-          collapsing
-          celled
-          selectable
-          sortable
-        >
-          <Table.Header>
-            <Table.Row>
-              {this.visibleColumns.map(column => {
-                return (
-                  <Table.HeaderCell
-                    key={column.header}
-                    sorted={(column.sortKey || column.field) === this.sortColumn ? this.sortDirection : null}
-                    onClick={() => this.handleSort(column.sortKey || column.field)}
-                    {...column.cellProps}
-                  >
-                    {column.header}
-                  </Table.HeaderCell>
-                )
-              })
-              }
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.visibleRows.map(row => {
-                return (
-                  <Table.Row
-                    style={{cursor: 'pointer'}}
-                    key={row.id}
-                    onClick={() => showResourceSidebar(resource, row.id)}
-                  >
-                    {this.visibleColumns.map(column => {
-                        return (
-                          <Table.Cell
-                            key={column.header}
-                            {...column.cellProps}
-                          >
-                            {this.renderCell(column, row)}
-                          </Table.Cell>
-                        )
-                      }
-                    )}
-                  </Table.Row>
-                )
-              }
-            )}
-          </Table.Body>
-        </Table>
+        <div className='resource-table-container'>
+          <Table
+            sortable
+            celled
+            className='resource-table'
+          >
+            <Table.Header>
+              <Table.Row>
+                {this.visibleColumns.map(column => {
+                  return (
+                    <Table.HeaderCell
+                      key={column.header}
+                      sorted={(column.sortKey || column.field) === this.sortColumn ? this.sortDirection : null}
+                      onClick={() => this.handleSort(column.sortKey || column.field)}
+                      {...column.cellProps}
+                    >
+                      {column.header}
+                    </Table.HeaderCell>
+                  )
+                })
+                }
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.visibleRows.map(row => {
+                  return (
+                    <Table.Row
+                      style={{cursor: 'pointer'}}
+                      key={row.id}
+                      onClick={() => showResourceSidebar(resource, row.id)}
+                    >
+                      {this.visibleColumns.map(column => {
+                          return (
+                            <Table.Cell
+                              key={column.header}
+                              {...column.cellProps}
+                            >
+                              {this.renderCell(column, row)}
+                            </Table.Cell>
+                          )
+                        }
+                      )}
+                    </Table.Row>
+                  )
+                }
+              )}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     );
   }

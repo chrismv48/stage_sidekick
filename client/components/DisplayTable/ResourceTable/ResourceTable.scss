@@ -1,9 +1,14 @@
 .ResourceTable {
+  .resource-table-container {
+    margin: 20px 0;
+  }
+
   .filters-container {
     display: flex;
     padding: 10px;
     background-color: #f9fafb;
     align-items: center;
+    flex-wrap: wrap;
 
     .filter-item {
       margin: 0 25px;

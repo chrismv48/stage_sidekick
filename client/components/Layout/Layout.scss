@@ -31,7 +31,8 @@ $content-vertical-margin: 20px;
   display: flex;
 
   .body-container {
-    flex: 3
+    flex: 3;
+    width: 100%;
   }
 
   .item-detail-sidebar {
@@ -51,10 +52,10 @@ $content-vertical-margin: 20px;
     .hide-sidebar-icon {
       position: absolute;
       opacity: 0.3;
-      right: 0;
+      right: 10px;
       cursor: pointer;
       z-index: 2;
-      top: 0;
+      top: 10px;
 
       &:hover {
         opacity: 0.7;

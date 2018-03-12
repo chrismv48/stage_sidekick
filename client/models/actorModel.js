@@ -66,6 +66,15 @@ Actor.RELATIONSHIPS = {
   'scenes': 'actors',
 }
 
+Actor.DEPARTMENTS = [
+  'Production',
+  'Costumes',
+  'Acting',
+  'Administration',
+  'Sound',
+  'Lighting'
+]
+
 Actor.tableColumns = [
   {
     field: 'fullName',
