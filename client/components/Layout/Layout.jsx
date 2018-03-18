@@ -3,25 +3,36 @@ import {Divider, Icon, Menu} from "semantic-ui-react";
 import './Layout.scss'
 import {Link} from "react-router-dom";
 import {inject, observer} from "mobx-react/index";
-import {RESOURCES} from "../../constants";
 import {observable} from "mobx";
+import Character from "containers/Character/Character";
+import Scene from "containers/Scene/Scene";
+import Costume from "containers/Costume/Costume";
+import Actor from "containers/Actor/Actor";
+import {singularResourceIdCamelCased} from 'helpers'
+
+const resourceToComponent = {
+  'characters': Character,
+  'scenes': Scene,
+  'costumes': Costume,
+  'actors': Actor
+}
 
 @inject("resourceStore", "uiStore") @observer
 class Layout extends Component {
 
   renderItemSidebar() {
     let {selectedResourceId, selectedResource, hideResourceSidebar} = this.props.uiStore
-
-    const resource = RESOURCES[selectedResource] || {}
-    const Resource = resource['component']
+    const { resourceStore } = this.props
+    const resource = resourceStore.resources[selectedResource] || {}
+    const Resource = resourceToComponent[selectedResource]
     if (!selectedResourceId || !Resource) {
       return null
     }
 
     const otherProps = {
-      [`${resource.singularized}Id`]: selectedResourceId
+      [singularResourceIdCamelCased(resource.RESOURCE)]: selectedResourceId
     }
-
+    debugger
     return (
       <div className='item-detail-sidebar'>
         <Icon name='remove circle' className='hide-sidebar-icon'

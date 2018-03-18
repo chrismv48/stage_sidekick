@@ -31,6 +31,6 @@ Line.RELATIONSHIPS = {
 }
 
 Line.RESOURCE = 'lines'
-
+Line.API_ENDPOINT = 'lines'
 
 export default Line

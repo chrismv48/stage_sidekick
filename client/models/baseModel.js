@@ -1,6 +1,5 @@
 import {computed, extendObservable, isObservable, isObservableArray, observable, transaction} from 'mobx'
 import {camelCase, compact, reject, remove, sortBy, upperFirst} from 'lodash'
-import {RESOURCES} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource, singularizeResource} from "../helpers";
 import {createViewModel} from 'mobx-utils'
@@ -49,6 +48,10 @@ class BaseModel {
     return this.constructor.RESOURCE
   }
 
+  get apiEndpoint() {
+    return this.constructor.API_ENDPOINT
+  }
+
   get resourceSingular() {
     // costume
     return this.resource.slice(0, -1)
@@ -73,11 +76,6 @@ class BaseModel {
     // costumeId
     return camelCase(this.singularResourceId)
   }
-
-  get tableColumns() {
-    return this.constructor.tableColumns
-  }
-
 
   constructor(store) {
     this.store = store
@@ -218,7 +216,7 @@ class BaseModel {
     let payload = this.getDirty()
 
     let method = 'POST'
-    let apiEndpoint = RESOURCES[this.resource].apiEndpoint
+    let apiEndpoint = this.apiEndpoint
 
     if (this.id) {
       method = 'PUT'
@@ -241,7 +239,7 @@ class BaseModel {
 
   destroy() {
     const method = 'delete'
-    const apiEndpoint = RESOURCES[this.resource].apiEndpoint + `/${this.id}`
+    const apiEndpoint = this.apiEndpoint + `/${this.id}`
 
     this.store._api(apiEndpoint, method).then(
       response => {
@@ -285,5 +283,6 @@ const handler = {
   }
 };
 
+Object.defineProperty(BaseModel, 'foo', {value: BaseModel.RESOURCE + 'foo'})
 
 export default BaseModel

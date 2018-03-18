@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import './Notes.scss'
-import {Grid, Header} from 'semantic-ui-react'
+import {Button, Grid, Header, Icon} from 'semantic-ui-react'
 import ResourceTable from "components/DisplayTable/ResourceTable/ResourceTable";
 import {inject, observer} from "mobx-react";
 import {computed, observable} from 'mobx'
@@ -37,6 +37,16 @@ export class Notes extends React.Component {
             <Header as="h2" dividing>
               Notes
             </Header>
+            <div className='button-container'>
+              <Button onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+                resourceName: 'notes',
+                resourceId: null
+              })}
+                      primary>
+                <Icon name="add user"/>
+                Add Note
+              </Button>
+            </div>
             <ResourceTable resource='notes'/>
           </Grid.Column>
         </Grid.Row>

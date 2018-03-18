@@ -7,6 +7,157 @@ import {computed} from "mobx";
 
 class Actor extends Role {
 
+  @computed get formFields() {
+    return [
+      {
+        field: 'display_image',
+        inputType: 'image_upload',
+      },
+      {
+        field: 'fullName',
+        inputType: 'text',
+        inputOptions: {readOnly: true}
+      },
+      {
+        field: 'character_ids',
+        label: 'Characters',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('characters'), multiple: true}
+      },
+      {
+        field: 'description',
+        inputType: 'textarea',
+      },
+      {
+        field: 'gender',
+        inputType: 'text',
+      },
+      {
+        field: 'height',
+        inputType: 'text',
+      },
+      {
+        field: 'weight',
+        inputType: 'text',
+      },
+      {
+        field: 'ethnicity',
+        inputType: 'text',
+      },
+      {
+        field: 'eye_color',
+        inputType: 'text',
+      },
+      {
+        field: 'hair_color',
+        inputType: 'text',
+      },
+      {
+        field: 'chest',
+        inputType: 'text',
+      },
+      {
+        field: 'waist',
+        inputType: 'text',
+      },
+      {
+        field: 'hips',
+        inputType: 'text',
+      },
+      {
+        field: 'neck',
+        inputType: 'text',
+      },
+      {
+        field: 'inseam',
+        inputType: 'text',
+      },
+      {
+        field: 'sleeve',
+        inputType: 'text',
+      },
+      {
+        field: 'shoe_size',
+        inputType: 'text',
+      },
+    ]
+  }
+
+  @computed get tableData() {
+    return [
+      {
+        field: 'fullName',
+        header: 'Name',
+        renderCell:
+          <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
+            <ActorFragment actor={this}/>
+          </span>,
+        filterOptions: {
+          multiple: true,
+          options: this.store.dropdownOptions('roles')
+        }
+      },
+      {
+        field: 'user.email',
+        header: 'Email',
+      },
+      {
+        field: 'scenes',
+        header: 'Scenes',
+        renderCell:
+          <Label.Group>
+            {this.scenes.map(scene =>
+              <Label as='a' image key={scene.id}>
+                <Image avatar src={scene.avatar}/>
+                {scene.title}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </Label.Group>,
+        sortKey: 'scenes.length',
+        cellProps: {
+          textAlign: 'center'
+        },
+        filterOptions: {
+          multiple: true,
+          field: 'scene_ids',
+          options: this.store.dropdownOptions('scenes')
+        }
+      },
+      {
+        field: 'characters',
+        header: 'Characters',
+        renderCell:
+          <Label.Group>
+            {this.characters.map(character =>
+              <Label as='a' image key={character.id}>
+                <Image avatar src={character.avatar}/>
+                {character.name}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </Label.Group>,
+        filterOptions: {
+          multiple: true,
+          field: 'character_ids',
+          options: this.store.dropdownOptions('characters')
+        },
+        sortKey: 'characters.length',
+        cellProps: {
+          textAlign: 'center'
+        }
+      },
+      {
+        field: 'weight',
+        header: 'Weight',
+        defaultVisible: false,
+        cellProps: {
+          textAlign: 'center'
+        }
+      }
+    ]
+  }
+
   constructor(store = null) {
     super(store)
 
@@ -60,116 +211,31 @@ Actor.FIELD_NAMES = {
   updated_at: null
 }
 
+Actor.profileFields = [
+  'gender',
+  'height',
+  'weight',
+  'ethnicity',
+  'eye_color',
+  'hair_color',
+]
+
+Actor.measurementFields = [
+  'chest',
+  'waist',
+  'hips',
+  'neck',
+  'inseam',
+  'sleeve',
+  'shoe_size'
+]
+
 Actor.RELATIONSHIPS = {
   'characters': 'actors',
   'costumes': 'actors',
   'scenes': 'actors',
 }
 
-Actor.DEPARTMENTS = [
-  'Production',
-  'Costumes',
-  'Acting',
-  'Administration',
-  'Sound',
-  'Lighting'
-]
-
-Actor.tableColumns = [
-  {
-    field: 'fullName',
-    header: 'Name',
-    renderCell: (actor) => {
-      return (
-        <span onClick={() => actor.store.rootStore.uiStore.showResourceSidebar(actor.id, actor.resource)}>
-          <ActorFragment actor={actor}/>
-        </span>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      options: (store) => {
-        return store.actors.map(actor => {
-          return {text: actor.fullName, value: actor.fullName}
-        })
-      }
-    }
-  },
-  {
-    field: 'user.email',
-    header: 'Email',
-  },
-  {
-    field: 'scenes',
-    header: 'Scenes',
-    renderCell: (actor) => {
-      return (
-        <Label.Group>
-          {actor.scenes.map(scene =>
-            <Label as='a' image key={scene.id}>
-              <Image avatar src={scene.avatar}/>
-              {scene.title}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </Label.Group>
-      )
-    },
-    sortKey: 'scenes.length',
-    cellProps: {
-      textAlign: 'center'
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'scene_ids',
-      options: (store) => {
-        return store.scenes.map(scene => {
-          return {text: scene.title, value: scene.id}
-        })
-      }
-    }
-
-  },
-  {
-    field: 'characters',
-    header: 'Characters',
-    renderCell: (actor) => {
-      return (
-        <Label.Group>
-          {actor.characters.map(character =>
-            <Label as='a' image key={character.id}>
-              <Image avatar src={character.avatar}/>
-              {character.name}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </Label.Group>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'character_ids',
-      options: (store) => {
-        return store.characters.map(character => {
-          return {text: character.name, value: character.id}
-        })
-      }
-    },
-    sortKey: 'characters.length',
-    cellProps: {
-      textAlign: 'center'
-    }
-  },
-  {
-    field: 'weight',
-    header: 'Weight',
-    defaultVisible: false,
-    cellProps: {
-      textAlign: 'center'
-    }
-
-  }
-
-]
+Actor.API_ENDPOINT = 'actors'
 
 export default Actor

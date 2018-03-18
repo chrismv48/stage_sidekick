@@ -25,6 +25,114 @@ class Character extends BaseModel {
       }
     )
   }
+
+  @computed get tableData() {
+    return [
+      {
+        field: 'name',
+        header: 'Name',
+        renderCell:
+          <span
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
+          <CharacterFragment character={this}/>
+        </span>
+      },
+      {
+        field: 'description',
+        header: 'Description',
+        defaultVisible: false
+      },
+      {
+        field: 'scenes',
+        header: 'Scenes',
+        renderCell:
+          <Label.Group>
+            {this.scenes.map(scene =>
+              <Label as='a' image key={scene.id}>
+                <Image avatar src={scene.avatar}/>
+                {scene.title}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </Label.Group>,
+        sortKey: 'scenes.length',
+        filterOptions: {
+          multiple: true,
+          field: 'scene_ids',
+          options: this.store.dropdownOptions('scenes')
+        }
+      },
+      {
+        field: 'actors',
+        header: 'Actors',
+        renderCell:
+          <Label.Group>
+            {this.actors.map(actor =>
+              <Label as='a' image key={actor.id}>
+                <Image avatar src={actor.avatar}/>
+                {actor.fullName}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </Label.Group>,
+        sortKey: 'actors.length',
+        filterOptions: {
+          multiple: true,
+          field: 'actor_ids',
+          options: this.store.dropdownOptions('actors')
+        }
+      },
+      {
+        field: 'costumes',
+        header: 'Costumes',
+        renderCell:
+          <div>
+            {this.costumes.map(costume =>
+              <Label image key={costume.id}>
+                <Image avatar src={costume.avatar}/>
+                {costume.title}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </div>,
+        sortKey: 'costumes.length',
+        filterOptions: {
+          multiple: true,
+          field: 'costume_ids',
+          options: this.store.dropdownOptions('costumes')
+        }
+      }
+    ]
+  }
+
+  @computed get formFields() {
+    return [
+      {
+        inputType: 'image_upload'
+      },
+      {
+        field: 'name',
+        inputType: 'text',
+        formFieldOptions: {required: true}
+      },
+      {
+        field: 'description',
+        inputType: 'textarea',
+      },
+      {
+        field: 'scene_ids',
+        label: 'Scenes',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('scenes'), multiple: true}
+      },
+      {
+        field: 'actor_ids',
+        label: 'Played by',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('actors'), multiple: true}
+      }
+    ]
+  }
 }
 
 Character.FIELD_NAMES = {
@@ -51,104 +159,7 @@ Character.RELATIONSHIPS = {
   'costumes': 'characters'
 }
 
-Character.tableColumns = [
-  {
-    field: 'name',
-    header: 'Name',
-    renderCell: (character) => {
-      return (
-        <span onClick={() => character.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}>
-          <CharacterFragment character={character}/>
-        </span>
-      )
-    }
-  },
-  {
-    field: 'description',
-    header: 'Description',
-    defaultVisible: false
-  },
-  {
-    field: 'scenes',
-    header: 'Scenes',
-    renderCell: (character) => {
-      return (
-        <Label.Group>
-          {character.scenes.map(scene =>
-            <Label as='a' image key={scene.id}>
-              <Image avatar src={scene.avatar}/>
-              {scene.title}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </Label.Group>
-      )
-    },
-    sortKey: 'scenes.length',
-    filterOptions: {
-      multiple: true,
-      field: 'scene_ids',
-      options: (store) => {
-        return store.scenes.map(scene => {
-          return {text: scene.title, value: scene.id}
-        })
-      }
-    }
-  },
-  {
-    field: 'actors',
-    header: 'Actors',
-    renderCell: (character) => {
-      return (
-        <Label.Group>
-          {character.actors.map(actor =>
-            <Label as='a' image key={actor.id}>
-              <Image avatar src={actor.avatar}/>
-              {actor.fullName}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </Label.Group>
-      )
-    },
-    sortKey: 'actors.length',
-    filterOptions: {
-      multiple: true,
-      field: 'actor_ids',
-      options: (store) => {
-        return store.actors.map(actor => {
-          return {text: actor.fullName, value: actor.id}
-        })
-      }
-    }
-  },
-  {
-    field: 'costumes',
-    header: 'Costumes',
-    renderCell: (character) => {
-      return (
-        <div>
-          {character.costumes.map(costume =>
-            <Label image key={costume.id}>
-              <Image avatar src={costume.avatar}/>
-              {costume.title}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </div>
-      )
-    },
-    sortKey: 'costumes.length',
-    filterOptions: {
-      multiple: true,
-      field: 'costume_ids',
-      options: (store) => {
-        return store.costumes.map(costume => {
-          return {text: costume.title, value: costume.id}
-        })
-      }
-    }
-  }
-]
+Character.API_ENDPOINT = 'characters'
+
 
 export default Character

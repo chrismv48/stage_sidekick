@@ -3,9 +3,8 @@ import React from "react";
 import {inject, observer} from "mobx-react";
 import {assign, isEmpty} from "lodash";
 import CostumeForm from "components/Forms/CostumeForm/CostumeForm";
-import ResourceForm from "components/Forms/ResourceForm/ResourceForm";
 import {computed} from "mobx";
-import {RESOURCES} from "../../constants";
+import ResourceForm from "components/Forms/ResourceForm/ResourceForm";
 
 const RESOURCE_FORM_COMPONENTS = {
   'characters': ResourceForm,
@@ -13,7 +12,8 @@ const RESOURCE_FORM_COMPONENTS = {
   'roles': ResourceForm,
   'costumes': CostumeForm,
   'costume_items': ResourceForm,
-  'actors': ResourceForm
+  'actors': ResourceForm,
+  'notes': ResourceForm
 }
 
 @inject('resourceStore', 'uiStore') @observer
@@ -46,7 +46,7 @@ export default class ResourceModal extends React.Component {
   render() {
     let {resourceStore, resourceName, resourceId, ...otherProps} = this.props
     let iconName = 'add user'
-    const singularizedResource = RESOURCES[resourceName].singularized
+    const singularizedResource = resourceStore.resources[resourceName].resourceSingular
     let modalHeading = `Add ${singularizedResource}`
     if (resourceId) {
       iconName = 'edit'

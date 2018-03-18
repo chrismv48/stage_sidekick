@@ -10,6 +10,39 @@ class Role extends BaseModel {
     return `${this.first_name} ${this.last_name}`
   }
 
+  @computed get formFields() {
+    return [
+      {
+        inputType: 'image_upload',
+      },
+      {
+        field: 'first_name',
+        inputType: 'text',
+        formFieldOptions: {required: true}
+      },
+      {
+        field: 'last_name',
+        inputType: 'text',
+        formFieldOptions: {required: true}
+      },
+      {
+        field: 'title',
+        inputType: 'text',
+      },
+      {
+        field: 'department',
+        inputType: 'dropdown',
+        inputOptions: {options: Role.departmentDropdownOptions},
+      },
+      {
+        field: 'status',
+        label: 'Employment Type',
+        inputType: 'dropdown',
+        inputOptions: {options: Role.employmentTypeDropdownOptions},
+      },
+    ]
+  }
+
   constructor(store = null) {
     super(store)
     this.store = store
@@ -64,5 +97,30 @@ Role.FIELD_NAMES = {
 Role.RELATIONSHIPS = {}
 
 Role.RESOURCE = 'roles'
+
+Role.DEPARTMENTS = [
+  'Production',
+  'Costumes',
+  'Acting',
+  'Administration',
+  'Sound',
+  'Lighting'
+]
+
+Role.departmentDropdownOptions = Role.DEPARTMENTS.map(n => {
+  return {text: n, value: n}
+})
+
+Role.EMPLOYMENT_TYPES = [
+  'Full-time',
+  'Part-time',
+  'Contractor'
+]
+
+Role.employmentTypeDropdownOptions = Role.EMPLOYMENT_TYPES.map(n => {
+  return {text: n, value: n}
+})
+
+Role.API_ENDPOINT = 'roles'
 
 export default Role

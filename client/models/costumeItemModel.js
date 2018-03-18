@@ -3,13 +3,120 @@ import {computed} from 'mobx'
 import BaseModel from "./baseModel";
 import {Header, Icon, Image, Label} from "semantic-ui-react";
 
-const sourceOptions = [
-  'Stock',
-  'Internet',
-  'Rental'
-]
 
 class CostumeItem extends BaseModel {
+
+  @computed get formFields() {
+    return [
+      {
+        inputType: 'image_upload',
+      },
+      {
+        field: 'title',
+        inputType: 'text',
+        formFieldOptions: {required: true}
+      },
+      {
+        field: 'description',
+        inputType: 'textarea',
+      },
+      {
+        field: 'item_type',
+        label: 'Type',
+        inputType: 'dropdown',
+        inputOptions: {options: CostumeItem.itemTypeDropdownOptions},
+      },
+      {
+        field: 'costume_id',
+        label: 'Costume',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('costumes')}
+      },
+      {
+        field: 'care_instructions',
+        inputType: 'text',
+      },
+      {
+        field: 'source',
+        inputType: 'text',
+      },
+      {
+        field: 'brand',
+        inputType: 'text',
+      },
+      {
+        field: 'notes',
+        inputType: 'text',
+      },
+      {
+        field: 'cost',
+        inputType: 'text',
+      },
+    ]
+
+  }
+
+  @computed get tableData() {
+    return [
+      {
+        field: 'title',
+        header: 'Title',
+        renderCell:
+          <Header as='h5'>
+            <Image avatar src={this.avatar}/>
+            {' '}{this.title}
+          </Header>,
+      },
+      {
+        field: 'costume',
+        header: 'Costume',
+        renderCell:
+          <Label image key={this.costume.id}>
+            <Image avatar src={this.costume.avatar}/>
+            {this.costume.title}
+            <Icon name='delete'/>
+          </Label>,
+        filterOptions: {
+          multiple: false,
+          field: 'costume_id',
+          options: this.store.dropdownOptions('costumes')
+        }
+      },
+      {
+        field: 'description',
+        header: 'Description'
+      },
+      {
+        field: 'item_type',
+        header: 'Item Type'
+      },
+      {
+        field: 'care_instructions',
+        header: 'Care Instructions'
+      },
+      {
+        field: 'source',
+        header: 'Source',
+        filterOptions: {
+          multiple: true,
+          options: CostumeItem.sourceDropdownOptions
+        }
+      },
+      {
+        field: 'brand',
+        header: 'Brand'
+      },
+      {
+        field: 'cost',
+        header: 'Cost'
+      },
+      {
+        field: 'notes',
+        header: 'Notes'
+      }
+    ]
+
+  }
 
   constructor(store = null) {
     super(store)
@@ -55,78 +162,31 @@ CostumeItem.RELATIONSHIPS = {
 
 CostumeItem.RESOURCE = 'costume_items'
 
-CostumeItem.tableColumns = [
-  {
-    field: 'title',
-    header: 'Title',
-    renderCell: (costumeItem) => {
-      return (
-        <Header as='h5'>
-          <Image avatar src={costumeItem.avatar}/>
-          {' '}{costumeItem.title}
-        </Header>
-      )
-    },
-  },
-  {
-    field: 'costume',
-    header: 'Costume',
-    renderCell: (costumeItem) => {
-      const costume = costumeItem.costume
-      return (
-        <Label image key={costume.id}>
-          <Image avatar src={costume.avatar}/>
-          {costume.title}
-          <Icon name='delete'/>
-        </Label>
-      )
-    },
-    filterOptions: {
-      multiple: false,
-      field: 'costume_id',
-      options: (store) => {
-        return store.costumes.map(costume => {
-          return {text: costume.title, value: costume.id}
-        })
-      }
-    }
-  },
-  {
-    field: 'description',
-    header: 'Description'
-  },
-  {
-    field: 'item_type',
-    header: 'Item Type'
-  },
-  {
-    field: 'care_instructions',
-    header: 'Care Instructions'
-  },
-  {
-    field: 'source',
-    header: 'Source',
-    filterOptions: {
-      multiple: true,
-      options: (store) => {
-        return sourceOptions.map(source => {
-          return {text: source, value: source}
-        })
-      }
-    }
-  },
-  {
-    field: 'brand',
-    header: 'Brand'
-  },
-  {
-    field: 'cost',
-    header: 'Cost'
-  },
-  {
-    field: 'notes',
-    header: 'Notes'
-  }
+CostumeItem.SOURCE_OPTIONS = [
+  'Stock',
+  'Internet',
+  'Rental'
 ]
+
+CostumeItem.sourceDropdownOptions = CostumeItem.SOURCE_OPTIONS.map(n => {
+  return {text: n, value: n}
+})
+
+CostumeItem.itemTypes = [
+  'Shirt',
+  'Pants',
+  'Jacket',
+  'Shoes',
+  'Hat',
+  'Belt',
+  'Dress'
+]
+
+CostumeItem.itemTypeDropdownOptions = CostumeItem.itemTypes.map(n => {
+  return {text: n, value: n}
+})
+
+CostumeItem.API_ENDPOINT = 'costume_items'
+
 
 export default CostumeItem

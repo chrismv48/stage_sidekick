@@ -1,12 +1,11 @@
 import React from 'react';
 import {Dropdown, Form} from "semantic-ui-react";
 import './ResourceForm.scss'
-import {capitalize, isEmpty, isString, replace} from "lodash";
 import ImageUpload from "components/ImageUpload/ImageUpload";
+import {capitalize, replace} from 'lodash'
 import {inject, observer} from "mobx-react";
-import {isObservable, observable} from 'mobx'
+import {computed, isObservable, observable} from 'mobx'
 import {pluralizeResource} from "helpers";
-import {formFieldsByResource, relationshipIdToLabel, relationshipsByResource} from "../../../constants";
 import PropTypes from 'prop-types'
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
@@ -15,112 +14,73 @@ export class ResourceForm extends React.Component {
 
   @observable loading = true
 
+  @computed get resource() {
+    const {resourceName, resourceId} = this.props
+    return this.props.resourceStore.getStagedResource(resourceName, resourceId)
+  }
+
   componentDidMount() {
-    const {resourceId, resourceName} = this.props
-    const relationships = relationshipsByResource[resourceName]
+    const {resourceName, resourceId} = this.props
+    const relationships = Object.keys(this.resource.relationships).map(relationship => pluralizeResource(relationship))
 
-    Promise.all([
-      this.props.resourceStore.loadResource(resourceName, resourceId),
-      relationships.forEach(relationship =>
-        this.props.resourceStore.loadResource(relationship)
-      )
-    ]).then(() => this.loading = false)
+    const loadRelationships = relationships.map(relationship => this.props.resourceStore.loadResource(pluralizeResource(relationship)))
+    loadRelationships.push(this.props.resourceStore.loadResource(resourceName, resourceId))
+
+    Promise.all(loadRelationships).then(() => this.loading = false)
   }
 
-  generateRelationshipOptions = (relationshipLabel, textField) => {
-    const relationshipItems = this.props.resourceStore[relationshipLabel]
-    return relationshipItems.map(relationshipItem => {
-      return {
-        key: relationshipItem.id,
-        text: isString(textField) ? relationshipItem[textField] : textField(relationshipItem),
-        value: relationshipItem.id,
-      }
-    })
+  renderTextInput(field, label, formFieldOptions, inputOptions) {
+    return (
+      <Form.Field key={label} {...formFieldOptions}>
+        <label>{label}</label>
+        <input
+          value={this.resource[field] || ''}
+          onChange={e => this.resource[field] = e.target.value}
+          {...inputOptions}
+        />
+      </Form.Field>
+    )
   }
 
-  generateFormfields = () => {
-    const {resourceName, resourceId, resourceStore} = this.props
-    const resource = resourceStore.getStagedResource(resourceName, resourceId)
-    const formFields = formFieldsByResource[resourceName]
+  renderTextAreaInput(field, label, formFieldOptions, inputOptions) {
+    return (
+      <Form.Field key={label} {...formFieldOptions}>
+        <label>{label}</label>
+        <textarea
+          value={this.resource[field] || ''}
+          onChange={e => this.resource[field] = e.target.value}
+          {...inputOptions}
+        />
+      </Form.Field>
+    )
+  }
 
-    return formFields.map(formField => {
-      const {
-        fieldName,
-        inputType,
-        label = capitalize(replace(fieldName, /_/g, ' ')),
-        dropdownText,
-        inputOptions = {}
-      } = formField
+  renderDropdownInput(field, label, formFieldOptions, inputOptions) {
+    debugger
+    return (
+      <Form.Field key={label} {...formFieldOptions}>
+        <label>{label}</label>
+        <Dropdown
+          fluid
+          selection
+          placeholder={label}
+          onChange={(event, data) => this.resource[field] = data.value}
+          {...inputOptions}
+        />
+      </Form.Field>
+    )
+  }
 
-      if (inputType === 'text') {
-        return (
-          <Form.Field key={label}>
-            <label>{label}</label>
-            <input
-              value={resource[fieldName] || ''}
-              onChange={e => resource[fieldName] = e.target.value}
-              {...inputOptions}
-            >
-            </input>
-          </Form.Field>
-        )
-      }
-      if (inputType === 'textarea') {
-        return (
-          <Form.Field key={label}>
-            <label>{label}</label>
-            <textarea
-              value={resource[fieldName] || ''}
-              onChange={e => resource[fieldName] = e.target.value}
-              {...inputOptions}
-            >
-            </textarea>
-          </Form.Field>
-        )
-      }
-      if (inputType === 'dropdown') {
-        let dropdownOptions = {...inputOptions}
-        // if no dropdown options are passed, we assume we need to use the relationships to generate them
-        if (isEmpty(dropdownOptions)) {
-          const multiple = pluralizeResource(fieldName) === fieldName
-          const value = isObservable(resource[fieldName]) ? resource[fieldName].toJS() : resource[fieldName]
-          const relationshipLabel = relationshipIdToLabel[fieldName] || fieldName
-          dropdownOptions = {
-            multiple,
-            options: this.generateRelationshipOptions(pluralizeResource(relationshipLabel), dropdownText),
-            value
-          }
-        }
-        else {
-          dropdownOptions.value = resource[fieldName] || ''
-        }
-        return (
-          <Form.Field key={label}>
-            <label>{label}</label>
-            <Dropdown
-              fluid
-              selection
-              placeholder={label}
-              onChange={(event, data) => resource[fieldName] = data.value}
-              {...dropdownOptions}
-            >
-            </Dropdown>
-          </Form.Field>
-        )
-      }
-      if (inputType === 'image_upload') {
-        return (
-          <ImageUpload
-            key={label}
-            images={resource.images.toJS()}
-            handleAddImage={(imageUrl) => resource.addImage(imageUrl)}
-            handleRemoveImage={(imageUrl) => resource.removeImage(imageUrl)}
-            handleChangePrimary={(imageId) => resource.setPrimaryImage(imageUrl)}
-            handleOnSort={({oldIndex, newIndex}) => resource.updateImageOrder(oldIndex, newIndex)}
-          />
-        )
-      }
-    })
+  renderImageUploadInput() {
+    return (
+      <ImageUpload
+        images={this.resource.images.toJS()}
+        handleAddImage={(imageUrl) => this.resource.addImage(imageUrl)}
+        handleRemoveImage={(imageUrl) => this.resource.removeImage(imageUrl)}
+        handleChangePrimary={() => this.resource.setPrimaryImage(imageUrl)}
+        handleOnSort={({oldIndex, newIndex}) => this.resource.updateImageOrder(oldIndex, newIndex)}
+      />
+    )
   }
 
   render() {
@@ -131,16 +91,31 @@ export class ResourceForm extends React.Component {
     }
 
     return (
-        <Form>
-          {this.generateFormfields()}
-        </Form>
+      <Form>
+        {this.resource.formFields.map(formField => {
+          const {field, inputType, label, inputOptions = {}, formFieldOptions = {}} = formField
+          const renderLabel = label || capitalize(replace(field, /_/g, ' '))
+          switch (inputType) {
+            case 'text':
+              return this.renderTextInput(field, renderLabel, formFieldOptions, inputOptions)
+            case 'textarea':
+              return this.renderTextAreaInput(field, renderLabel, formFieldOptions, inputOptions)
+            case 'dropdown':
+              return this.renderDropdownInput(field, renderLabel, formFieldOptions, inputOptions)
+            case 'image_upload':
+              return this.renderImageUploadInput()
+            default:
+              return null
+          }
+        })}
+      </Form>
     );
   }
 }
 
 ResourceForm.propTypes = {
   resourceId: PropTypes.number,
-  resourceName: PropTypes.string.isRequired
+  resourceName: PropTypes.string.isRequired,
 };
 
 

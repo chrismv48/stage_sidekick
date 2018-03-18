@@ -1,9 +1,5 @@
 import {computed, observable, toJS, transaction} from 'mobx'
 import {difference, sortBy} from "lodash";
-import {
-  ACTOR_RESOURCE, CHARACTER_RESOURCE, COSTUME_ITEM_RESOURCE, COSTUME_RESOURCE, LINE_RESOURCE, ROLE_RESOURCE,
-  SCENE_RESOURCE
-} from "../constants";
 import {arrayMove} from "react-sortable-hoc";
 import {pluralizeResource} from "../helpers";
 import SceneModel from "models/sceneModel";
@@ -62,37 +58,41 @@ class ResourceStore {
   }
 
   loadCharacters(idOrIds = null) {
-    return this.loadResource(CHARACTER_RESOURCE, idOrIds)
+    return this.loadResource('characters', idOrIds)
   }
 
   loadScenes(idOrIds = null) {
-    return this.loadResource(SCENE_RESOURCE, idOrIds)
+    return this.loadResource('scenes', idOrIds)
   }
 
   loadRoles(idOrIds = null) {
-    return this.loadResource(ROLE_RESOURCE, idOrIds)
+    return this.loadResource('roles', idOrIds)
   }
 
   loadActors(idOrIds = null) {
-    return this.loadResource(ACTOR_RESOURCE, idOrIds)
+    return this.loadResource('actors', idOrIds)
   }
 
   loadCostumes(idOrIds = null) {
-    return this.loadResource(COSTUME_RESOURCE, idOrIds)
+    return this.loadResource('costumes', idOrIds)
   }
 
   loadCostumeItems(idOrIds = null) {
-    return this.loadResource(COSTUME_ITEM_RESOURCE, idOrIds)
+    return this.loadResource('costume_items', idOrIds)
   }
 
   loadLines(idOrIds = null) {
-    return this.loadResource(LINE_RESOURCE, idOrIds)
+    return this.loadResource('lines', idOrIds)
   }
 
   loadSetupAlerts() {
     return this._api('setup_alerts').then(results => {
       this.setupAlerts = results
     })
+  }
+
+  dropdownOptions(resource) {
+    return this[resource].map(resource => resource.dropdownItem())
   }
 
   getStagedResource(resource, id = null) {

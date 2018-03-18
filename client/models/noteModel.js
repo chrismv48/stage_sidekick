@@ -4,7 +4,7 @@ import BaseModel from "./baseModel";
 import {camelCase, snakeCase, upperFirst} from 'lodash'
 import {pluralizeResource, singularizeResource} from "../helpers";
 import {Label} from "semantic-ui-react";
-import {EditableField} from "../components/EditableField/EditableField";
+import {EditableField} from "components/EditableField/EditableField";
 
 class Note extends BaseModel {
 
@@ -63,6 +63,202 @@ class Note extends BaseModel {
     return `${pluralizeResource(snakeCase(this.viewModel.noteable_type))}.${this.viewModel.noteable_id}`
   }
 
+  @computed get tableData() {
+    return [
+      {
+        field: 'department',
+        header: 'Department',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='department'
+            fieldType='dropdown'
+            dropdownOptions={{options: this.store.resources['roles'].departmentDropdownOptions}}
+          />,
+        filterOptions: {
+          multiple: true,
+          field: 'department',
+          compact: true,
+          options: this.store.resources['roles'].departmentDropdownOptions
+        }
+      },
+      {
+        field: 'priority',
+        header: 'Priority',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='priority'
+            fieldType='dropdown'
+            dropdownOptions={{options: Note.prioritiesDropdownOptions}}
+          />,
+        filterOptions: {
+          multiple: true,
+          field: 'priority',
+          compact: true,
+          options: Note.prioritiesDropdownOptions
+        },
+        cellProps: {singleLine: true}
+      },
+      {
+        field: 'title',
+        header: 'Note',
+        renderCell:
+          <EditableField resource='notes' resourceId={this.id} field='title'/>,
+        cellProps: {width: 6}
+      },
+      {
+        field: 'actor_id',
+        header: 'Actor',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='actor_id'
+            fieldType='dropdown'
+            dropdownOptions={{options: this.store.actors.map(actor => actor.dropdownItem())}}
+          >
+            {this.actor &&
+            <a href={`/actors/${this.actor.id}`}>
+              {this.actor.fullName}
+            </a>}
+          </EditableField>,
+        filterOptions: {
+          multiple: true,
+          field: 'actor_id',
+          options: this.store.dropdownOptions('actors')
+        }
+      },
+      {
+        field: 'scene_id',
+        header: 'Scene',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='scene_id'
+            fieldType='dropdown'
+            dropdownOptions={{options: this.store.dropdownOptions('scenes')}}
+          >
+            {this.scene &&
+            <a href={`/scenes/${this.scene.id}`}>
+              {this.scene.title}
+            </a>}
+          </EditableField>,
+        filterOptions: {
+          multiple: true,
+          field: 'scene_id',
+          options: this.store.dropdownOptions('scenes')
+        }
+        // cellProps: {singleLine: true}
+      },
+      {
+        field: 'noteableComposite',
+        header: 'Item',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='noteableComposite'
+            fieldType='dropdown'
+            dropdownOptions={{options: this.noteableDropdownOptions}}
+          >
+            <Label as='a' image key={this.noteable.id}>
+              <img src={this.noteable.avatar}/>
+              {this.noteable && (this.noteable.title || this.noteable.name)}
+            </Label>
+          </EditableField>,
+        cellProps: {singleLine: true}
+      },
+      {
+        field: 'assignee_ids',
+        header: 'Assignees',
+        renderCell:
+          <EditableField
+            resource='notes'
+            resourceId={this.id}
+            field='assignee_ids'
+            fieldType='dropdown'
+            dropdownOptions={{options: this.store.dropdownOptions('roles'), multiple: true}}
+          >
+            {this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>{role.label()}</div>)}
+          </EditableField>,
+        sortKey: 'assignees.length',
+        filterOptions: {
+          multiple: true,
+          field: 'assignee_ids',
+          options: this.store.roles.map(role => {
+            return {text: role.fullName, value: role.id}
+          })
+        }
+      }
+    ]
+  }
+
+  @computed get formFields() {
+    return [
+      {
+        field: 'department',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.resources['roles'].departmentDropdownOptions},
+      },
+      {
+        field: 'priority',
+        inputType: 'dropdown',
+        inputOptions: {options: Note.prioritiesDropdownOptions},
+      },
+      {
+        field: 'noteableComposite',
+        label: 'Refers to',
+        inputType: 'dropdown',
+        inputOptions: {options: this.noteableDropdownOptions},
+      },
+      {
+        field: 'scene_id',
+        label: 'Scene',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('scenes')},
+      },
+      {
+        field: 'actor_id',
+        label: 'Actor',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.dropdownOptions('actors')},
+      },
+      {
+        field: 'assignee_ids',
+        label: 'Assignee(s)',
+        inputType: 'dropdown',
+        inputOptions: {multiple: true, options: this.store.dropdownOptions('roles')},
+      },
+      {
+        field: 'title',
+        label: 'Note',
+        inputType: 'textarea',
+        required: true,
+        formFieldOptions: {required: true}
+      }
+    ]
+  }
+
+  @computed get noteableDropdownOptions() {
+    const costumeOptions = this.store.costumes.map(costume => {
+      const noteableCompositeKey = `costumes.${costume.id}`
+      return costume.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
+    })
+    const costumeItemOptions = this.store.costume_items.map(costumeItem => {
+      const noteableCompositeKey = `costume_items.${costumeItem.id}`
+      return costumeItem.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
+    })
+    const characterOptions = this.store.characters.map(character => {
+      const noteableCompositeKey = `characters.${character.id}`
+      return character.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
+    })
+    return costumeItemOptions.concat(costumeOptions, characterOptions)
+  }
+
   set noteableComposite(newValue) {
     const [noteableType, noteableId] = newValue.split('.')
     this.viewModel.noteable_type = upperFirst(camelCase(singularizeResource(noteableType)))
@@ -105,204 +301,12 @@ Note.RELATIONSHIPS = {
   characters: 'notes'
 }
 
-Note.tableColumns = [
-  {
-    field: 'department',
-    header: 'Department',
-    renderCell: note => {
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='department'
-          fieldType='dropdown'
-          dropdownOptions={{
-            options: note.store.resources['actors'].DEPARTMENTS.map(n => {
-              return {text: n, value: n}
-            })
-          }}
-        />
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'department',
-      compact: true,
-      options: (store) => store.resources['actors'].DEPARTMENTS.map(n => {
-        return {text: n, value: n}
-      })
+Note.PRIORITIES = ['1', '2', '3']
+Note.prioritiesDropdownOptions = Note.PRIORITIES.map(n => {
+  return {text: n, value: n}
+})
 
-    }
-  },
-  {
-    field: 'priority',
-    header: 'Priority',
-    renderCell: note => {
-      const dropdownOptions = {
-        multiple: false,
-        options: ['1', '2', '3'].map(n => {
-          return {text: n, value: n}
-        })
-      }
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='priority'
-          fieldType='dropdown'
-          dropdownOptions={dropdownOptions}/>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'priority',
-      compact: true,
-      options: () => ['1', '2', '3'].map(n => {
-        return {text: n, value: n}
-      })
-    },
-    cellProps: {singleLine: true}
-  },
-  {
-    field: 'title',
-    header: 'Note',
-    renderCell: note => {
-      return (
-        <EditableField resource='notes' resourceId={note.id} field='title'/>
-      )
-    },
-    cellProps: {width: 6}
-  },
-  {
-    field: 'actor_id',
-    header: 'Actor',
-    renderCell: note => {
-      const actor = note.actor
-      const actorOptions = note.store.actors.map(actor => actor.dropdownItem())
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='actor_id'
-          fieldType='dropdown'
-          dropdownOptions={{options: actorOptions}}
-        >
-          {actor &&
-          <a href={`/actors/${actor.id}`}>
-            {actor.fullName}
-          </a>}
-        </EditableField>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'actor_id',
-      options: (store) => store.actors.map(actor => actor.dropdownItem())
-    }
-  },
-  {
-    field: 'scene_id',
-    header: 'Scene',
-    renderCell: note => {
-      const scene = note.scene
-      const sceneOptions = note.store.scenes.map(scene => scene.dropdownItem())
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='scene_id'
-          fieldType='dropdown'
-          dropdownOptions={{options: sceneOptions}}
-        >
-          {scene &&
-          <a href={`/scenes/${scene.id}`}>
-            {scene.title}
-          </a>}
-        </EditableField>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'scene_id',
-      options: (store) => {
-        return store.scenes.map(scene => {
-          return {text: scene.title, value: scene.id}
-        })
-      }
-    }
+Note.API_ENDPOINT = 'notes'
 
-    // cellProps: {singleLine: true}
-  },
-  {
-    field: 'noteableComposite',
-    header: 'Item',
-    renderCell: (note) => {
-      const item = note.noteable
-      const costumeOptions = note.store.costumes.map(costume => {
-        const noteableCompositeKey = `costumes.${costume.id}`
-        return costume.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
-      })
-      const costumeItemOptions = note.store.costume_items.map(costumeItem => {
-        const noteableCompositeKey = `costume_items.${costumeItem.id}`
-        return costumeItem.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
-      })
-      const characterOptions = note.store.characters.map(character => {
-        const noteableCompositeKey = `characters.${character.id}`
-        return character.dropdownItem({value: noteableCompositeKey, key: noteableCompositeKey})
-      })
-      const dropdownOptions = {
-        multiple: false,
-        options: costumeItemOptions.concat(costumeOptions, characterOptions)
-      }
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='noteableComposite'
-          fieldType='dropdown'
-          dropdownOptions={dropdownOptions}
-        >
-          <Label as='a' image key={item.id}>
-            <img src={item.avatar}/>
-            {item && (item.title || item.name)}
-          </Label>
-        </EditableField>
-      )
-    },
-    cellProps: {singleLine: true}
-  },
-  {
-    field: 'assignee_ids',
-    header: 'Assignees',
-    renderCell: note => {
-      const assignees = note.assignees
-      const assigneeOptions = note.store.roles.map(role => role.dropdownItem())
-      return (
-        <EditableField
-          resource='notes'
-          resourceId={note.id}
-          field='assignee_ids'
-          fieldType='dropdown'
-          dropdownOptions={{options: assigneeOptions, multiple: true}}
-        >
-          {assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>{role.label()}</div>)}
-        </EditableField>
-      )
-    },
-    sortKey: 'assignees.length',
-    filterOptions: {
-      multiple: true,
-      field: 'assignee_ids',
-      options: (store) => {
-        return store.roles.map(role => {
-          return {text: role.fullName, value: role.id}
-        })
-      }
-    }
-
-    // cellProps: {singleLine: true}
-  }
-]
 
 export default Note
-

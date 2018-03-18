@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import {camelCase, invert} from 'lodash'
 
 const PLURALITY_RESOURCE_MAPPING = {
   'user': 'users',
@@ -20,7 +20,7 @@ const PLURALITY_RESOURCE_MAPPING = {
 }
 
 export function swapPlurality(resource) {
-  return PLURALITY_RESOURCE_MAPPING[resource] || _.invert(PLURALITY_RESOURCE_MAPPING)[resource]
+  return PLURALITY_RESOURCE_MAPPING[resource] || invert(PLURALITY_RESOURCE_MAPPING)[resource]
 }
 
 export function pluralizeResource(resource) {
@@ -28,7 +28,7 @@ export function pluralizeResource(resource) {
 }
 
 export function singularizeResource(resource) {
-  return _.invert(PLURALITY_RESOURCE_MAPPING)[resource] || resource
+  return invert(PLURALITY_RESOURCE_MAPPING)[resource] || resource
 }
 
 export function addIdToResource(resource) {
@@ -39,6 +39,10 @@ export function addIdToResource(resource) {
   else {
     return singularizedResource + '_ids'
   }
+}
+
+export function singularResourceIdCamelCased(resource) {
+  return camelCase(singularizeResource(resource)) + 'Id'
 }
 
 

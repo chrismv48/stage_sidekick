@@ -8,11 +8,11 @@ import {computed, observable} from "mobx";
 import {capitalize, replace} from 'lodash'
 import {CharacterCardGroup} from "containers/CardGroups/CharacterCardGroup";
 import {EditableField} from "components/EditableField/EditableField";
-import {actorFormFields, actorMeasurementFields, actorProfileFields} from "../../constants";
 import EditIcon from "components/EditIcon/EditIcon";
 import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import {CostumeCardGroup} from "containers/CardGroups/CostumeCardGroup";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import ActorModel from 'models/actorModel'
 
 @inject("resourceStore", "uiStore") @observer
 export class Actor extends React.Component {
@@ -105,16 +105,16 @@ export class Actor extends React.Component {
             <div className='profile-container'>
               <Header as='h5'>Profile</Header>
               <List verticalAlign='middle'>
-                {actorProfileFields.map((profileField, i) => {
-                  const field = actorFormFields.find(field => field.fieldName === profileField)
+                {ActorModel.profileFields.map((profileField, i) => {
+                  const field = this.actor.formFields.find(field => field.field === profileField)
                   return(
                     <List.Item key={`profile-${i}`} className='actor-list-item'>
                     <List.Content floated='right'>
                       <div className='field-container'>
-                        <EditableField resource={'actors'} resourceId={this.actorId} field={field.fieldName} fieldType={field.inputType}/>
+                        <EditableField resource={'actors'} resourceId={this.actorId} field={field.field} fieldType={field.inputType}/>
                       </div>
                     </List.Content>
-                    <List.Content>{field.label || capitalize(replace(field.fieldName, /_/g, ' '))}</List.Content>
+                    <List.Content>{field.label || capitalize(replace(field.field, /_/g, ' '))}</List.Content>
                   </List.Item>
                   )}
                 )}
@@ -123,16 +123,16 @@ export class Actor extends React.Component {
             <div className='measurements-container'>
               <Header as='h5'>Measurements</Header>
               <List verticalAlign='middle'>
-                {actorMeasurementFields.map((measurementField, i) => {
-                  const field = actorFormFields.find(field => field.fieldName === measurementField)
-                  return(
+                {ActorModel.measurementFields.map((measurementField, i) => {
+                  const field = this.actor.formFields.find(field => field.field === measurementField)
+                  return (
                     <List.Item key={`measurement-${i}`} className='actor-list-item'>
                       <List.Content floated='right'>
                         <div className='field-container'>
-                          <EditableField resource={'actors'} resourceId={this.actorId} field={field.fieldName} fieldType={field.inputType}/>
+                          <EditableField resource={'actors'} resourceId={this.actorId} field={field.field} fieldType={field.inputType}/>
                         </div>
                       </List.Content>
-                      <List.Content>{field.label || capitalize(replace(field.fieldName, /_/g, ' '))}</List.Content>
+                      <List.Content>{field.label || capitalize(replace(field.field, /_/g, ' '))}</List.Content>
                     </List.Item>
                   )}
                 )}

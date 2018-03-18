@@ -33,7 +33,8 @@ export class ResourceTable extends React.Component {
   }
 
   @computed get columns() {
-    return this.model.tableColumns
+    // Since tableColumns is an instance method of the resource model.
+    return this.rows.length > 0 ? this.rows[0].tableData : []
   }
 
   @computed get visibleColumns() {
@@ -87,7 +88,7 @@ export class ResourceTable extends React.Component {
 
   renderCell(column, row) {
     if (column.renderCell) {
-      return column.renderCell(row)
+      return column.renderCell
     } else {
       return get(row, column.field)
     }
@@ -154,7 +155,7 @@ export class ResourceTable extends React.Component {
                     closeOnChange
                     placeholder={`Filter ${column.header}`}
                     multiple={multiple}
-                    options={options(this.props.resourceStore)}
+                    options={options}
                     value={dropdownValue}
                     onChange={(event, data) => this.handleFilterChange(field, data.value)}
                     {...otherOptions}
@@ -192,26 +193,25 @@ export class ResourceTable extends React.Component {
             </Table.Header>
             <Table.Body>
               {this.visibleRows.map(row => {
+                const visibleColumnFields = this.visibleColumns.map(col => col.field)
                   return (
                     <Table.Row
                       style={{cursor: 'pointer'}}
                       key={row.id}
                       onClick={() => showResourceSidebar(resource, row.id)}
                     >
-                      {this.visibleColumns.map(column => {
-                          return (
-                            <Table.Cell
-                              key={column.header}
-                              {...column.cellProps}
-                            >
-                              {this.renderCell(column, row)}
-                            </Table.Cell>
-                          )
-                        }
+                      {row.tableData.filter(col => visibleColumnFields.includes(col.field)).map(column => {
+                        return (
+                          <Table.Cell
+                            key={column.header}
+                            {...column.cellProps}
+                          >
+                            {this.renderCell(column, row)}
+                          </Table.Cell>
+                        )}
                       )}
                     </Table.Row>
-                  )
-                }
+                  )}
               )}
             </Table.Body>
           </Table>

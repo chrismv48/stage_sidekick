@@ -6,6 +6,87 @@ import {Icon, Image, Label} from "semantic-ui-react";
 
 class Scene extends BaseModel {
 
+  @computed get tableData() {
+    return [
+      {
+        field: 'title',
+        header: 'Scene',
+        renderCell:
+          <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
+            <SceneFragment scene={this}/>
+          </span>,
+        filterOptions: {
+          multiple: true,
+          options: this.store.dropdownOptions('scenes')
+        }
+      },
+      {
+        field: 'description',
+        header: 'Description',
+        defaultVisible: false
+      },
+      {
+        field: 'length_in_minutes',
+        header: 'Length In Minutes'
+      },
+      {
+        field: 'setting',
+        header: 'Setting'
+      },
+      {
+        field: 'characters',
+        header: 'Characters',
+        renderCell:
+          <Label.Group>
+            {this.characters.map(character =>
+              <Label as='a' image key={character.id}>
+                <Image avatar src={character.avatar}/>
+                {character.name}
+                <Icon name='delete'/>
+              </Label>
+            )}
+          </Label.Group>,
+        filterOptions: {
+          multiple: true,
+          field: 'character_ids',
+          options: this.store.dropdownOptions('characters')
+        },
+        sortKey: 'characters.length',
+      }
+    ]
+  }
+
+  @computed get formFields() {
+    return [
+      {
+        inputType: 'image_upload',
+      },
+      {
+        field: 'title',
+        inputType: 'text',
+        formFieldOptions: {required: true}
+      },
+      {
+        field: 'description',
+        inputType: 'textarea',
+      },
+      {
+        field: 'setting',
+        inputType: 'text',
+      },
+      {
+        field: 'length_in_minutes',
+        inputType: 'text',
+      },
+      {
+        field: 'character_ids',
+        label: 'Characters',
+        inputType: 'dropdown',
+        inputOptions: {multiple: true, options: this.store.dropdownOptions('characters')}
+      }
+    ]
+  }
+
 
   constructor(store = null) {
     super(store)
@@ -58,69 +139,6 @@ Scene.RELATIONSHIPS = {
 
 Scene.RESOURCE = 'scenes'
 
-Scene.tableColumns = [
-  {
-    field: 'title',
-    header: 'Scene',
-    renderCell: (scene) => {
-      return (
-        <span onClick={() => scene.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}>
-          <SceneFragment scene={scene}/>
-        </span>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      options: (store) => {
-        return store.scenes.map(scene => {
-          return {text: scene.title, value: scene.title}
-        })
-      }
-    }
-  },
-  {
-    field: 'description',
-    header: 'Description',
-    defaultVisible: false
-  },
-  {
-    field: 'length_in_minutes',
-    header: 'Length In Minutes'
-  },
-  {
-    field: 'setting',
-    header: 'Setting'
-  },
-  {
-    field: 'characters',
-    header: 'Characters',
-    renderCell: (scene) => {
-      return (
-        <Label.Group>
-          {scene.characters.map(character =>
-            <Label as='a' image key={character.id}>
-              <Image avatar src={character.avatar}/>
-              {character.name}
-              <Icon name='delete'/>
-            </Label>
-          )}
-        </Label.Group>
-      )
-    },
-    filterOptions: {
-      multiple: true,
-      field: 'character_ids',
-      options: (store) => {
-        return store.characters.map(character => {
-          return {text: character.name, value: character.id}
-        })
-      }
-    },
-    sortKey: 'characters.length',
-  }
-
-
-
-]
+Scene.API_ENDPOINT = 'scenes'
 
 export default Scene
