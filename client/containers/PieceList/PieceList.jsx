@@ -1,9 +1,8 @@
 import React from 'react';
 import './PieceList.scss'
 import {Grid, Image} from 'semantic-ui-react'
-import {uniq} from "lodash";
+import {sortBy, uniq} from "lodash";
 import 'react-table/react-table.css'
-import SceneFragment from "components/Fragment/SceneFragment";
 import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
 import CostumeItemTable from "./CostumeItemTable";
@@ -51,43 +50,18 @@ export class PieceList extends React.Component {
     return pieceList
   }
 
-  renderCharacterColumn(character, actor) {
-    return (
-      <div className='character-actor-container'>
-        <Image style={{maxHeight: 200}} centered rounded src={character.primaryImage}/>
-        <div style={{marginTop: 10}}>
-          <a href={`/characters/${character.id}`}>
-            <strong>{character.name}</strong>
-          </a>
-        </div>
-        <div style={{marginTop: 10}}>
-          Played by <a href={`/cast/${actor.id}`}>{actor.fullName}</a>
-        </div>
-      </div>
-    )
-  }
-
-  renderCostumeColumn(costume, sceneIds) {
+  renderCostumeColumn(costume, sceneIds, character, actor) {
     return (
       <div className='costume-container'>
         <Image style={{maxHeight: 200}} centered rounded src={costume.primaryImage}/>
-        <div style={{marginTop: 10}}>
+        <div className='section'>
           <strong>
             <a href={`/costumes/${costume.id}`}>{costume.title}</a>
           </strong>
         </div>
-        {sceneIds.length > 0 &&
-        <div>
-          <div style={{textAlign: 'left', marginTop: 10}}><strong>Scenes</strong></div>
-          {sceneIds.map((sceneId, i) => {
-            const scene = this.props.resourceStore.scenes.find(scene => scene.id === sceneId)
-            return (
-              <SceneFragment key={i} scene={scene}/>
-            )
-          })
-          }
+        <div className='section'>
+          <a href={"/characters/${character.id}"}>{character.name}</a>  <span className='divider'>|</span>  <a href={"/characters/${actor.id}"}>{actor.fullName}</a>
         </div>
-        }
       </div>
     )
   }
@@ -105,14 +79,11 @@ export class PieceList extends React.Component {
       <Grid className='PieceList'>
         <Grid.Column>
           {
-            pieceList.map(({costume, character, actor, sceneIds, costumeItemIds}, i) => {
+            sortBy(pieceList, piece => piece.actor.id).map(({costume, character, actor, sceneIds, costumeItemIds}, i) => {
               return (
                 <div key={i} className='piece-container'>
-                  <div className='character-actor-column column'>
-                    {this.renderCharacterColumn(character, actor)}
-                  </div>
                   <div className='costume-column column'>
-                    {this.renderCostumeColumn(costume, sceneIds)}
+                    {this.renderCostumeColumn(costume, sceneIds, character, actor)}
                   </div>
                   <div className='table-column column'>
                     <CostumeItemTable costumeId={costume.id} />

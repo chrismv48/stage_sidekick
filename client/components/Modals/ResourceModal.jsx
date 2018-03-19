@@ -46,7 +46,8 @@ export default class ResourceModal extends React.Component {
   render() {
     let {resourceStore, resourceName, resourceId, ...otherProps} = this.props
     let iconName = 'add user'
-    const singularizedResource = resourceStore.resources[resourceName].resourceSingular
+    const resourceStaged = resourceStore.getStagedResource(resourceName, resourceId)
+    const singularizedResource = resourceStaged.resourceSingular
     let modalHeading = `Add ${singularizedResource}`
     if (resourceId) {
       iconName = 'edit'
@@ -54,7 +55,7 @@ export default class ResourceModal extends React.Component {
     }
 
     // Do this so we get resourceId personalized for custom forms like CostumeForm
-    otherProps[`${singularizedResource}Id`] = resourceId
+    otherProps[resourceStaged.singularResourceIdCamelCased] = resourceId
 
     const ResourceForm = RESOURCE_FORM_COMPONENTS[resourceName]
     return (

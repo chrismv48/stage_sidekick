@@ -7,32 +7,28 @@
       padding: 10px;
     }
 
-    .character-actor-column {
-      flex: 2;
-      border-top: 1px solid rgba(34, 36, 38, 0.15);
-      border-left: 1px solid rgba(34, 36, 38, 0.15);
-      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-
-      border-radius: 5px 0 0 5px;
-    }
-
     .costume-column {
       flex: 2;
       border: 1px solid rgba(34, 36, 38, 0.15);
     }
 
     .table-column {
-      flex: 6;
+      flex: 7;
       padding: 0;
       align-items: flex-start;
     }
 
-    .character-actor-container {
-      text-align: center;
-    }
-
     .costume-container {
       text-align: center;
+
+      .section {
+        margin-top: 10px;
+      }
+
+      .divider {
+        margin: 0 3px;
+        color: hsl(0, 0%, 83%)
+      }
     }
   }
 }

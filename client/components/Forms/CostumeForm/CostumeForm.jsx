@@ -158,8 +158,8 @@ export class CostumeForm extends React.Component {
             <label>Costume items</label>
             <Dropdown fluid multiple selection
                       options={this.costumeItemOptions || []}
-                      value={costumeStaged.costumeItemIds.slice()}
-                      onChange={(e, data) => costumeStaged.costumeItemIds = data.value}
+                      value={costumeStaged.costume_item_ids.slice()}
+                      onChange={(e, data) => costumeStaged.costume_item_ids = data.value}
             />
           </Form.Field>
 

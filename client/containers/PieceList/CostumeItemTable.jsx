@@ -1,6 +1,6 @@
 import React from 'react';
 import './PieceList.scss'
-import {Button, Icon, Table} from 'semantic-ui-react'
+import {Button, Dropdown, Table} from 'semantic-ui-react'
 import 'react-table/react-table.css'
 import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
@@ -67,7 +67,7 @@ export class CostumeItemTable extends React.Component {
                               resourceId: costumeItem.id
                             })}
                     />
-                  <Button size='mini' compact negative icon='remove' onClick={() => costumeItem.destroy()} />
+                    <Button size='mini' compact negative icon='remove' onClick={() => costumeItem.destroy()}/>
                   </div>
                 </Table.Cell>
                 {columns.map(column => {
@@ -85,19 +85,29 @@ export class CostumeItemTable extends React.Component {
           <Table.Row>
             <Table.HeaderCell />
             <Table.HeaderCell colSpan={columns.length}>
-              <Button
-                floated='right'
-                icon
-                labelPosition='left'
-                primary
-                size='small'
-                onClick={() => this.props.uiStore.showModal(
-                  'RESOURCE_MODAL',
-                  {resourceName: 'costume_items', resourceId: null, initializeWith: {costume_id: costumeId}}
-                )}
-              >
-                <Icon name='add' /> Add piece
-              </Button>
+              <Button.Group size='small' floated='right' primary>
+                <Dropdown
+                  text='Add piece'
+                  button
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={() => this.props.uiStore.showModal(
+                        'RESOURCE_MODAL', {resourceName: 'costumes', resourceId: costume.id}
+                      )}
+                    >
+                      Add existing
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => this.props.uiStore.showModal(
+                      'RESOURCE_MODAL',
+                      {resourceName: 'costume_items', resourceId: null, initializeWith: {costume_id: costumeId}}
+                    )}
+                    >
+                      Add new
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button.Group>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
