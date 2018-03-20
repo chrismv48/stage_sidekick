@@ -1,6 +1,6 @@
 import React from 'react';
 import './DressingList.scss'
-import {Form, Grid, Segment} from 'semantic-ui-react'
+import {Accordion, Form, Grid, Icon, Segment} from 'semantic-ui-react'
 import 'react-table/react-table.css'
 import {inject, observer} from "mobx-react";
 import {computed, observable} from "mobx";
@@ -11,6 +11,7 @@ import {sortBy} from 'lodash'
 export class DressingList extends React.Component {
 
   @observable loading = true
+  @observable editorExpanded = false
 
   @computed get costumeCharactersScenes() {
     const {costumes, getStagedResource} = this.props.resourceStore
@@ -64,15 +65,36 @@ export class DressingList extends React.Component {
         <div className='diff-container'>
           <div className='diff-item'>
             <h5>Removals</h5>
-            {diff.removals.map(removal => <div key={removal.id}>{removal.title}</div>)}
+            {diff.removals.map(removal => {
+              return (
+                <ul class="dress-list-item" key={removal.id}>
+                  <li><a href={`/costume_items/${removal.id}`}>{removal.title}</a></li>
+                </ul>
+              )
+            })
+            }
           </div>
           <div className='diff-item'>
             <h5>Additions</h5>
-              {diff.additions.map(addition => <div key={addition.id}>{addition.title}</div>)}
+            {diff.additions.map(addition => {
+              return (
+                <ul class="dress-list-item" key={addition.id}>
+                  <li><a href={`/costume_items/${addition.id}`}>{addition.title}</a></li>
+                </ul>
+              )
+            })
+            }
           </div>
           <div className='diff-item'>
             <h5>Repeats</h5>
-              {diff.repeats.map(repeat => <div key={repeat.id}>{repeat.title}</div>)}
+            {diff.repeats.map(repeat => {
+              return (
+                <ul class="dress-list-item" key={repeat.id}>
+                  <li><a href={`/costume_items/${repeat.id}`}>{repeat.title}</a></li>
+                </ul>
+              )
+            })
+            }
           </div>
         </div>
       </div>
@@ -100,45 +122,56 @@ export class DressingList extends React.Component {
     return (
       <Grid className='DressingList'>
         <Grid.Column>
-          <div style={{padding: 20}}>
-            {this.costumeCharactersScenes.map(ccs => {
-              const costume = costumes.find(costume => costume.id === ccs.costume_id)
+          <Accordion exclusive={false}>
+            <Accordion.Title as='h4' active={this.editorExpanded} index={0}
+                             onClick={() => this.editorExpanded = !this.editorExpanded}>
+              <Icon name='dropdown'/>
+              {this.editorExpanded ? 'Hide' : 'Show'} Editor
+            </Accordion.Title>
+            <Accordion.Content active={this.editorExpanded}>
+              <div style={{padding: 20}}>
+                {this.costumeCharactersScenes.map(ccs => {
+                  const costume = costumes.find(costume => costume.id === ccs.costume_id)
 
-              const scene = scenes.find(scene => scene.id === ccs.scene_id) || {}
-              const character = characters.find(character => character.id === ccs.character_id)
+                  const scene = scenes.find(scene => scene.id === ccs.scene_id) || {}
+                  const character = characters.find(character => character.id === ccs.character_id)
 
-              return (
-                <Form key={ccs.id}>
-                  <Form.Group widths='equal'>
-                    <Form.Select
-                      label='Scene'
-                      options={scenes.map(scene => scene.dropdownItem({image: null}))}
-                      value={scene.id}
-                      onChange={(event, data) => this.handleChange(ccs, 'scene_id', data.value)}
-                      placeholder='Scene'/>
+                  return (
+                    <Form key={ccs.id}>
+                      <Form.Group widths='equal'>
+                        <Form.Select
+                          label='Scene'
+                          options={scenes.map(scene => scene.dropdownItem({image: null}))}
+                          value={scene.id}
+                          onChange={(event, data) => this.handleChange(ccs, 'scene_id', data.value)}
+                          placeholder='Scene'/>
 
-                    <Form.Select
-                      label='Character'
-                      options={characters.map(character => character.dropdownItem({image: null}))}
-                      value={character.id}
-                      onChange={(event, data) => ccs.character_id = data.value}
-                      placeholder='Character'/>
+                        <Form.Select
+                          label='Character'
+                          options={characters.map(character => character.dropdownItem({image: null}))}
+                          value={character.id}
+                          onChange={(event, data) => ccs.character_id = data.value}
+                          placeholder='Character'/>
 
-                    <Form.Select
-                      label='Costume'
-                      options={costumes.map(costume => costume.dropdownItem({image: null}))}
-                      value={costume.id}
-                      onChange={(event, data) => ccs.costume_id = data.value}
-                      placeholder='Costume'/>
-                  </Form.Group>
-                </Form>
-              )
-            })}
-          </div>
+                        <Form.Select
+                          label='Costume'
+                          options={costumes.map(costume => costume.dropdownItem({image: null}))}
+                          value={costume.id}
+                          onChange={(event, data) => ccs.costume_id = data.value}
+                          placeholder='Costume'/>
+                      </Form.Group>
+                    </Form>
+                  )
+                })}
+              </div>
+            </Accordion.Content>
+          </Accordion>
           <div>
             {characters.map(character => {
               const costumes_characters_scenes = sortBy(character.costumes_characters_scenes, 'order_index')
-
+              if (costumes_characters_scenes.length === 0) {
+                return
+              }
               return (
                 <Segment>
                   <h3>{character.name}</h3>
