@@ -67,7 +67,7 @@ export class DressingList extends React.Component {
             <h5>Removals</h5>
             {diff.removals.map(removal => {
               return (
-                <ul class="dress-list-item" key={removal.id}>
+                <ul className="dress-list-item" key={removal.id}>
                   <li><a href={`/costume_items/${removal.id}`}>{removal.title}</a></li>
                 </ul>
               )
@@ -78,7 +78,7 @@ export class DressingList extends React.Component {
             <h5>Additions</h5>
             {diff.additions.map(addition => {
               return (
-                <ul class="dress-list-item" key={addition.id}>
+                <ul className="dress-list-item" key={addition.id}>
                   <li><a href={`/costume_items/${addition.id}`}>{addition.title}</a></li>
                 </ul>
               )
@@ -89,7 +89,7 @@ export class DressingList extends React.Component {
             <h5>Repeats</h5>
             {diff.repeats.map(repeat => {
               return (
-                <ul class="dress-list-item" key={repeat.id}>
+                <ul className="dress-list-item" key={repeat.id}>
                   <li><a href={`/costume_items/${repeat.id}`}>{repeat.title}</a></li>
                 </ul>
               )
