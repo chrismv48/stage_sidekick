@@ -17,18 +17,6 @@ export class EditableField extends React.Component {
 
   @observable editing = false
 
-  // renderDisplayMode() {
-  //   const {fieldType} = this.props
-  //   switch (fieldType) {
-  //     case "text":
-  //       return this.renderTextDisplayMode()
-  //     case "textarea":
-  //       return this.renderTextareaDisplayMode()
-  //     default:
-  //       return this.renderTextDisplayMode()
-  //   }
-  // }
-
   renderEditMode() {
     const {fieldType} = this.props
     switch (fieldType) {
@@ -43,30 +31,13 @@ export class EditableField extends React.Component {
     }
   }
 
-  // renderTextareaDisplayMode() {
-  //   return (
-  //     <p className='display-input textarea-input'>
-  //       {
-  //         this.resource[this.props.field] ?
-  //           this.resource[this.props.field] :
-  //           <span className='empty-field'>Click to edit</span>
-  //       }
-  //     </p>
-  //   )
-  // }
-
-  // renderTextDisplayMode() {
-  //   const {field, renderField} = this.props
-  //   return (
-  //     <Input transparent className='display-input text-input'>
-  //       {
-  //         this.resource[this.props.field] ?
-  //           this.resource[this.props.field] :
-  //           <span className='empty-field'>Click to edit</span>
-  //       }
-  //     </Input>
-  //   )
-  // }
+  handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      this.saveChange()
+    } else if (e.key === 'Escape') {
+      this.handleDiscardInput()
+    }
+  }
 
   renderTextareaEditMode() {
     return (
@@ -103,6 +74,7 @@ export class EditableField extends React.Component {
         type='text'
         size='mini'
         action
+        onKeyDown={e => this.handleKeyDown(e)}
       >
         <input/>
         <Button size='mini' icon='checkmark' onMouseDown={this.saveChange}/>
@@ -121,7 +93,6 @@ export class EditableField extends React.Component {
           selection
           search
           value={dropdownValue}
-          // compact
           onChange={(event, data) => this.resource[field] = data.value}
           {...dropdownOptions}
         />
@@ -146,7 +117,6 @@ export class EditableField extends React.Component {
   handleOnBlur = () => {
     // If the user has made changes, we want to protect against accidental clicks and make them explicitly click the x button
     if (!this.resource.modified) {
-      // this.resource.revert()
       this.editing = false
     }
   }

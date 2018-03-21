@@ -2,7 +2,7 @@ class CostumeItemsController < ApplicationController
   before_action :set_costume_item, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:costume_id, :note_ids, :images]
+  ASSOCIATIONS_TO_INCLUDE = [:costume_id, :note_ids, :images, :comments]
 
   # GET /costume_items
   def index
@@ -38,6 +38,10 @@ class CostumeItemsController < ApplicationController
 
       if params[:images]
         reconcile_images(@costume_item, params[:images])
+      end
+
+      if params[:comments]
+        reconcile_comments(@costume_item, params[:comments])
       end
 
       render json: build_json_response(@costume_item, ASSOCIATIONS_TO_INCLUDE)

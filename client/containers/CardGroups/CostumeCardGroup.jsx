@@ -3,13 +3,29 @@ import {inject, observer} from "mobx-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import {computed, observable} from "mobx";
 
 @inject("resourceStore", "uiStore") @observer
 export class CostumeCardGroup extends React.Component {
 
+  @observable loading = true
+
   componentDidMount() {
-    this.props.resourceStore.loadCostumes()
+    Promise.all([
+      this.props.resourceStore.loadCostumes()
+    ]).then(() => this.loading = false)
   }
+
+  @computed get costumes() {
+    const {costumeIds, resourceStore} = this.props
+
+    if (costumeIds) {
+      return resourceStore.costumes.filter(costume => costumeIds.includes(costume.id))
+    } else {
+      return resourceStore.costume
+    }
+  }
+
 
   handleEditCostume = (event, costume) => {
     event.preventDefault()
@@ -43,9 +59,8 @@ export class CostumeCardGroup extends React.Component {
   }
 
   render() {
-    const {costumes, isLoading} = this.props.resourceStore
     let {showResourceSidebar, hideResourceSidebar} = this.props.uiStore
-    if (isLoading) {
+    if (this.loading) {
       return (
         <ContentLoader/>
       )
@@ -53,7 +68,7 @@ export class CostumeCardGroup extends React.Component {
 
     return (
       <CardGroup resource='costumes'>
-        {costumes.map((costume, i) => {
+        {this.costumes.map((costume, i) => {
             return (
               <DisplayCard
                 cardImage={costume.cardImage}

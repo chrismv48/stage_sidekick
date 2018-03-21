@@ -11,11 +11,11 @@ import ContentLoader from "components/ContentLoader/ContentLoader";
 export class CostumeForm extends React.Component {
 
   @computed get costume() {
-    return this.props.resourceStore.costumes.find(costume => costume.id === this.props.costumeId)
+    return this.props.resourceStore.costumes.find(costume => costume.id === this.props.costumeItemId)
   }
 
   @computed get costumeStaged() {
-    return this.props.resourceStore.getStagedResource('costumes', this.props.costumeId)
+    return this.props.resourceStore.getStagedResource('costumes', this.props.costumeItemId)
   }
 
   @observable loading = true

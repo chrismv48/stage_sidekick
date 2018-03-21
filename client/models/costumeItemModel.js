@@ -151,6 +151,7 @@ CostumeItem.FIELD_NAMES = {
   brand: null,
   cost: null,
   images: [],
+  comments: [],
   updated_at: null,
   costume_id: null,
   note_ids: []

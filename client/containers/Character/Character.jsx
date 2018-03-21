@@ -29,7 +29,7 @@ export class Character extends React.Component {
   componentDidMount() {
     this.loading = true
     Promise.all([
-      this.props.resourceStore.loadCharacters(this.costumeId),
+      this.props.resourceStore.loadCharacters(this.costumeItemId),
       this.props.resourceStore.loadScenes(),
       this.props.resourceStore.loadRoles(),
     ]).then(() => this.loading = false)

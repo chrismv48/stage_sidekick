@@ -19,7 +19,7 @@ export class Costume extends React.Component {
   @observable showLightbox = false
 
   @computed get costumeId() {
-    return this.props.costumeId || parseInt(this.props.match.params.costumeId)
+    return this.props.costumeItemId || parseInt(this.props.match.params.costumeItemId)
   }
 
   @computed get costume() {
@@ -116,7 +116,7 @@ export class Costume extends React.Component {
           <EditableField resource='costumes' resourceId={this.costumeId} field='description' fieldType='textarea'/>
           <Header as='h3' dividing>
             Costume Items
-            {this.costume.costumeItemIds.length > 0 &&
+            {this.costume.costume_item_ids.length > 0 &&
             <span style={{float: 'right'}}>
               <EditIcon resource='costumes' resourceId={this.costumeId}/>
             </span>
@@ -124,8 +124,8 @@ export class Costume extends React.Component {
           </Header>
 
           <CardGroup resource={'costume_items'}>
-            {this.costume.costumeItemIds.length > 0 ?
-              <CostumeItemCardGroup costumeItemIds={this.costume.costumeItemIds}/>
+            {this.costume.costume_item_ids.length > 0 ?
+              <CostumeItemCardGroup costumeItemIds={this.costume.costume_item_ids}/>
               : this.renderEmptyContent()
             }
           </CardGroup>
