@@ -22,7 +22,7 @@ export class CostumeCardGroup extends React.Component {
     if (costumeIds) {
       return resourceStore.costumes.filter(costume => costumeIds.includes(costume.id))
     } else {
-      return resourceStore.costume
+      return resourceStore.costumes
     }
   }
 

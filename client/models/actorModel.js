@@ -208,6 +208,7 @@ Actor.FIELD_NAMES = {
   character_ids: [],
   costume_ids: [],
   scene_ids: [],
+  note_ids: [],
   updated_at: null
 }
 

@@ -3,8 +3,8 @@ import {computed, extendObservable, observable, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import {camelCase, snakeCase, upperFirst} from 'lodash'
 import {pluralizeResource, singularizeResource} from "../helpers";
-import {Label} from "semantic-ui-react";
-import {EditableField} from "components/EditableField/EditableField";
+import {Icon, Label} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 class Note extends BaseModel {
 
@@ -33,7 +33,7 @@ class Note extends BaseModel {
       if (this.updated_at > role.updated_at) {
         return this.assignee_ids.includes(role.id)
       } else {
-        return role.note_ids.includes(this.id)
+        return role.assigned_note_ids.includes(this.id)
       }
     })
   }
@@ -66,16 +66,44 @@ class Note extends BaseModel {
   @computed get tableData() {
     return [
       {
+        field: 'status',
+        header: 'Status',
+        filterOptions: {
+          field: 'status',
+          compact: true,
+          multiple: true,
+          options: Note.statusesDropdownOptions,
+          defaultValue: ['Assigned', 'In Progress']
+        },
+        renderCell: (() => {
+          switch (this.status) {
+            case "Assigned":
+              return <Icon size='large' name='inbox' color='purple' title='Assigned'/>
+
+            case "In Progress":
+              return <Icon size='large' name='wait' color='blue' title='In Progress'/>
+            case "Complete":
+              return <Icon size='large' name='check circle' color='green' title='Completed'/>
+            default:
+              return 'Assigned'
+          }
+        })(),
+        cellProps: {singleLine: true, textAlign: 'center'},
+      },
+      {
+        field: 'priority',
+        header: 'Priority',
+        filterOptions: {
+          multiple: true,
+          field: 'priority',
+          compact: true,
+          options: Note.prioritiesDropdownOptions
+        },
+        cellProps: {textAlign: 'center'}
+      },
+      {
         field: 'department',
         header: 'Department',
-        renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='department'
-            fieldType='dropdown'
-            dropdownOptions={{options: this.store.resources['roles'].departmentDropdownOptions}}
-          />,
         filterOptions: {
           multiple: true,
           field: 'department',
@@ -84,47 +112,18 @@ class Note extends BaseModel {
         }
       },
       {
-        field: 'priority',
-        header: 'Priority',
-        renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='priority'
-            fieldType='dropdown'
-            dropdownOptions={{options: Note.prioritiesDropdownOptions}}
-          />,
-        filterOptions: {
-          multiple: true,
-          field: 'priority',
-          compact: true,
-          options: Note.prioritiesDropdownOptions
-        },
-        cellProps: {singleLine: true}
-      },
-      {
         field: 'title',
         header: 'Note',
-        renderCell:
-          <EditableField resource='notes' resourceId={this.id} field='title'/>,
         cellProps: {width: 6}
       },
       {
         field: 'actor_id',
         header: 'Actor',
         renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='actor_id'
-            fieldType='dropdown'
-            dropdownOptions={{options: this.store.actors.map(actor => actor.dropdownItem())}}
-          >
-            {this.actor &&
-            <a href={`/actors/${this.actor.id}`}>
+        this.actor &&
+        <a href={`/cast/${this.actor.id}`}>
               {this.actor.fullName}
-            </a>}
-          </EditableField>,
+        </a>,
         filterOptions: {
           multiple: true,
           field: 'actor_id',
@@ -135,56 +134,36 @@ class Note extends BaseModel {
         field: 'scene_id',
         header: 'Scene',
         renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='scene_id'
-            fieldType='dropdown'
-            dropdownOptions={{options: this.store.dropdownOptions('scenes')}}
-          >
-            {this.scene &&
+        this.scene &&
             <a href={`/scenes/${this.scene.id}`}>
               {this.scene.title}
-            </a>}
-          </EditableField>,
+            </a>,
         filterOptions: {
           multiple: true,
           field: 'scene_id',
           options: this.store.dropdownOptions('scenes')
-        }
-        // cellProps: {singleLine: true}
+        },
+        cellProps: {width: 2}
       },
       {
         field: 'noteableComposite',
         header: 'Item',
         renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='noteableComposite'
-            fieldType='dropdown'
-            dropdownOptions={{options: this.noteableDropdownOptions}}
-          >
             <Label as='a' image key={this.noteable.id}>
               <img src={this.noteable.avatar}/>
               {this.noteable && (this.noteable.title || this.noteable.name)}
-            </Label>
-          </EditableField>,
+            </Label>,
+        filterOptions: {
+          options: this.noteableDropdownOptions
+        },
         cellProps: {singleLine: true}
       },
       {
         field: 'assignee_ids',
         header: 'Assignees',
         renderCell:
-          <EditableField
-            resource='notes'
-            resourceId={this.id}
-            field='assignee_ids'
-            fieldType='dropdown'
-            dropdownOptions={{options: this.store.dropdownOptions('roles'), multiple: true}}
-          >
-            {this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>{role.label()}</div>)}
-          </EditableField>,
+          this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}><Link
+            to={`/roles/${role.id}`}>{role.fullName}</Link></div>),
         sortKey: 'assignees.length',
         filterOptions: {
           multiple: true,
@@ -200,14 +179,19 @@ class Note extends BaseModel {
   @computed get formFields() {
     return [
       {
-        field: 'department',
+        field: 'status',
         inputType: 'dropdown',
-        inputOptions: {options: this.store.resources['roles'].departmentDropdownOptions},
+        inputOptions: {options: Note.statusesDropdownOptions},
       },
       {
         field: 'priority',
         inputType: 'dropdown',
         inputOptions: {options: Note.prioritiesDropdownOptions},
+      },
+      {
+        field: 'department',
+        inputType: 'dropdown',
+        inputOptions: {options: this.store.resources['roles'].departmentDropdownOptions},
       },
       {
         field: 'noteableComposite',
@@ -226,6 +210,7 @@ class Note extends BaseModel {
         label: 'Actor',
         inputType: 'dropdown',
         inputOptions: {options: this.store.dropdownOptions('actors')},
+        defaultVisible: false
       },
       {
         field: 'assignee_ids',
@@ -295,7 +280,7 @@ Note.RESOURCE = 'notes'
 Note.RELATIONSHIPS = {
   scene: 'notes',
   actor: 'notes',
-  roles: 'notes',
+  roles: 'assigned_notes',
   costume_items: 'notes',
   costumes: 'notes',
   characters: 'notes'
@@ -303,6 +288,12 @@ Note.RELATIONSHIPS = {
 
 Note.PRIORITIES = ['1', '2', '3']
 Note.prioritiesDropdownOptions = Note.PRIORITIES.map(n => {
+  return {text: n, value: n}
+})
+
+Note.STATUSES = ['Assigned', 'In Progress', 'Completed']
+
+Note.statusesDropdownOptions = Note.STATUSES.map(n => {
   return {text: n, value: n}
 })
 

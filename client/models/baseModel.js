@@ -1,5 +1,5 @@
 import {computed, extendObservable, isObservable, isObservableArray, observable, transaction} from 'mobx'
-import {camelCase, compact, reject, remove, sortBy, upperFirst} from 'lodash'
+import {camelCase, capitalize, compact, reject, remove, replace, sortBy, upperFirst} from 'lodash'
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource, singularizeResource} from "../helpers";
 import {createViewModel} from 'mobx-utils'
@@ -44,8 +44,18 @@ class BaseModel {
   }
 
   get resource() {
-    // costumes
+    // costume_items
     return this.constructor.RESOURCE
+  }
+
+  get resourcePretty() {
+    // Costume Items
+    return capitalize(replace(this.constructor.RESOURCE, /_/g, ' '))
+  }
+
+  get resourcePrettySingular() {
+    // Costume Item
+    return this.resourcePretty.slice(0, -1)
   }
 
   get apiEndpoint() {

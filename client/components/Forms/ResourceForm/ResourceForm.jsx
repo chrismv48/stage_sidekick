@@ -56,7 +56,6 @@ export class ResourceForm extends React.Component {
   }
 
   renderDropdownInput(field, label, formFieldOptions, inputOptions) {
-    debugger
     return (
       <Form.Field key={label} {...formFieldOptions}>
         <label>{label}</label>
@@ -64,6 +63,7 @@ export class ResourceForm extends React.Component {
           fluid
           selection
           placeholder={label}
+          value={this.resource[field]}
           onChange={(event, data) => this.resource[field] = data.value}
           {...inputOptions}
         />

@@ -89,7 +89,7 @@ Role.FIELD_NAMES = {
   last_name: null,
   images: [],
   user: {},
-  note_ids: [],
+  assigned_note_ids: [],
   completed_note_ids: [],
   updated_at: null,
 }

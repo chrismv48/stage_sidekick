@@ -34,7 +34,7 @@ export class ResourceTable extends React.Component {
 
   @computed get columns() {
     // Since tableColumns is an instance method of the resource model.
-    return this.rows.length > 0 ? this.rows[0].tableData : []
+    return (this.rows.length === 0 || this.loading) ? [] : this.rows[0].tableData
   }
 
   @computed get visibleColumns() {
@@ -62,10 +62,12 @@ export class ResourceTable extends React.Component {
     })
   }
 
-  constructor(props) {
-    super(props)
-
-    this.hiddenColumns = this.initializeHiddenColumns()
+  initializeDefaultFilters() {
+    for (let col of this.columns.filter(col => col.filterOptions)) {
+      if (col['filterOptions']['defaultValue']) {
+        this.activeFilters.set(col.field, col['filterOptions']['defaultValue'])
+      }
+    }
   }
 
   initializeHiddenColumns() {
@@ -107,7 +109,11 @@ export class ResourceTable extends React.Component {
     this.loading = true
     const loadRelationships = Object.keys(this.model.RELATIONSHIPS).map(relationship => this.props.resourceStore.loadResource(pluralizeResource(relationship)))
     loadRelationships.push(this.props.resourceStore.loadResource(pluralizeResource(resource)))
-    Promise.all(loadRelationships).then(() => this.loading = false)
+    Promise.all(loadRelationships).then(() => {
+      this.loading = false
+      this.initializeHiddenColumns()
+      this.initializeDefaultFilters()
+    })
   }
 
   render() {
@@ -145,14 +151,15 @@ export class ResourceTable extends React.Component {
           </div>
           {this.columns.map(column => {
             if (column.filterOptions) {
-              const {multiple, options, field = column.field, ...otherOptions} = column.filterOptions
+              const {multiple, options, field = column.field, defaultValue, ...otherOptions} = column.filterOptions
+
               let dropdownValue = this.activeFilters.get(field) || (multiple ? [] : '')
               dropdownValue = isObservableArray(dropdownValue) ? dropdownValue.slice() : dropdownValue
               return (
                 <div className='filter-item' key={field}>
                   <Dropdown
                     selection
-                    closeOnChange
+                    selectOnBlur={false}
                     placeholder={`Filter ${column.header}`}
                     multiple={multiple}
                     options={options}
@@ -172,10 +179,12 @@ export class ResourceTable extends React.Component {
           <Table
             sortable
             celled
+            definition
             className='resource-table'
           >
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell/>
                 {this.visibleColumns.map(column => {
                   return (
                     <Table.HeaderCell
@@ -196,10 +205,28 @@ export class ResourceTable extends React.Component {
                 const visibleColumnFields = this.visibleColumns.map(col => col.field)
                   return (
                     <Table.Row
-                      style={{cursor: 'pointer'}}
                       key={row.id}
                       onClick={() => showResourceSidebar(resource, row.id)}
                     >
+                      <Table.Cell collapsing>
+                        <span className='row-actions'>
+                          <Dropdown
+                            icon='ellipsis horizontal'
+                          >
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                icon='edit'
+                                text={`Edit ${row.resourcePrettySingular}`}
+                                onClick={() => this.props.uiStore.showModal(
+                                  'RESOURCE_MODAL', {resourceName: resource, resourceId: row.id}
+                                )}
+                              />
+                              <Dropdown.Item text={`Duplicate ${row.resourcePrettySingular}`} icon='copy' onClick={() => null} disabled/>
+                              <Dropdown.Item text={`Delete ${row.resourcePrettySingular}`} icon='trash' onClick={() => row.destroy()}/>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </span>
+                      </Table.Cell>
                       {row.tableData.filter(col => visibleColumnFields.includes(col.field)).map(column => {
                         return (
                           <Table.Cell

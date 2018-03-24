@@ -14,7 +14,7 @@ const resourceToComponent = {
   'characters': Character,
   'scenes': Scene,
   'costumes': Costume,
-  'actors': Actor
+  'actors': Actor,
 }
 
 @inject("resourceStore", "uiStore") @observer
@@ -32,7 +32,6 @@ class Layout extends Component {
     const otherProps = {
       [singularResourceIdCamelCased(resource.RESOURCE)]: selectedResourceId
     }
-    debugger
     return (
       <div className='item-detail-sidebar'>
         <Icon name='remove circle' className='hide-sidebar-icon'
@@ -87,15 +86,20 @@ class Layout extends Component {
                 Costumes
               </Menu.Item>
 
+              <Menu.Item as={Link} to='/notes' id="sidebar-button" name='sticky note' active={thisPage === '/notes'}>
+                <Icon name='sticky note'/>
+                Notes
+              </Menu.Item>
+
               <Menu.Item id="sidebar-button" name='budget' active={thisPage === 'budget'}>
                 <Icon name='dollar'/>
                 Budget
               </Menu.Item>
 
-              <Menu.Item id="sidebar-button" name='gallery' active={thisPage === 'gallery'}>
-                <Icon name='camera retro'/>
-                Gallery
-              </Menu.Item>
+              {/*<Menu.Item id="sidebar-button" name='gallery' active={thisPage === 'gallery'}>*/}
+                {/*<Icon name='camera retro'/>*/}
+                {/*Gallery*/}
+              {/*</Menu.Item>*/}
 
             </Menu>
           </div>

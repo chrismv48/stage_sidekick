@@ -3,6 +3,15 @@
     margin: 20px 0;
   }
 
+  .row-actions {
+    color: hsl(0, 0%, 73%);
+
+    &:hover {
+      cursor: pointer;
+      color: hsl(0, 0%, 53%);
+    }
+  }
+
   .filters-container {
     display: flex;
     padding: 10px;

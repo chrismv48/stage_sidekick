@@ -12,8 +12,8 @@ class Costume extends BaseModel {
         field: 'title',
         header: 'Title',
         renderCell:
-          <span onClick={() => costume.store.rootStore.uiStore.showResourceSidebar(costume.id, costume.resource)}>
-          <CostumeFragment costume={costume}/>
+          <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
+          <CostumeFragment costume={this}/>
         </span>,
         filterOptions: {
           multiple: true,
@@ -30,9 +30,9 @@ class Costume extends BaseModel {
         header: 'Character Scenes',
         renderCell:
           <Label.Group>
-            {costume.costumes_characters_scenes.map(costumes_characters_scene => {
-              const character = costume.characters.find(character => character.id === costumes_characters_scene.character_id)
-              const scene = costume.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
+            {this.costumes_characters_scenes.map(costumes_characters_scene => {
+              const character = this.characters.find(character => character.id === costumes_characters_scene.character_id)
+              const scene = this.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
               return (
                 <Label as='a' image key={costumes_characters_scene.id}>
                   <Image avatar src={character.avatar}/>
@@ -52,7 +52,7 @@ class Costume extends BaseModel {
         header: 'Characters',
         renderCell:
           <Label.Group>
-            {costume.characters.map(character =>
+            {this.characters.map(character =>
               <Label as='a' image key={character.id}>
                 <Image avatar src={character.avatar}/>
                 {character.name}
@@ -73,7 +73,7 @@ class Costume extends BaseModel {
         header: 'Scenes',
         renderCell:
           <Label.Group>
-            {costume.scenes.map(scene =>
+            {this.scenes.map(scene =>
               <Label as='a' image key={scene.id}>
                 <Image avatar src={scene.avatar}/>
                 {scene.title}
