@@ -35,13 +35,15 @@ class Costume extends BaseModel {
               const character = this.characters.find(character => character.id === costumes_characters_scene.character_id)
               const scene = this.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
               return (
-                <Label as={Link} to={character.href} image key={costumes_characters_scene.id}>
-                  <Image avatar src={character.avatar}/>
-                  {character.name}
-                  <Label.Detail as={Link} to={scene.href}>
-                    {scene && scene.title}
-                  </Label.Detail>
-                </Label>
+                <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                  <Label as={Link} to={character.href} image key={costumes_characters_scene.id}>
+                    <Image avatar src={character.avatar}/>
+                    {character.name}
+                    <Label.Detail as={Link} to={scene.href}>
+                      {scene && scene.title}
+                    </Label.Detail>
+                  </Label>
+                </div>
               )
             })}
           </Label.Group>,
@@ -53,10 +55,12 @@ class Costume extends BaseModel {
         renderCell:
           <Label.Group>
             {this.costume_items.map(costume_item =>
-              <Label as={Link} to={costume_item.href} image key={costume_item.id}>
-                <Image avatar src={costume_item.avatar}/>
-                {costume_item.title}
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={costume_item.href} image key={costume_item.id}>
+                  <Image avatar src={costume_item.avatar}/>
+                  {costume_item.title}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         filterOptions: {
@@ -72,10 +76,12 @@ class Costume extends BaseModel {
         renderCell:
           <Label.Group>
             {this.characters.map(character =>
-              <Label as={Link} to={character.href} image key={character.id}>
-                <Image avatar src={character.avatar}/>
-                {character.name}
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={character.href} image key={character.id}>
+                  <Image avatar src={character.avatar}/>
+                  {character.name}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         filterOptions: {
@@ -92,10 +98,12 @@ class Costume extends BaseModel {
         renderCell:
           <Label.Group>
             {this.scenes.map(scene =>
-              <Label as='a' image key={scene.id}>
-                <Image avatar src={scene.avatar}/>
-                {scene.title}
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as='a' image key={scene.id}>
+                  <Image avatar src={scene.avatar}/>
+                  {scene.title}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         filterOptions: {
