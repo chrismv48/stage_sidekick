@@ -5,16 +5,16 @@ import {Link} from 'react-router-dom'
 import PropTypes from "prop-types";
 
 
-const CostumeFragmentContent = ({costume}) => {
+const CostumeItemFragmentContent = ({costumeItem}) => {
   return (
     <div className='fragment-container'>
       <div>
-        <Image avatar src={costume.avatar}/>
+        <Image avatar src={costumeItem.avatar}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={costume.href} target="_blank">
-            {costume.title}
+          <Link to={costumeItem.href} target="_blank">
+            {costumeItem.title}
           </Link>
         </Header>
       </div>
@@ -22,30 +22,30 @@ const CostumeFragmentContent = ({costume}) => {
   )
 }
 
-class CostumeFragment extends React.Component {
+class CostumeItemFragment extends React.Component {
 
   render() {
-    const {costume, popup} = this.props
+    const {costumeItem, popup} = this.props
 
-    if (!costume) {
+    if (!costumeItem) {
       return null
     }
 
     if (!popup) {
-      return <CostumeFragmentContent costume={costume}/>
+      return <CostumeItemFragmentContent costumeItem={costumeItem}/>
     }
 
     return (
       <Popup
-        trigger={CostumeFragmentContent({costume})}
+        trigger={CostumeItemFragmentContent({costumeItem})}
         position='bottom center'
       >
         <Popup.Header>
-          {costume.title}
+          {costumeItem.title}
         </Popup.Header>
         <Popup.Content>
           <div className='content-divider'><strong>Description</strong></div>
-          {costume.description}
+          {costumeItem.description}
         </Popup.Content>
       </Popup>
     )
@@ -53,14 +53,14 @@ class CostumeFragment extends React.Component {
 }
 
 
-CostumeFragment.propTypes = {
-  costume: PropTypes.object,
+CostumeItemFragment.propTypes = {
+  costumeItem: PropTypes.object,
   popup: PropTypes.bool
 };
 
-CostumeFragment.defaultProps = {
+CostumeItemFragment.defaultProps = {
   popup: false
 }
 
 
-export default CostumeFragment
+export default CostumeItemFragment

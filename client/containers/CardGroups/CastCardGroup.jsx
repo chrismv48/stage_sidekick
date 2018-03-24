@@ -5,6 +5,7 @@ import {Header} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class CastCardGroup extends React.Component {
@@ -24,7 +25,7 @@ export class CastCardGroup extends React.Component {
 
     const characterTags = actor.characterIds.map(characterId => {
       const character = this.props.resourceStore.characters.find(character => character.id === characterId)
-      return (<a key={character.id} href={`characters/${characterId}`}>{character.name}</a>)
+      return (<Link key={character.id} to={character.href}>{character.name}</Link>)
     })
     return (
       <div>

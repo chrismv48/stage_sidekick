@@ -11,6 +11,7 @@ import EditIcon from "components/EditIcon/EditIcon";
 import {SceneCardGroup} from "containers/CardGroups/SceneCardGroup";
 import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class Character extends React.Component {
@@ -95,7 +96,7 @@ export class Character extends React.Component {
           <Header as="h1">
             {this.character.name}
             <Header.Subheader>
-              Played by <a href={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+              Played by <Link to={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</Link>
             </Header.Subheader>
           </Header>
           <Header as='h3' dividing>

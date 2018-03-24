@@ -7,6 +7,7 @@ import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
 import CostumeItemTable from "./CostumeItemTable";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class PieceList extends React.Component {
@@ -56,11 +57,11 @@ export class PieceList extends React.Component {
         <Image style={{maxHeight: 200}} centered rounded src={costume.primaryImage}/>
         <div className='section'>
           <strong>
-            <a href={`/costumes/${costume.id}`}>{costume.title}</a>
+            <Link to={costume.href}>{costume.title}</Link>
           </strong>
         </div>
         <div className='section'>
-          <a href={"/characters/${character.id}"}>{character.name}</a>  <span className='divider'>|</span>  <a href={"/characters/${actor.id}"}>{actor.fullName}</a>
+          <Link to={character.href}>{character.name}</Link>  <span className='divider'>|</span>  <Link to={actor.href}>{actor.fullName}</Link>
         </div>
       </div>
     )

@@ -1,8 +1,8 @@
 import React from 'react'
 import {computed, transaction} from 'mobx'
 import BaseModel from "./baseModel";
-import SceneFragment from "components/Fragment/SceneFragment";
-import {Icon, Image, Label} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 class Scene extends BaseModel {
 
@@ -11,10 +11,7 @@ class Scene extends BaseModel {
       {
         field: 'title',
         header: 'Scene',
-        renderCell:
-          <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
-            <SceneFragment scene={this}/>
-          </span>,
+        renderCell: <Link to={this.href}>{this.title}</Link>,
         filterOptions: {
           multiple: true,
           options: this.store.dropdownOptions('scenes')
@@ -31,7 +28,7 @@ class Scene extends BaseModel {
       },
       {
         field: 'setting',
-        header: 'Setting'
+        header: 'Setting',
       },
       {
         field: 'characters',
@@ -39,10 +36,9 @@ class Scene extends BaseModel {
         renderCell:
           <Label.Group>
             {this.characters.map(character =>
-              <Label as='a' image key={character.id}>
+              <Label as={Link} to={`/characters/${character.id}`} image key={character.id}>
                 <Image avatar src={character.avatar}/>
                 {character.name}
-                <Icon name='delete'/>
               </Label>
             )}
           </Label.Group>,
@@ -140,5 +136,7 @@ Scene.RELATIONSHIPS = {
 Scene.RESOURCE = 'scenes'
 
 Scene.API_ENDPOINT = 'scenes'
+
+Scene.SETTINGS = ['Morning', 'Night', 'Afternoon', 'Sunset', 'Indoors']
 
 export default Scene

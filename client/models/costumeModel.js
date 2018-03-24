@@ -2,7 +2,8 @@ import React from 'react'
 import {computed, extendObservable, observable, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import CostumeFragment from "../components/Fragment/CostumeFragment";
-import {Icon, Image, Label} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 class Costume extends BaseModel {
 
@@ -10,7 +11,7 @@ class Costume extends BaseModel {
     return [
       {
         field: 'title',
-        header: 'Title',
+        header: 'Costumes',
         renderCell:
           <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
           <CostumeFragment costume={this}/>
@@ -34,12 +35,11 @@ class Costume extends BaseModel {
               const character = this.characters.find(character => character.id === costumes_characters_scene.character_id)
               const scene = this.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
               return (
-                <Label as='a' image key={costumes_characters_scene.id}>
+                <Label as={Link} to={character.href} image key={costumes_characters_scene.id}>
                   <Image avatar src={character.avatar}/>
                   {character.name}
-                  <Label.Detail>
+                  <Label.Detail as={Link} to={scene.href}>
                     {scene && scene.title}
-                    <Icon name='delete'/>
                   </Label.Detail>
                 </Label>
               )
@@ -48,15 +48,33 @@ class Costume extends BaseModel {
         sortKey: 'costumes_characters_scenes.length'
       },
       {
+        field: 'costume_items',
+        header: 'Costume Items',
+        renderCell:
+          <Label.Group>
+            {this.costume_items.map(costume_item =>
+              <Label as={Link} to={costume_item.href} image key={costume_item.id}>
+                <Image avatar src={costume_item.avatar}/>
+                {costume_item.title}
+              </Label>
+            )}
+          </Label.Group>,
+        filterOptions: {
+          multiple: true,
+          field: 'costume_item_ids',
+          options: this.store.dropdownOptions('costume_items')
+        },
+        sortKey: 'costume_items.length',
+      },
+      {
         field: 'characters',
         header: 'Characters',
         renderCell:
           <Label.Group>
             {this.characters.map(character =>
-              <Label as='a' image key={character.id}>
+              <Label as={Link} to={character.href} image key={character.id}>
                 <Image avatar src={character.avatar}/>
                 {character.name}
-                <Icon name='delete'/>
               </Label>
             )}
           </Label.Group>,
@@ -77,7 +95,6 @@ class Costume extends BaseModel {
               <Label as='a' image key={scene.id}>
                 <Image avatar src={scene.avatar}/>
                 {scene.title}
-                <Icon name='delete'/>
               </Label>
             )}
           </Label.Group>,

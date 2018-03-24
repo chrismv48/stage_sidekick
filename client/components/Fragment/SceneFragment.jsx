@@ -12,7 +12,7 @@ const SceneFragmentContent = ({scene}) => {
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={`scenes/${scene.id}`} target="_blank">
+          <Link to={scene.href} target="_blank">
             {scene.order_index} - {scene.title}
           </Link>
           <Header.Subheader>{scene.setting} | {scene.length_in_minutes}m</Header.Subheader>

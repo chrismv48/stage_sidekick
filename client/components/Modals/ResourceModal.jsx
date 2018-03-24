@@ -56,6 +56,7 @@ export default class ResourceModal extends React.Component {
 
     // Do this so we get resourceId personalized for custom forms like CostumeForm
     otherProps[resourceStaged.singularResourceIdCamelCased] = resourceId
+    debugger
 
     const ResourceForm = RESOURCE_FORM_COMPONENTS[resourceName]
     return (

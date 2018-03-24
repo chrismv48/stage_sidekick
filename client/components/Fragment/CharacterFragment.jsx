@@ -4,7 +4,7 @@ import './Fragment.scss'
 import {Link} from 'react-router-dom'
 import PropTypes from "prop-types";
 
-const CharacterFragmentContent = ({character, actor}) => {
+const CharacterFragmentContent = (character, actor) => {
   return (
     <div className='fragment-container'>
       <div>
@@ -12,11 +12,11 @@ const CharacterFragmentContent = ({character, actor}) => {
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={`characters/${character.id}`} target="_blank">
+          <Link to={character.href} target="_blank">
             {character.name}
           </Link>
           {actor &&
-          <Header.Subheader>Played by <a href={`/cast/${actor.id}`}>{actor.fullName}</a></Header.Subheader>
+          <Header.Subheader>Played by <Link to={actor.href}>{actor.fullName}</Link></Header.Subheader>
           }
         </Header>
       </div>
@@ -30,22 +30,29 @@ class CharacterFragment extends React.Component {
   render() {
     const {character, actor, popup} = this.props
 
+    if (!character) {
+      return null
+    }
+
     if (!popup) {
       return <CharacterFragmentContent character={character} actor={actor}/>
     }
 
     return (
       <Popup
-        trigger={<CharacterFragmentContent character={character} actor={actor} />}
+        trigger={CharacterFragmentContent(character, actor)}
         position='bottom center'
       >
         <Popup.Header>
           {character.name}
         </Popup.Header>
         <Popup.Content>
-          <div className='content-divider'><strong>Played by</strong></div>
-          {actor.first_name} {actor.last_name}
-
+          {actor &&
+          <React.Fragment>
+            <div className='content-divider'><strong>Played by</strong></div>
+            {actor.first_name} {actor.last_name}
+          </React.Fragment>
+          }
           <div className='content-divider'><strong>Description</strong></div>
           {character.description}
         </Popup.Content>

@@ -1,7 +1,6 @@
 import React from 'react';
 import './CostumePlot.scss'
 import {Grid,} from 'semantic-ui-react'
-import {isEmpty} from "lodash";
 import 'react-table/react-table.css'
 import ReactTable from "react-table";
 import SceneFragment from "components/Fragment/SceneFragment";
@@ -29,7 +28,7 @@ export class CostumePlot extends React.Component {
   renderCharacter(characterId) {
     const {characters, actors} = this.props.resourceStore
     const character = characters.find(character => character.id === characterId)
-    const characterActor = isEmpty(character.actorIds) ? {} : actors.find(actor => actor.id === character.actorIds[0])
+    const characterActor = actors.find(actor => actor.id === character.actorIds[0])
     return (
       <CharacterFragment popup character={character} actor={characterActor} />
     )

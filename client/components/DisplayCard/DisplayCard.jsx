@@ -35,7 +35,6 @@ class DisplayCard extends React.Component {
       <Card
         raised
         className={classNames("DisplayCard", {'hover': showHoverState})}
-        // href={link}
         onMouseEnter={() => this.setState({showHoverState: true})}
         onMouseLeave={() => this.setState({showHoverState: false})}
         onClick={() => handleOnClick()}

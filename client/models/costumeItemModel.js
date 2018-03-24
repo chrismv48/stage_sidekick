@@ -1,7 +1,9 @@
 import React from 'react'
 import {computed} from 'mobx'
 import BaseModel from "./baseModel";
-import {Header, Icon, Image, Label} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
+import CostumeItemFragment from "components/Fragment/CostumeItemFragment";
+import {Link} from "react-router-dom";
 
 
 class CostumeItem extends BaseModel {
@@ -61,21 +63,17 @@ class CostumeItem extends BaseModel {
       {
         field: 'title',
         header: 'Title',
-        renderCell:
-          <Header as='h5'>
-            <Image avatar src={this.avatar}/>
-            {' '}{this.title}
-          </Header>,
+        renderCell: <CostumeItemFragment costumeItem={this}/>
       },
       {
         field: 'costume',
         header: 'Costume',
         renderCell:
-          <Label image key={this.costume.id}>
+          <Label as={Link} to={this.costume.href} image key={this.costume.id}>
             <Image avatar src={this.costume.avatar}/>
             {this.costume.title}
-            <Icon name='delete'/>
           </Label>,
+        cellOptions: {singleLine: true},
         filterOptions: {
           multiple: false,
           field: 'costume_id',
@@ -84,7 +82,8 @@ class CostumeItem extends BaseModel {
       },
       {
         field: 'description',
-        header: 'Description'
+        header: 'Description',
+        defaultVisible: false
       },
       {
         field: 'item_type',

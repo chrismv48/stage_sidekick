@@ -87,6 +87,10 @@ class BaseModel {
     return camelCase(this.singularResourceId)
   }
 
+  get href() {
+    return `/${this.resource}/${this.id}`
+  }
+
   constructor(store) {
     this.store = store
 

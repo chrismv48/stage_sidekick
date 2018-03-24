@@ -12,7 +12,7 @@ const ActorFragmentContent = ({actor}) => {
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={`cast/${actor.id}`} target="_blank">
+          <Link to={`cast/${actor.id}`}>
             {actor.fullName}
           </Link>
         </Header>

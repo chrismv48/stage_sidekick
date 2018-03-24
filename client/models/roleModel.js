@@ -55,7 +55,6 @@ class Role extends BaseModel {
     return (
       {
         image: {src: this.avatar, circular: true},
-        // content: this.title,
         text: this.fullName,
         value: this.id,
         key: this.id,

@@ -121,9 +121,9 @@ class Note extends BaseModel {
         header: 'Actor',
         renderCell:
         this.actor &&
-        <a href={`/cast/${this.actor.id}`}>
+        <Link to={this.actor.href}>
               {this.actor.fullName}
-        </a>,
+        </Link>,
         filterOptions: {
           multiple: true,
           field: 'actor_id',
@@ -135,9 +135,9 @@ class Note extends BaseModel {
         header: 'Scene',
         renderCell:
         this.scene &&
-            <a href={`/scenes/${this.scene.id}`}>
+            <Link to={this.scene.href}>
               {this.scene.title}
-            </a>,
+            </Link>,
         filterOptions: {
           multiple: true,
           field: 'scene_id',
@@ -163,7 +163,7 @@ class Note extends BaseModel {
         header: 'Assignees',
         renderCell:
           this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}><Link
-            to={`/roles/${role.id}`}>{role.fullName}</Link></div>),
+            to={role.href}>{role.fullName}</Link></div>),
         sortKey: 'assignees.length',
         filterOptions: {
           multiple: true,

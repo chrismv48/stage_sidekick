@@ -6,6 +6,7 @@ import {inject, observer} from "mobx-react";
 import {computed, observable} from "mobx";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 import {sortBy} from 'lodash'
+import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class DressingList extends React.Component {
@@ -68,7 +69,7 @@ export class DressingList extends React.Component {
             {diff.removals.map(removal => {
               return (
                 <ul className="dress-list-item" key={removal.id}>
-                  <li><a href={`/costume_items/${removal.id}`}>{removal.title}</a></li>
+                  <li><Link to={removal.href}>{removal.title}</Link></li>
                 </ul>
               )
             })
@@ -79,7 +80,7 @@ export class DressingList extends React.Component {
             {diff.additions.map(addition => {
               return (
                 <ul className="dress-list-item" key={addition.id}>
-                  <li><a href={`/costume_items/${addition.id}`}>{addition.title}</a></li>
+                  <li><Link to={addition.href}>{addition.title}</Link></li>
                 </ul>
               )
             })
@@ -90,7 +91,7 @@ export class DressingList extends React.Component {
             {diff.repeats.map(repeat => {
               return (
                 <ul className="dress-list-item" key={repeat.id}>
-                  <li><a href={`/costume_items/${repeat.id}`}>{repeat.title}</a></li>
+                  <li><Link to={repeat.href}>{repeat.title}</Link></li>
                 </ul>
               )
             })

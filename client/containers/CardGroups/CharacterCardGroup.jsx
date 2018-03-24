@@ -5,6 +5,7 @@ import {Header} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import {Link} from "react-router-dom";
 
 const faker = require('faker');
 
@@ -56,8 +57,8 @@ export class CharacterCardGroup extends React.Component {
       <div>
         {characterRole &&
         <Header as="h5">
-          Played by <a
-          href={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+          Played by
+          <Link to={characterRole.href}>{`${characterRole.first_name} ${characterRole.last_name}`}</Link>
         </Header>
         }
         {character.description}

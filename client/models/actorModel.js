@@ -1,8 +1,9 @@
 import React from 'react';
 import Role from "models/roleModel";
 import ActorFragment from "../components/Fragment/ActorFragment";
-import {Icon, Image, Label} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
 import {computed} from "mobx";
+import {Link} from "react-router-dom";
 
 
 class Actor extends Role {
@@ -94,35 +95,13 @@ class Actor extends Role {
           </span>,
         filterOptions: {
           multiple: true,
-          options: this.store.dropdownOptions('roles')
+          options: this.store.dropdownOptions('actors')
         }
       },
       {
-        field: 'user.email',
-        header: 'Email',
-      },
-      {
-        field: 'scenes',
-        header: 'Scenes',
-        renderCell:
-          <Label.Group>
-            {this.scenes.map(scene =>
-              <Label as='a' image key={scene.id}>
-                <Image avatar src={scene.avatar}/>
-                {scene.title}
-                <Icon name='delete'/>
-              </Label>
-            )}
-          </Label.Group>,
-        sortKey: 'scenes.length',
-        cellProps: {
-          textAlign: 'center'
-        },
-        filterOptions: {
-          multiple: true,
-          field: 'scene_ids',
-          options: this.store.dropdownOptions('scenes')
-        }
+        field: 'description',
+        header: 'Description',
+        defaultVisible: false
       },
       {
         field: 'characters',
@@ -130,11 +109,12 @@ class Actor extends Role {
         renderCell:
           <Label.Group>
             {this.characters.map(character =>
-              <Label as='a' image key={character.id}>
-                <Image avatar src={character.avatar}/>
-                {character.name}
-                <Icon name='delete'/>
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={this.href} image key={character.id}>
+                  <Image avatar src={character.avatar}/>
+                  {character.name}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         filterOptions: {
@@ -143,17 +123,42 @@ class Actor extends Role {
           options: this.store.dropdownOptions('characters')
         },
         sortKey: 'characters.length',
-        cellProps: {
-          textAlign: 'center'
+      },
+      {
+        field: 'scenes',
+        header: 'Scenes',
+        renderCell:
+          <Label.Group>
+            {this.scenes.map(scene =>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={this.href} image key={scene.id}>
+                  <Image avatar src={scene.avatar}/>
+                  {scene.title}
+                </Label>
+              </div>
+            )}
+          </Label.Group>,
+        sortKey: 'scenes.length',
+        filterOptions: {
+          multiple: true,
+          field: 'scene_ids',
+          options: this.store.dropdownOptions('scenes')
         }
+      },
+      {
+        field: 'gender',
+        header: 'Gender',
+        defaultVisible: false,
+      },
+      {
+        field: 'height',
+        header: 'Height',
+        defaultVisible: false,
       },
       {
         field: 'weight',
         header: 'Weight',
         defaultVisible: false,
-        cellProps: {
-          textAlign: 'center'
-        }
       }
     ]
   }

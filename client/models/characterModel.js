@@ -2,7 +2,8 @@ import React from 'react'
 import {computed, extendObservable, observable, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import CharacterFragment from "components/Fragment/CharacterFragment";
-import {Icon, Image, Label} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 class Character extends BaseModel {
 
@@ -48,11 +49,12 @@ class Character extends BaseModel {
         renderCell:
           <Label.Group>
             {this.scenes.map(scene =>
-              <Label as='a' image key={scene.id}>
-                <Image avatar src={scene.avatar}/>
-                {scene.title}
-                <Icon name='delete'/>
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={scene.href} image key={scene.id}>
+                  <Image avatar src={scene.avatar}/>
+                  {scene.title}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         sortKey: 'scenes.length',
@@ -68,11 +70,12 @@ class Character extends BaseModel {
         renderCell:
           <Label.Group>
             {this.actors.map(actor =>
-              <Label as='a' image key={actor.id}>
-                <Image avatar src={actor.avatar}/>
-                {actor.fullName}
-                <Icon name='delete'/>
-              </Label>
+              <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+                <Label as={Link} to={actor.href} image key={actor.id}>
+                  <Image avatar src={actor.avatar}/>
+                  {actor.fullName}
+                </Label>
+              </div>
             )}
           </Label.Group>,
         sortKey: 'actors.length',
@@ -80,26 +83,6 @@ class Character extends BaseModel {
           multiple: true,
           field: 'actor_ids',
           options: this.store.dropdownOptions('actors')
-        }
-      },
-      {
-        field: 'costumes',
-        header: 'Costumes',
-        renderCell:
-          <div>
-            {this.costumes.map(costume =>
-              <Label image key={costume.id}>
-                <Image avatar src={costume.avatar}/>
-                {costume.title}
-                <Icon name='delete'/>
-              </Label>
-            )}
-          </div>,
-        sortKey: 'costumes.length',
-        filterOptions: {
-          multiple: true,
-          field: 'costume_ids',
-          options: this.store.dropdownOptions('costumes')
         }
       }
     ]

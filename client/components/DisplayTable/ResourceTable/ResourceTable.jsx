@@ -71,7 +71,7 @@ export class ResourceTable extends React.Component {
   }
 
   initializeHiddenColumns() {
-    return this.columns.filter(col => col.defaultVisible === false).map(col => col.field)
+    this.hiddenColumns = this.columns.filter(col => col.defaultVisible === false).map(col => col.field)
   }
 
   toggleColumnVisibility = (columnName) => {
