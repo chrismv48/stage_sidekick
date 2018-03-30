@@ -1,7 +1,6 @@
 import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
-import {Link} from 'react-router-dom'
 import PropTypes from "prop-types";
 
 const CharacterFragmentContent = (character, actor) => {
@@ -12,11 +11,16 @@ const CharacterFragmentContent = (character, actor) => {
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={character.href} target="_blank">
+          <a
+            style={{cursor: 'pointer'}}
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}
+          >
             {character.name}
-          </Link>
+          </a>
           {actor &&
-          <Header.Subheader>Played by <Link to={actor.href}>{actor.fullName}</Link></Header.Subheader>
+          <Header.Subheader>Played by <a style={{cursor: 'pointer'}}
+                                         onClick={() => this.store.rootStore.uiStore.showResourceSidebar(actor.id, actor.resource)}
+          >{actor.fullName}</a></Header.Subheader>
           }
         </Header>
       </div>
@@ -35,7 +39,7 @@ class CharacterFragment extends React.Component {
     }
 
     if (!popup) {
-      return <CharacterFragmentContent character={character} actor={actor}/>
+      return CharacterFragmentContent(character, actor)
     }
 
     return (

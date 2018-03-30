@@ -1,7 +1,6 @@
 import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
-import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const SceneFragmentContent = ({scene}) => {
@@ -11,10 +10,11 @@ const SceneFragmentContent = ({scene}) => {
         <Image avatar src={scene.avatar}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
-        <Header size='tiny'>
-          <Link to={scene.href} target="_blank">
+        <Header size='tiny'
+                as='a'
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}
+        >
             {scene.order_index} - {scene.title}
-          </Link>
           <Header.Subheader>{scene.setting} | {scene.length_in_minutes}m</Header.Subheader>
         </Header>
       </div>

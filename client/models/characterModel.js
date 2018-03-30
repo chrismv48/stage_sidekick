@@ -3,7 +3,6 @@ import {computed, extendObservable, observable, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import CharacterFragment from "components/Fragment/CharacterFragment";
 import {Image, Label} from "semantic-ui-react";
-import {Link} from "react-router-dom";
 
 class Character extends BaseModel {
 
@@ -35,7 +34,7 @@ class Character extends BaseModel {
         renderCell:
           <span
             onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
-          <CharacterFragment character={this}/>
+          <CharacterFragment character={this} actor={this.actor} />
         </span>
       },
       {
@@ -50,7 +49,12 @@ class Character extends BaseModel {
           <Label.Group>
             {this.scenes.map(scene =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={scene.href} image key={scene.id}>
+                <Label
+                  as='a'
+                  image
+                  key={scene.id}
+                  onClick={() => this.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}
+                >
                   <Image avatar src={scene.avatar}/>
                   {scene.title}
                 </Label>
@@ -71,7 +75,12 @@ class Character extends BaseModel {
           <Label.Group>
             {this.actors.map(actor =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={actor.href} image key={actor.id}>
+                <Label
+                  as='a'
+                  image
+                  onClick={() => this.store.rootStore.uiStore.showResourceSidebar(actor.id, actor.resource)}
+                  key={actor.id}
+                >
                   <Image avatar src={actor.avatar}/>
                   {actor.fullName}
                 </Label>

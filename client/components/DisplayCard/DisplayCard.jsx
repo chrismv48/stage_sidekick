@@ -29,7 +29,7 @@ class DisplayCard extends React.Component {
   }
 
   render() {
-    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, link, handleOnClick, flipped, index, sortable} = this.props
+    const {showEditBar, cardImage, header, meta, frontDescription, backDescription, extra, handleOnClick, flipped, index, sortable} = this.props
     const {showHoverState} = this.state
     return (
       <Card

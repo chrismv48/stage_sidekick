@@ -6,7 +6,6 @@ import {inject, observer} from "mobx-react";
 import {computed, observable} from "mobx";
 import ContentLoader from "components/ContentLoader/ContentLoader";
 import {sortBy} from 'lodash'
-import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class DressingList extends React.Component {
@@ -69,7 +68,14 @@ export class DressingList extends React.Component {
             {diff.removals.map(removal => {
               return (
                 <ul className="dress-list-item" key={removal.id}>
-                  <li><Link to={removal.href}>{removal.title}</Link></li>
+                  <li>
+                    <a
+                      style={{cursor: 'pointer'}}
+                      onClick={() => this.store.rootStore.uiStore.showResourceSidebar(removal.id, removal.resource)}
+                    >
+                      {removal.title}
+                    </a>
+                  </li>
                 </ul>
               )
             })
@@ -80,7 +86,14 @@ export class DressingList extends React.Component {
             {diff.additions.map(addition => {
               return (
                 <ul className="dress-list-item" key={addition.id}>
-                  <li><Link to={addition.href}>{addition.title}</Link></li>
+                  <li>
+                    <a
+                      style={{cursor: 'pointer'}}
+                      onClick={() => this.store.rootStore.uiStore.showResourceSidebar(addition.id, addition.resource)}
+                    >
+                      {addition.title}
+                    </a>
+                  </li>
                 </ul>
               )
             })
@@ -91,7 +104,14 @@ export class DressingList extends React.Component {
             {diff.repeats.map(repeat => {
               return (
                 <ul className="dress-list-item" key={repeat.id}>
-                  <li><Link to={repeat.href}>{repeat.title}</Link></li>
+                  <li>
+                    <a
+                      style={{cursor: 'pointer'}}
+                      onClick={() => this.store.rootStore.uiStore.showResourceSidebar(repeat.id, repeat.resource)}
+                    >
+                      {repeat.title}
+                    </a>
+                  </li>
                 </ul>
               )
             })

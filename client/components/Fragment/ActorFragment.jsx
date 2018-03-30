@@ -1,7 +1,6 @@
 import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
-import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const ActorFragmentContent = ({actor}) => {
@@ -12,9 +11,9 @@ const ActorFragmentContent = ({actor}) => {
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
         <Header size='tiny'>
-          <Link to={`cast/${actor.id}`}>
+          <a style={{cursor: 'pointer'}}>
             {actor.fullName}
-          </Link>
+          </a>
         </Header>
       </div>
     </div>

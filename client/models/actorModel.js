@@ -3,7 +3,6 @@ import Role from "models/roleModel";
 import ActorFragment from "../components/Fragment/ActorFragment";
 import {Image, Label} from "semantic-ui-react";
 import {computed} from "mobx";
-import {Link} from "react-router-dom";
 
 
 class Actor extends Role {
@@ -110,7 +109,12 @@ class Actor extends Role {
           <Label.Group>
             {this.characters.map(character =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={this.href} image key={character.id}>
+                <Label
+                  as='a'
+                  image
+                  key={character.id}
+                  onClick={() => {this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}}
+                >
                   <Image avatar src={character.avatar}/>
                   {character.name}
                 </Label>
@@ -131,7 +135,12 @@ class Actor extends Role {
           <Label.Group>
             {this.scenes.map(scene =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={this.href} image key={scene.id}>
+                <Label
+                  as='a'
+                  image
+                  key={scene.id}
+                  onClick={() => this.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}
+                >
                   <Image avatar src={scene.avatar}/>
                   {scene.title}
                 </Label>

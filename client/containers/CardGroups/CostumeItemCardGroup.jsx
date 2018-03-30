@@ -58,7 +58,7 @@ export class CostumeItemCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditCostumeItem(event, costumeItem)}
                 onDeleteCallback={(event) => this.handleDestroyCostumeItem(event, costumeItem)}
                 label='Costume Item'
-                handleOnClick={() => showResourceSidebar('costume_items', costumeItem.id)}
+                onClick={() => showResourceSidebar('costume_items', costumeItem.id)}
                 key={`index-${i}`}
                 sortable={false}
                 index={i}

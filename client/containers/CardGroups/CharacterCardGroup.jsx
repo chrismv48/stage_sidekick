@@ -5,7 +5,6 @@ import {Header} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import ContentLoader from "components/ContentLoader/ContentLoader";
-import {Link} from "react-router-dom";
 
 const faker = require('faker');
 
@@ -58,7 +57,12 @@ export class CharacterCardGroup extends React.Component {
         {characterRole &&
         <Header as="h5">
           Played by
-          <Link to={characterRole.href}>{`${characterRole.first_name} ${characterRole.last_name}`}</Link>
+          <a
+            style={{cursor: 'pointer'}}
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(characterRole.id, characterRole.resource)}
+          >
+            {`${characterRole.first_name} ${characterRole.last_name}`}
+          </a>
         </Header>
         }
         {character.description}
@@ -72,6 +76,8 @@ export class CharacterCardGroup extends React.Component {
         <ContentLoader/>
       )
     }
+
+    const {uiStore: {showResourceSidebar}} = this.props
 
     return (
       <CardGroup sortable resource='characters'>
@@ -90,7 +96,7 @@ export class CharacterCardGroup extends React.Component {
               label='Character'
               key={`index-${i}`}
               index={i}
-              link={`/characters/${character.id}`}
+              onClick={() => showResourceSidebar(character.id, character.resource)}
             />
             )
           }

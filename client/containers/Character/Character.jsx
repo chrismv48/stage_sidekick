@@ -11,7 +11,6 @@ import EditIcon from "components/EditIcon/EditIcon";
 import {SceneCardGroup} from "containers/CardGroups/SceneCardGroup";
 import ImgLightbox from "components/ImgLightbox/ImgLightbox";
 import ContentLoader from "components/ContentLoader/ContentLoader";
-import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class Character extends React.Component {
@@ -20,7 +19,7 @@ export class Character extends React.Component {
   @observable showLightbox = false
 
   @computed get characterId() {
-    return parseInt(this.props.match.params.characterId)
+    return parseInt(this.props.characterId || this.props.match.params.characterId)
   }
 
   @computed get character() {
@@ -96,7 +95,12 @@ export class Character extends React.Component {
           <Header as="h1">
             {this.character.name}
             <Header.Subheader>
-              Played by <Link to={`/cast/${characterRole.id}`}>{`${characterRole.first_name} ${characterRole.last_name}`}</Link>
+              Played by <a
+              style={{cursor: 'pointer'}}
+              onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.character.id, this.character.resource)}
+            >
+              {`${characterRole.first_name} ${characterRole.last_name}`}
+            </a>
             </Header.Subheader>
           </Header>
           <Header as='h3' dividing>

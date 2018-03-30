@@ -4,7 +4,6 @@ import {Accordion, Grid, Progress} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react";
 import {observable} from 'mobx'
 import ContentLoader from "components/ContentLoader/ContentLoader";
-import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export default class Dashboard extends Component {
@@ -27,7 +26,14 @@ export default class Dashboard extends Component {
         return {
           title: `Scenes without characters (${alert.results.length})`,
           content: alert.results.map((result, i) => {
-            return <div key={i}><Link to={result.href}>{result.title}</Link></div>
+            return <div key={i}>
+              <a
+                style={{cursor: 'pointer'}}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+              >
+                {result.title}
+              </a>
+            </div>
           }),
           key: alert.alert
         }
@@ -35,7 +41,14 @@ export default class Dashboard extends Component {
         return {
           title: `Characters without scenes (${alert.results.length})`,
           content: alert.results.map((result, i) => {
-            return <div key={i}><Link to={result.href}>{result.name}</Link></div>
+            return <div key={i}>
+              <a
+                style={{cursor: 'pointer'}}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+              >
+                {result.name}
+              </a>
+            </div>
           }),
           key: alert.alert
         }
@@ -48,8 +61,12 @@ export default class Dashboard extends Component {
             const character = characters.find(character => character.id === result.character_id)
             return (
               <div key={i}>
-                <Link to={character.href}>{result.name}</Link> in scene <Link
-                to={scene.href}>{scene.title}</Link>
+                <a
+                  style={{cursor: 'pointer'}}
+                  onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+                >
+                  {result.name}
+                </a> in scene
               </div>
             )
           }),
@@ -60,7 +77,14 @@ export default class Dashboard extends Component {
         return {
           title: `Costumes without character scenes (${alert.results.length})`,
           content: alert.results.map((result, i) => {
-            return <div key={i}><Link to={result.href}>{result.title}</Link></div>
+            return <div key={i}>
+              <a
+                style={{cursor: 'pointer'}}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+              >
+                {result.title}
+              </a>
+            </div>
           }),
           key: alert.alert
         }
@@ -69,7 +93,14 @@ export default class Dashboard extends Component {
         return {
           title: `Costumes without costume items (${alert.results.length})`,
           content: alert.results.map((result, i) => {
-            return <div key={i}><Link to={result.href}>{result.title}</Link></div>
+            return <div key={i}>
+              <a
+                style={{cursor: 'pointer'}}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+              >
+                {result.title}
+              </a>
+            </div>
           }),
           key: alert.alert
         }
@@ -78,7 +109,14 @@ export default class Dashboard extends Component {
         return {
           title: `Costume Items without costumes (${alert.results.length})`,
           content: alert.results.map((result, i) => {
-            return <div key={i}><Link to={result.href}>{result.title}</Link></div>
+            return <div key={i}>
+              <a
+                style={{cursor: 'pointer'}}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(result.id, result.resource)}
+              >
+                {result.title}
+              </a>
+            </div>
           }),
           key: alert.alert
         }

@@ -3,7 +3,6 @@ import {computed, extendObservable, observable, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import CostumeFragment from "../components/Fragment/CostumeFragment";
 import {Image, Label} from "semantic-ui-react";
-import {Link} from "react-router-dom";
 
 class Costume extends BaseModel {
 
@@ -14,8 +13,8 @@ class Costume extends BaseModel {
         header: 'Costumes',
         renderCell:
           <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}>
-          <CostumeFragment costume={this}/>
-        </span>,
+            <CostumeFragment costume={this}/>
+          </span>,
         filterOptions: {
           multiple: true,
           options: this.store.dropdownOptions('costumes')
@@ -36,11 +35,19 @@ class Costume extends BaseModel {
               const scene = this.scenes.find(scene => scene.id === costumes_characters_scene.scene_id)
               return (
                 <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                  <Label as={Link} to={character.href} image key={costumes_characters_scene.id}>
-                    <Image avatar src={character.avatar}/>
-                    {character.name}
-                    <Label.Detail as={Link} to={scene.href}>
-                      {scene && scene.title}
+                  <Label
+                    as='a'
+                    image
+                    key={costumes_characters_scene.id}
+                  >
+                    <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}>
+                      <Image avatar src={character.avatar}/>
+                      {character.name}
+                    </span>
+                    <Label.Detail as='a'>
+                      <span onClick={() => this.store.rootStore.uiStore.showResourceSidebar(scene.id, scene.resource)}>
+                        {scene && scene.title}
+                      </span>
                     </Label.Detail>
                   </Label>
                 </div>
@@ -56,7 +63,11 @@ class Costume extends BaseModel {
           <Label.Group>
             {this.costume_items.map(costume_item =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={costume_item.href} image key={costume_item.id}>
+                <Label as='a'
+                       image
+                       key={costume_item.id}
+                       onClick={() => this.store.rootStore.uiStore.showResourceSidebar(costume_item.id, costume_item.resource)}
+                >
                   <Image avatar src={costume_item.avatar}/>
                   {costume_item.title}
                 </Label>
@@ -77,7 +88,12 @@ class Costume extends BaseModel {
           <Label.Group>
             {this.characters.map(character =>
               <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
-                <Label as={Link} to={character.href} image key={character.id}>
+                <Label
+                  as='a'
+                  image
+                  key={character.id}
+                  onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}
+                >
                   <Image avatar src={character.avatar}/>
                   {character.name}
                 </Label>

@@ -1,21 +1,22 @@
 import React from 'react';
 import {Header, Image, Popup} from "semantic-ui-react";
 import './Fragment.scss'
-import {Link} from 'react-router-dom'
 import PropTypes from "prop-types";
 
 
 const CostumeFragmentContent = ({costume}) => {
   return (
-    <div className='fragment-container'>
+    <div className='fragment-container'
+         onClick={() => this.store.rootStore.uiStore.showResourceSidebar(costume.id, costume.resource)}
+    >
       <div>
         <Image avatar src={costume.avatar}/>
       </div>
       <div style={{textAlign: 'left', marginLeft: '5px'}}>
-        <Header size='tiny'>
-          <Link to={costume.href} target="_blank">
-            {costume.title}
-          </Link>
+        <Header
+          size='tiny'
+        >
+          <a style={{cursor: 'pointer'}}>{costume.title}</a>
         </Header>
       </div>
     </div>

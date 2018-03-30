@@ -5,7 +5,6 @@ import {Header} from "semantic-ui-react";
 import CardGroup from "components/CardGroup/CardGroup";
 import DisplayCard from "components/DisplayCard/DisplayCard";
 import ContentLoader from "components/ContentLoader/ContentLoader";
-import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 export class CastCardGroup extends React.Component {
@@ -25,7 +24,15 @@ export class CastCardGroup extends React.Component {
 
     const characterTags = actor.characterIds.map(characterId => {
       const character = this.props.resourceStore.characters.find(character => character.id === characterId)
-      return (<Link key={character.id} to={character.href}>{character.name}</Link>)
+      return (
+        <a
+          key={character.id}
+          style={{cursor: 'pointer'}}
+          onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}
+        >
+          {character.name}
+          </a>
+      )
     })
     return (
       <div>
@@ -75,11 +82,10 @@ export class CastCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditActor(event, actor)}
                 onDeleteCallback={(event) => this.handleDestroyActor(event, actor)}
                 label='Actor'
-                handleOnClick={() => showResourceSidebar('actors', actor.id)}
+                handleOnClick={() => showResourceSidebar(actor.id, actor.resource)}
                 key={`index-${i}`}
                 sortable={true}
                 index={i}
-                link={`/cast/${actor.id}`}
               />
             )
           }

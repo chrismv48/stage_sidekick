@@ -3,7 +3,6 @@ import {computed} from 'mobx'
 import BaseModel from "./baseModel";
 import {Image, Label} from "semantic-ui-react";
 import CostumeItemFragment from "components/Fragment/CostumeItemFragment";
-import {Link} from "react-router-dom";
 
 
 class CostumeItem extends BaseModel {
@@ -69,7 +68,12 @@ class CostumeItem extends BaseModel {
         field: 'costume',
         header: 'Costume',
         renderCell:
-          <Label as={Link} to={this.costume.href} image key={this.costume.id}>
+          <Label
+            as='a'
+            image
+            key={this.costume.id}
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.costume.id, this.costume.resource)}
+          >
             <Image avatar src={this.costume.avatar}/>
             {this.costume.title}
           </Label>,

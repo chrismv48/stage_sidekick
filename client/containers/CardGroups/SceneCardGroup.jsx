@@ -84,10 +84,9 @@ export class SceneCardGroup extends React.Component {
                 onEditCallback={(event) => this.handleEditScene(event, scene)}
                 onDeleteCallback={(event) => this.handleDestroyScene(event, scene)}
                 label='Scene'
-                handleOnClick={() => showResourceSidebar('scenes', scene.id)}
+                handleOnClick={() => showResourceSidebar(scene.id, scene.resource)}
                 key={`index-${i}`}
                 index={scene.order_index}
-                link={`/scenes/${scene.id}`}
                 flipped={false}
               />
             )

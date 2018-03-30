@@ -4,7 +4,6 @@ import BaseModel from "./baseModel";
 import {camelCase, snakeCase, upperFirst} from 'lodash'
 import {pluralizeResource, singularizeResource} from "../helpers";
 import {Icon, Label} from "semantic-ui-react";
-import {Link} from "react-router-dom";
 
 class Note extends BaseModel {
 
@@ -121,9 +120,12 @@ class Note extends BaseModel {
         header: 'Actor',
         renderCell:
         this.actor &&
-        <Link to={this.actor.href}>
-              {this.actor.fullName}
-        </Link>,
+        <a
+          style={{cursor: 'pointer'}}
+          onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.actor.id, this.actor.resource)}
+        >
+          {this.actor.fullName}
+        </a>,
         filterOptions: {
           multiple: true,
           field: 'actor_id',
@@ -135,9 +137,12 @@ class Note extends BaseModel {
         header: 'Scene',
         renderCell:
         this.scene &&
-            <Link to={this.scene.href}>
-              {this.scene.title}
-            </Link>,
+        <a
+          style={{cursor: 'pointer'}}
+          onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.scene.id, this.scene.resource)}
+        >
+          {this.scene.title}
+        </a>,
         filterOptions: {
           multiple: true,
           field: 'scene_id',
@@ -162,8 +167,14 @@ class Note extends BaseModel {
         field: 'assignee_ids',
         header: 'Assignees',
         renderCell:
-          this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}><Link
-            to={role.href}>{role.fullName}</Link></div>),
+          this.assignees.map(role => <div style={{whiteSpace: 'nowrap', marginBottom: '5px'}}>
+            <a
+              style={{cursor: 'pointer'}}
+              onClick={() => this.store.rootStore.uiStore.showResourceSidebar(role.id, role.resource)}
+            >
+              {role.fullName}
+            </a>
+          </div>),
         sortKey: 'assignees.length',
         filterOptions: {
           multiple: true,

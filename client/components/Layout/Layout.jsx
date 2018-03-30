@@ -8,6 +8,7 @@ import Character from "containers/Character/Character";
 import Scene from "containers/Scene/Scene";
 import Costume from "containers/Costume/Costume";
 import Actor from "containers/Actor/Actor";
+import CostumeItem from "containers/CostumeItem/CostumeItem";
 import {singularResourceIdCamelCased} from 'helpers'
 
 const resourceToComponent = {
@@ -15,6 +16,7 @@ const resourceToComponent = {
   'scenes': Scene,
   'costumes': Costume,
   'actors': Actor,
+  'costume_items': CostumeItem
 }
 
 @inject("resourceStore", "uiStore") @observer

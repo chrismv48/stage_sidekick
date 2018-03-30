@@ -206,7 +206,6 @@ export class ResourceTable extends React.Component {
                   return (
                     <Table.Row
                       key={row.id}
-                      onClick={() => showResourceSidebar(resource, row.id)}
                     >
                       <Table.Cell collapsing>
                         <span className='row-actions'>

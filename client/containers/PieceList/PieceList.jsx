@@ -57,11 +57,21 @@ export class PieceList extends React.Component {
         <Image style={{maxHeight: 200}} centered rounded src={costume.primaryImage}/>
         <div className='section'>
           <strong>
-            <Link to={costume.href}>{costume.title}</Link>
+            <a
+              style={{cursor: 'pointer'}}
+              onClick={() => this.store.rootStore.uiStore.showResourceSidebar(costume.id, costume.resource)}
+            >
+              {costume.title}
+            </a>
           </strong>
         </div>
         <div className='section'>
-          <Link to={character.href}>{character.name}</Link>  <span className='divider'>|</span>  <Link to={actor.href}>{actor.fullName}</Link>
+          <a
+            style={{cursor: 'pointer'}}
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}
+          >
+            {character.name}
+          </a>  <span className='divider'>|</span>  <Link to={actor.href}>{actor.fullName}</Link>
         </div>
       </div>
     )

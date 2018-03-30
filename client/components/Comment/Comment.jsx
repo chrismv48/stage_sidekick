@@ -5,7 +5,6 @@ import {inject, observer} from "mobx-react";
 import {Button, Comment, Form} from "semantic-ui-react";
 import {computed} from "mobx";
 import moment from 'moment'
-import {Link} from "react-router-dom";
 
 @inject("resourceStore", "uiStore") @observer
 class DisplayComment extends React.Component {
@@ -29,8 +28,10 @@ class DisplayComment extends React.Component {
       <Comment className='Comment'>
         <Comment.Avatar src={this.role.avatar}/>
         <Comment.Content>
-          <Comment.Author as='a'>
-            <Link to={this.role.href}>{this.role.fullName}</Link>
+          <Comment.Author as='a'
+                          onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.role.id, this.role.resource)}
+          >
+            {this.role.fullName}
           </Comment.Author>
           <Comment.Metadata>
             <div>{moment(comment.created_at).fromNow()}</div>

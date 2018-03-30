@@ -2,7 +2,6 @@ import React from 'react'
 import {computed, transaction} from 'mobx'
 import BaseModel from "./baseModel";
 import {Image, Label} from "semantic-ui-react";
-import {Link} from "react-router-dom";
 
 class Scene extends BaseModel {
 
@@ -11,7 +10,12 @@ class Scene extends BaseModel {
       {
         field: 'title',
         header: 'Scene',
-        renderCell: <Link to={this.href}>{this.title}</Link>,
+        renderCell: <a
+          style={{cursor: 'pointer'}}
+          onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)}
+        >
+          {this.title}
+        </a>,
         filterOptions: {
           multiple: true,
           options: this.store.dropdownOptions('scenes')
@@ -36,7 +40,12 @@ class Scene extends BaseModel {
         renderCell:
           <Label.Group>
             {this.characters.map(character =>
-              <Label as={Link} to={`/characters/${character.id}`} image key={character.id}>
+              <Label
+                as='a'
+                image
+                key={character.id}
+                onClick={() => this.store.rootStore.uiStore.showResourceSidebar(character.id, character.resource)}
+              >
                 <Image avatar src={character.avatar}/>
                 {character.name}
               </Label>

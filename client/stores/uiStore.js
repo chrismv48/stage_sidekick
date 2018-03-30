@@ -28,7 +28,7 @@ export class UiStore {
     this.modalProps = null
   }
 
-  showResourceSidebar(resource, resourceId) {
+  showResourceSidebar(resourceId, resource) {
     this.selectedResource = resource
     this.selectedResourceId = resourceId
   }
