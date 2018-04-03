@@ -17,13 +17,30 @@ class Line extends React.Component {
     return this.props.resourceStore.getStagedResource('lines', this.props.lineId)
   }
 
-  renderCharacterAvatar(characters) {
+  renderCharacter(character) {
+    return (
+      <React.Fragment>
+      <span className='character-line-avatar'>
+        <Image circular inline height={25} width={25} src={character.avatar}/>
+      </span>
+        <a onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}</a>
+      </React.Fragment>
+    )
+  }
+
+  renderCharacters(characters) {
     return (
       <span className='character-line-avatar'>
-        <Image circular inline height={25} width={25} src={characters[0].avatar}/>
+        {characters.map((character, i) => {
+          const last = i === characters.length - 1
+          return (
+            <a key={i} onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}{!last && ', '}</a>
+          )
+        })}
       </span>
     )
   }
+
 
   renderLineTypeIcon(lineType) {
     let iconName = ''
@@ -48,9 +65,11 @@ class Line extends React.Component {
 
   renderLineHeader() {
     return (
-      <Header as='h3'>
-        {this.renderCharacterAvatar(this.lineStaged.characters)}
-        {this.lineStaged.characters[0].name}
+      <Header as='h4'>
+        {this.lineStaged.characters.length === 1 ?
+          this.renderCharacter(this.lineStaged.characters[0]) :
+          this.renderCharacters(this.lineStaged.characters)
+        }
         {this.renderLineTypeIcon(this.lineStaged.line_type)}
       </Header>
     )
@@ -59,7 +78,7 @@ class Line extends React.Component {
   renderDisplayMode() {
     const {handleEdit, handleInsertAbove, handleDelete} = this.props
     return (
-      <div className='display-mode' onClick={() => handleEdit(this.line.id)}>
+      <div className='display-mode'>
         <div className='edit-icon'>
           <Dropdown icon='ellipsis horizontal' pointing='right'>
             <Dropdown.Menu>
@@ -169,7 +188,6 @@ class Line extends React.Component {
           }}/>
         </Form>
       </Segment>
-
     )
   }
 

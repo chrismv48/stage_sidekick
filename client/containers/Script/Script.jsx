@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Button, Dropdown, Grid, Header, Segment} from 'semantic-ui-react'
+import {Button, Container, Dropdown, Grid, Header, Segment} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import Line from "components/Line/Line";
@@ -203,7 +203,7 @@ export class Script extends React.Component {
                 <div className='current-scene-label'>Current scene</div>
               </div>
             </div>
-            <div className='lines-container'>
+            <Container text className='lines-container'>
               {lines.sort((a, b) => a.number - b.number).map((line, i) => {
                 const shouldRenderSceneHeader = () => {
                   if (i === 0) {
@@ -264,7 +264,7 @@ export class Script extends React.Component {
                 <p>Click to add new line</p>
               </Segment>
               }
-            </div>
+            </Container>
           </Grid.Column>
         </Grid.Row>
       </Grid>

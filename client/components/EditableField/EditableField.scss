@@ -1,24 +1,27 @@
-.field-wrapper {
-  padding: 5px;
-}
+.EditableField {
 
-.empty-field {
-  font-style: italic;
-  opacity: 0.5;
-  cursor: pointer;
-}
+  .field-wrapper {
+    padding: 5px;
+  }
 
-.text-input {
-  line-height: 0.9em;
-  border-radius: 3px;
-  border: 1px solid transparent;
-}
-
-.display-mode {
-
-  &:hover {
+  .empty-field {
+    font-style: italic;
+    opacity: 0.5;
     cursor: pointer;
-    background: hsl(0, 0%, 97%);
+  }
+
+  .text-input {
+    line-height: 0.9em;
     border-radius: 3px;
+    border: 1px solid transparent;
+  }
+
+  .display-mode {
+
+    &:hover {
+      cursor: pointer;
+      background: hsl(0, 0%, 97%);
+      border-radius: 3px;
+    }
   }
 }

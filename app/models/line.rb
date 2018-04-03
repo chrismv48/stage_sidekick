@@ -25,10 +25,12 @@ class Line < ApplicationRecord
 
   # the has many relationship with characters is necessary because some lines are spoken (sang) in unison.
   has_many :characters_lines
-  has_many :characters, through: :characters_lines
+  has_many :characters, through: :characters_lines, dependent: :destroy
 
   after_validation :update_sort_order
   after_destroy :update_sort_order
+
+  # TODO: add some kind of validation to ensure lines do not belong to characters/scene combos that don't exist
 
   private
 

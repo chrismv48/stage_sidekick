@@ -1,21 +1,10 @@
-/**
- *
- * App.react.js
- *
- * This component is the skeleton around the actual pages, and should only
- * contain code that should be seen on all pages. (e.g. navigation bar)
- *
- * NOTE: while this component should technically be a stateless functional
- * component (SFC), hot reloading does not currently support SFCs. If hot
- * reloading is not a necessity for you then you can refactor it and remove
- * the linting exception.
- */
-
 import React, {Component} from 'react';
 import {Provider} from "mobx-react";
 import {Route} from "react-router-dom";
 import DevTools from 'mobx-react-devtools'
 import RootModal from 'components/Modals/RootModal'
+
+import './App.scss'
 
 import Layout from "components/Layout/Layout";
 import Dashboard from "containers/Dashboard/Dashboard";

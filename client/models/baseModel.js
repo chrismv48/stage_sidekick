@@ -91,6 +91,10 @@ class BaseModel {
     return `/${this.resource}/${this.id}`
   }
 
+  get showSidebar() {
+    return this.store.rootStore.uiStore.showResourceSidebar(this.id, this.resource)
+  }
+
   constructor(store) {
     this.store = store
 

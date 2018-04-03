@@ -129,11 +129,13 @@ export class EditableField extends React.Component {
   render() {
     const {children, field} = this.props
     return (
-      <div
-        className={classNames('field-wrapper', this.editing ? 'edit-mode' : 'display-mode')}
-        onClick={() => this.editing = true}
-      >
-        {this.editing ? this.renderEditMode() : (children || (this.resource[field] || <span className='empty-field'>Click to edit</span>))}
+      <div className='EditableField'>
+        <div
+          className={classNames('field-wrapper', this.editing ? 'edit-mode' : 'display-mode')}
+          onClick={() => this.editing = true}
+        >
+          {this.editing ? this.renderEditMode() : (children || (this.resource[field] || <span className='empty-field'>Click to edit</span>))}
+        </div>
       </div>
     )
   }
