@@ -3,31 +3,34 @@ require 'open-uri'
 require 'rtesseract'
 require 'active_support/core_ext/string/inflections'
 require 'openssl'
+require 'pry'
 
 class ScriptReader
 
   attr_reader :reader
 
+  DELIMITER_REGEX = /(\.\s{2,}|\s{2,}|\:|\n)/
+
   PATTERNS = [
     {
       description: 'all uppercase',
-      proc: Proc.new {|line| line.upcase == line}
+      proc: Proc.new {|line| line.split(DELIMITER_REGEX)[0] == line.split(DELIMITER_REGEX)[0].upcase}
     },
     {
-      description: 'ends with colon',
-      proc: Proc.new {|line| line.strip[-1] == ':'}
+      description: 'ends with delimeter',
+      proc: Proc.new {|line| line.split(DELIMITER_REGEX).size >= 3}
     },
-    # {
-    #   description: 'does not end in a sentence delimiter',
-    #   proc: Proc.new {|line| !['?', '.', '!', ')'].include? line.strip[-1]}
-    # },
     {
-      description: 'titlecased',  # not using titleize because there are some edge cases like 'Act II' where we don't want to downcase the rest of the word
-      proc: Proc.new {|line| line.split(' ').map {|word| word[0].upcase + word[1..-1]}.join(' ') == line.strip && line.upcase != line}
+      description: 'titlecased', # not using titleize because there are some edge cases like 'Act II' where we don't want to downcase the rest of the word
+      proc: Proc.new {|line| line.split(DELIMITER_REGEX)[0] == line.split(DELIMITER_REGEX)[0].titleize}
     },
     {
       description: 'preceded by multiple linebreaks',
-      proc: Proc.new {|consecutive_line_break_count| consecutive_line_break_count > 1}
+      proc: Proc.new {|consecutive_line_break_count| consecutive_line_break_count >= 1}
+    },
+    {
+      description: 'begins with Act or Scene',
+      proc: Proc.new {|line| line.strip.match(/^act |scene /i)}
     }
   ]
 
@@ -37,6 +40,87 @@ class ScriptReader
     @reader = PDF::Reader.new(io)
   end
 
+  def generate_character_options
+    if @matched_patterns_to_lines.nil?
+      self.apply_patterns
+    end
+
+    return @matched_patterns_to_lines.select do |matched_patterns, candidates|
+      !matched_patterns.includes('begins with Act or Scene') &&
+        candidates.values.any? {|count| count >= 15}
+    end
+  end
+
+  def generate_scene_options
+    if @matched_patterns_to_lines.nil?
+      self.apply_patterns
+    end
+
+    return @matched_patterns_to_lines.select do |matched_patterns, candidates|
+      matched_patterns.includes('begins with Act or Scene')
+    end
+  end
+
+  def generate_script(character_pattern, characters, scene_pattern = nil, scenes = [])
+
+    if @lines_patterns.nil?
+      self.apply_patterns
+    end
+
+    prev_character = nil
+    current_character = nil
+
+    current_scene = nil
+
+    script = []
+    line_number = 1
+    script_has_scenes = !scene_pattern.nil?
+
+    @lines_patterns.each do |line|
+
+      if script_has_scenes
+        if line[:patterns] >= scene_pattern
+          current_scene = find_character_or_scene(line[:line_content], scenes)
+          current_character = nil
+        end
+
+        next unless current_scene
+      end
+
+      if line[:patterns] >= character_pattern
+        current_character = find_character_or_scene(line[:line_content], characters)
+        current_character = current_character.titleize if current_character
+      end
+
+      cleaned_line_content = remove_character_and_scene_from_line(line[:line_content], current_character, current_scene)
+
+      next if cleaned_line_content.empty?
+
+      if (prev_character == current_character) && script.any?
+        script.last[:line] += cleaned_line_content == "\n" ? cleaned_line_content : " #{cleaned_line_content}"
+      else
+        script.last[:line].strip! if script.any? # strip the last line before starting a new one
+
+        # start new line
+        script_line = {}
+        script_line[:number] = line_number
+        script_line[:line] = cleaned_line_content
+        script_line[:scene] = current_scene
+        script_line[:character] = current_character
+
+        script.push(script_line)
+
+        line_number += 1
+      end
+      prev_character = current_character
+    end
+    puts 'done!'
+    return script
+  end
+
+
+  private
+
   def should_skip_line?(line)
     return [
       line.strip.empty?,
@@ -44,16 +128,17 @@ class ScriptReader
     ].any?
   end
 
-
+  # iterates through the script and applies each pattern to a line building a hash <Set(matched patterns)> : [matched lines]
   def apply_patterns
-    lines_patterns = []
+    @lines_patterns = []
     line_count = 0
     consecutive_line_break_count = 0
-    matched_patterns_to_lines = Hash.new {|h, k| h[k] = {}}
+    @matched_patterns_to_lines = Hash.new {|h, k| h[k] = {}}
     @reader.pages.each do |page|
       page.text.each_line do |line|
-        consecutive_line_break_count += 1 if line == "\n"
-        next if should_skip_line?(line)
+        # consecutive_line_break_count += 1 if line == "\n"
+        # next if should_skip_line?(line)
+
         line_count += 1
         matched_patterns = Set.new
         PATTERNS.each do |pattern|
@@ -64,87 +149,60 @@ class ScriptReader
           end
         end
 
-        lines_patterns.push({
+        @lines_patterns.push({
                               line_number: line_count,
                               line_content: line,
                               patterns: matched_patterns
                             })
 
-        if matched_patterns_to_lines[matched_patterns].has_key?(line)
-          matched_patterns_to_lines[matched_patterns][line] += 1
-        else
-          matched_patterns_to_lines[matched_patterns][line] = 1
-        end
-
         consecutive_line_break_count = 0
-      end
 
-    end
-    puts 'foo'
+        next if matched_patterns.empty?
 
-  end
+        matched_content = line.split(DELIMITER_REGEX)[0].strip
+        next if matched_content.empty? or matched_content.size > 25
 
-  def extract_character_candidates(pattern_set_content_to_lines)
-
-  end
-
-  def full_text
-    output_text = ''
-    @reader.pages.each do |page|
-      output_text += page.to_s
-    end
-    return output_text
-  end
-
-  def apply_pattern(pattern)
-    full_text = self.full_text
-    results = full_text.scan(pattern)
-    cleaned_results = results.flatten.map(&:strip)
-    pattern_count = Hash.new(0).tap { |h| cleaned_results.each { |result| h[result] += 1 } }
-
-    return pattern_count
-  end
-
-  def process_script(full_text, character_pattern, scene_pattern)
-    results = Hash.new { |h, key| h[key] = {} }
-
-    line_number = 0
-
-    scene = nil
-    character = nil
-
-    full_text.each_line do |line|
-      if line.match(scene_pattern)
-        scene = line.match(scene_pattern)[0]
-      elsif line.match(character_pattern)
-        character = line.match(character_pattern)[0]
-      elsif scene && character
-        line_number += 1
-        if results[scene][character]
-          results[scene][character][line_number] = line
+        if @matched_patterns_to_lines[matched_patterns].has_key?(matched_content)
+          @matched_patterns_to_lines[matched_patterns][matched_content] += 1
         else
-          results[scene][character] = {line_number => line}
+          @matched_patterns_to_lines[matched_patterns][matched_content] = 1
         end
+
       end
     end
+  end
 
-    return results
+
+  def find_character_or_scene(line, characters_or_scenes)
+    characters_or_scenes.sort {|x, y| y.size <=> x.size}.each do |character_or_scene|
+      return character_or_scene if line.strip.match(/^#{character_or_scene}/i)
+    end
+    return nil
+  end
+
+  def remove_character_and_scene_from_line(line, character, scene)
+    clean_line = line == "\n" ? "\n" : line.strip
+    if character
+      clean_line.slice!(/^#{character}|#{scene}/i) # remove leading character reference
+    else
+      clean_line.slice!(/^#{scene}/i) # remove leading scene references
+    end
+    clean_line.slice!(/^[\.:\- ]*/) # remove leading non-word / whitespace characters
+    return clean_line
   end
 
   def read_ocr(filename)
     image = RTesseract.new(filename)
     image.to_s
   end
-
-
-
 end
 
-# input = '/Users/chrisarmstrong/Projects/stage_sidekick/foo.pdf'
+# input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
+# input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
 # web_input = 'http://www.kinnarieco-theatre.org/scripts/GreeningofOz_Eng.pdf'
-web_input = 'https://gymkhana.iitb.ac.in/~cultural/dram_scripts/romeo_juliett.pdf'
-pdf_reader = ScriptReader.new(web_input)
-pdf_reader.apply_patterns
-puts 'foo'
+# web_input = 'https://gymkhana.iitb.ac.in/~cultural/dram_scripts/romeo_juliett.pdf'
+# pdf_reader = ScriptReader.new(input)
+# pdf_reader.apply_patterns
+# puts 'foo'
 # pdf_reader.process_script(pdf_reader.full_text, /^[\w\s]+:$/, /^(Act .*|Scene .*)$/i)
 # pdf_reader.read_ocr(input)
