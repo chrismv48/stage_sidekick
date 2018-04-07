@@ -1,0 +1,2 @@
+class ScriptImporterController < ApplicationController
+end

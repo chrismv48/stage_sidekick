@@ -32,6 +32,9 @@ gem 'faker', require: true
 gem 'foreman', '0.84.0'
 gem 'figaro'
 gem 'fog-aws'
+gem 'pdf-reader'
+gem 'rtesseract'
+gem 'rmagick'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -54,3 +57,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'carrierwave', '~> 1.0'
 gem 'carrierwave-base64'
 gem 'mini_magick'
+
+gem 'pdf-reader'
+gem 'rtesseract'
+gem 'rmagick'
