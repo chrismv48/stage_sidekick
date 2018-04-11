@@ -41,7 +41,7 @@ class Actor < Role
 
   has_many :notes
 
-  belongs_to :user, touch: true
+  belongs_to :user
   has_one :actor_measurement, through: :user
 
   after_create do |actor|

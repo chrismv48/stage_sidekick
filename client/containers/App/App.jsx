@@ -22,6 +22,7 @@ import Actor from "containers/Actor/Actor";
 import Script from "containers/Script/Script";
 import Notes from "containers/Notes/Notes";
 import CostumeItem from "containers/CostumeItem/CostumeItem";
+import ScriptImport from "containers/ScriptImport/ScriptImport";
 
 const rootStore = new RootStore()
 
@@ -58,6 +59,7 @@ export default class App extends Component {
           <Route exact path='/costumes' component={Costumes}/>
           <Route exact path='/directory' component={Directory}/>
           <Route exact path='/script' component={Script}/>
+          <Route exact path='/script_import' component={ScriptImport}/>
           <Route exact path='/costumes/:costumeId' component={Costume}/>
           <Route exact path='/characters/:characterId' component={Character}/>
           <Route exact path='/scenes/:sceneId' component={Scene}/>

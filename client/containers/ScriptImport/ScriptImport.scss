@@ -1,0 +1,23 @@
+.ScriptImport {
+  .radio-container {
+    display: flex;
+    max-height: 300px;
+    margin: 20px 0;
+
+    .radio-select {
+      overflow-y: hidden;
+      align-self: center;
+    }
+
+    .radio-content {
+      overflow-y: auto;
+      padding: 20px;
+      border: solid 1px hsl(0, 0%, 83%)
+    }
+
+    .radio-options-container {
+      margin: 10px 0;
+    }
+
+  }
+}

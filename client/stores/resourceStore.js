@@ -26,6 +26,7 @@ class ResourceStore {
   @observable isLoading = false
 
   @observable setupAlerts = []
+  @observable scriptOptions = {}
 
   get resources() {
     return this.constructor.resources
@@ -88,6 +89,18 @@ class ResourceStore {
   loadSetupAlerts() {
     return this._api('setup_alerts').then(results => {
       this.setupAlerts = results
+    })
+  }
+
+  loadScriptOptions() {
+    return this._api('script_importer').then(results => {
+      this.scriptOptions = results
+    })
+  }
+
+  submitScriptOptions(options) {
+    return this._api('script_importer', 'POST', options).then(results => {
+      this.scriptOptions = results
     })
   }
 

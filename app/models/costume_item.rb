@@ -22,7 +22,7 @@
 
 class CostumeItem < ApplicationRecord
 
-  belongs_to :costume, touch: true, optional: true
+  belongs_to :costume, optional: true
   has_many :images, as: :imageable
   has_many :notes, as: :noteable
   has_many :comments, as: :commentable

@@ -15,6 +15,6 @@
 #
 
 class CharactersLine < ApplicationRecord
-  belongs_to :line, touch: true
-  belongs_to :character, touch: true
+  belongs_to :line
+  belongs_to :character
 end

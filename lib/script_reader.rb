@@ -4,6 +4,10 @@ require 'rtesseract'
 require 'active_support/core_ext/string/inflections'
 require 'openssl'
 require 'pry'
+require 'digest/sha1'
+require './config/environment.rb'
+
+ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 class ScriptReader
 
@@ -22,7 +26,7 @@ class ScriptReader
     },
     {
       description: 'titlecased', # not using titleize because there are some edge cases like 'Act II' where we don't want to downcase the rest of the word
-      proc: Proc.new {|line| line.split(DELIMITER_REGEX)[0] == line.split(DELIMITER_REGEX)[0].titleize}
+      proc: Proc.new {|line| line.split(DELIMITER_REGEX)[0].split(' ').map {|word| word[0].upcase + word[1..-1]}.join(' ') == line.strip && line.upcase != line}
     },
     {
       description: 'preceded by multiple linebreaks',
@@ -41,30 +45,36 @@ class ScriptReader
   end
 
   def generate_character_options
+
     if @matched_patterns_to_lines.nil?
-      self.apply_patterns
+      apply_patterns
     end
 
-    return @matched_patterns_to_lines.select do |matched_patterns, candidates|
-      !matched_patterns.includes('begins with Act or Scene') &&
+    character_options = @matched_patterns_to_lines.select do |matched_patterns, candidates|
+      !matched_patterns.include?('begins with Act or Scene') &&
         candidates.values.any? {|count| count >= 15}
-    end
+    end.map {|k, v| [k.to_a.join(', '), v.sort_by {|_, val| val}.reverse.to_h]}.to_h
+
+    return character_options
   end
 
   def generate_scene_options
+
     if @matched_patterns_to_lines.nil?
-      self.apply_patterns
+      apply_patterns
     end
 
-    return @matched_patterns_to_lines.select do |matched_patterns, candidates|
-      matched_patterns.includes('begins with Act or Scene')
-    end
+    scene_options = @matched_patterns_to_lines.select do |matched_patterns, candidates|
+      matched_patterns.include?('begins with Act or Scene')
+    end.map {|k, v| [k.to_a.join(', '), v.sort_by {|_, val| val}.reverse.to_h]}.to_h
+
+    return scene_options
   end
 
-  def generate_script(character_pattern, characters, scene_pattern = nil, scenes = [])
+  def generate_script(character_pattern, characters, scene_pattern = nil, scenes = [], persist: true)
 
     if @lines_patterns.nil?
-      self.apply_patterns
+      apply_patterns
     end
 
     prev_character = nil
@@ -89,7 +99,7 @@ class ScriptReader
 
       if line[:patterns] >= character_pattern
         current_character = find_character_or_scene(line[:line_content], characters)
-        current_character = current_character.titleize if current_character
+        current_character = current_character if current_character
       end
 
       cleaned_line_content = remove_character_and_scene_from_line(line[:line_content], current_character, current_scene)
@@ -114,12 +124,65 @@ class ScriptReader
       end
       prev_character = current_character
     end
-    puts 'done!'
+
+    if persist
+      ActiveRecord::Base.transaction do
+        puts "Persisting script"
+        Character.destroy_all
+        Scene.destroy_all
+        Line.skip_callback(:destroy, :after, :update_sort_order)
+        Line.skip_callback(:validation, :after, :update_sort_order)
+        Line.destroy_all
+        puts "Creating characters"
+        characters.each do |character|
+          Character.create!(name: character, production_id: 1)
+        end
+
+        puts "Creating scenes"
+        scenes.each do |scene|
+          Scene.create!(title: scene, production_id: 1)
+        end
+
+        script.group_by {|x| x[:character]}.each do |character, lines|
+          puts "Processing lines for #{character}"
+          character_scenes = lines.map {|line| line[:scene]}.uniq.compact
+          character_model = Character.find_by(name: character)
+          scenes = Scene.where(title: character_scenes)
+          character_model.scenes = scenes if character_model
+          lines.each do |line|
+            Line.create!(
+              scene: scenes.find {|scene| scene.title == line[:scene]},
+              characters: [character_model].compact,
+              number: line[:number],
+              content: line[:line],
+              production_id: 1
+            )
+          end
+        end
+        Line.set_callback(:destroy, :after, :update_sort_order)
+        Line.set_callback(:validation, :after, :update_sort_order)
+      end
+    end
     return script
   end
 
 
   private
+
+  def full_text
+    full_text = ''
+
+    @reader.pages.each do |page|
+      full_text += page.text
+    end
+
+    return full_text
+  end
+
+  def digest
+    @digest ||= Digest::SHA1.hexdigest(full_text)
+    return @digest
+  end
 
   def should_skip_line?(line)
     return [
@@ -130,6 +193,14 @@ class ScriptReader
 
   # iterates through the script and applies each pattern to a line building a hash <Set(matched patterns)> : [matched lines]
   def apply_patterns
+
+    cached_result = Rails.cache.read(digest)
+    if cached_result
+      @lines_patterns = cached_result[:lines_patterns]
+      @matched_patterns_to_lines = cached_result[:matched_patterns_to_lines]
+      return
+    end
+
     @lines_patterns = []
     line_count = 0
     consecutive_line_break_count = 0
@@ -170,6 +241,7 @@ class ScriptReader
 
       end
     end
+    Rails.cache.write(digest, {lines_patterns: @lines_patterns, matched_patterns_to_lines: @matched_patterns_to_lines})
   end
 
 
@@ -199,10 +271,46 @@ end
 
 # input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
 # input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
-# web_input = 'http://www.kinnarieco-theatre.org/scripts/GreeningofOz_Eng.pdf'
+web_input = 'http://www.kinnarieco-theatre.org/scripts/GreeningofOz_Eng.pdf'
 # web_input = 'https://gymkhana.iitb.ac.in/~cultural/dram_scripts/romeo_juliett.pdf'
-# pdf_reader = ScriptReader.new(input)
-# pdf_reader.apply_patterns
-# puts 'foo'
-# pdf_reader.process_script(pdf_reader.full_text, /^[\w\s]+:$/, /^(Act .*|Scene .*)$/i)
-# pdf_reader.read_ocr(input)
+
+characters = ["DOROTHY",
+              "SCARECROW",
+              "TIN MAN",
+              "LION",
+              "GLINDA",
+              "WITCH",
+              "WIZARD",
+              "AUNT EM",
+              "OZ'S VOICE",
+              "UNCLE HENRY",
+              "TOTO",
+              "GULCH",
+              "DOORMAN",
+              "GUARD",
+              "WINKIE LEADER",
+              "TREE",
+              "WINKIE 4",
+              "WINKIE 2",
+              "WINKIE 1",
+              "WINKIE 5",
+              "WINKIE 3",
+              "MUNCHKIN 2",
+              "MUNCHKIN 1",
+              "MUNCHKINS",
+              "WITCH’S VOICE",
+              "MUNCHIKIN 3"]
+character_pattern = Set.new(["all uppercase", "ends with delimeter"])
+scenes = ["Act V",
+          "Act IV",
+          "Act III",
+          "Act II",
+          "Act I"]
+scene_pattern = Set.new(["titlecased", "begins with Act or Scene"])
+pdf_reader = ScriptReader.new(web_input)
+pdf_reader.generate_script(
+  character_pattern,
+  characters,
+  scene_pattern,
+  scenes
+)

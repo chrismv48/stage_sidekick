@@ -18,8 +18,8 @@
 #
 
 class CostumesCharactersScene < ApplicationRecord
-  belongs_to :costume, touch: true
-  belongs_to :character, optional: :true, touch: true
-  belongs_to :scene, optional: :true, touch: true
+  belongs_to :costume
+  belongs_to :character, optional: :true
+  belongs_to :scene, optional: :true
 
 end

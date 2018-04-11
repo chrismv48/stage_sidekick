@@ -26,5 +26,5 @@
 #
 
 class ActorMeasurement < ApplicationRecord
-  belongs_to :user, touch: true
+  belongs_to :user
 end

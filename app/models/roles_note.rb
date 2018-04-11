@@ -15,6 +15,6 @@
 #
 
 class RolesNote < ApplicationRecord
-  belongs_to :role, touch: true
-  belongs_to :note, touch: true
+  belongs_to :role
+  belongs_to :note
 end
