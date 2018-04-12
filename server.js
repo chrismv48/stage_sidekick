@@ -10,6 +10,10 @@ const webpack = require('webpack')
 const proxyHost = '127.0.0.1';
 const proxyPort = '3005';
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}));
+
 app.use('/api', proxy(`${proxyHost}:${proxyPort}`));
 app.use(express.static('public'))
 

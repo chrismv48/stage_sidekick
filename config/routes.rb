@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   resources :comments
   get '/setup_alerts', to: 'setup_alerts#index'
-  get '/script_importer', to: 'script_importer#index'
-  post '/script_importer', to: 'script_importer#create'
+  post '/script_importer/parse', to: 'script_importer#parse_script'
+  post '/script_importer/generate', to: 'script_importer#generate_script'
   resources :notes
   resources :lines
   resources :actors

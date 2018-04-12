@@ -7,8 +7,6 @@ require 'pry'
 require 'digest/sha1'
 require './config/environment.rb'
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
-
 class ScriptReader
 
   attr_reader :reader
@@ -39,8 +37,7 @@ class ScriptReader
   ]
 
 
-  def initialize(input)
-    io = open(input, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE})
+  def initialize(io)
     @reader = PDF::Reader.new(io)
   end
 
@@ -269,48 +266,48 @@ class ScriptReader
   end
 end
 
+
 # input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
-# input = "/Users/chrisarmstrong/Downloads/Mountaintop Script 12.18.pdf"
-web_input = 'http://www.kinnarieco-theatre.org/scripts/GreeningofOz_Eng.pdf'
+# web_input = 'http://www.kinnarieco-theatre.org/scripts/GreeningofOz_Eng.pdf'
 # web_input = 'https://gymkhana.iitb.ac.in/~cultural/dram_scripts/romeo_juliett.pdf'
 
-characters = ["DOROTHY",
-              "SCARECROW",
-              "TIN MAN",
-              "LION",
-              "GLINDA",
-              "WITCH",
-              "WIZARD",
-              "AUNT EM",
-              "OZ'S VOICE",
-              "UNCLE HENRY",
-              "TOTO",
-              "GULCH",
-              "DOORMAN",
-              "GUARD",
-              "WINKIE LEADER",
-              "TREE",
-              "WINKIE 4",
-              "WINKIE 2",
-              "WINKIE 1",
-              "WINKIE 5",
-              "WINKIE 3",
-              "MUNCHKIN 2",
-              "MUNCHKIN 1",
-              "MUNCHKINS",
-              "WITCH’S VOICE",
-              "MUNCHIKIN 3"]
-character_pattern = Set.new(["all uppercase", "ends with delimeter"])
-scenes = ["Act V",
-          "Act IV",
-          "Act III",
-          "Act II",
-          "Act I"]
-scene_pattern = Set.new(["titlecased", "begins with Act or Scene"])
-pdf_reader = ScriptReader.new(web_input)
-pdf_reader.generate_script(
-  character_pattern,
-  characters,
-  scene_pattern,
-  scenes
-)
+# characters = ["DOROTHY",
+#               "SCARECROW",
+#               "TIN MAN",
+#               "LION",
+#               "GLINDA",
+#               "WITCH",
+#               "WIZARD",
+#               "AUNT EM",
+#               "OZ'S VOICE",
+#               "UNCLE HENRY",
+#               "TOTO",
+#               "GULCH",
+#               "DOORMAN",
+#               "GUARD",
+#               "WINKIE LEADER",
+#               "TREE",
+#               "WINKIE 4",
+#               "WINKIE 2",
+#               "WINKIE 1",
+#               "WINKIE 5",
+#               "WINKIE 3",
+#               "MUNCHKIN 2",
+#               "MUNCHKIN 1",
+#               "MUNCHKINS",
+#               "WITCH’S VOICE",
+#               "MUNCHIKIN 3"]
+# character_pattern = Set.new(["all uppercase", "ends with delimeter"])
+# scenes = ["Act V",
+#           "Act IV",
+#           "Act III",
+#           "Act II",
+#           "Act I"]
+# scene_pattern = Set.new(["titlecased", "begins with Act or Scene"])
+# pdf_reader = ScriptReader.new(web_input)
+# pdf_reader.generate_script(
+#   character_pattern,
+#   characters,
+#   scene_pattern,
+#   scenes
+# )

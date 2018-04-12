@@ -26,7 +26,7 @@ class ResourceStore {
   @observable isLoading = false
 
   @observable setupAlerts = []
-  @observable scriptOptions = {}
+  @observable scriptOptions = null
 
   get resources() {
     return this.constructor.resources
@@ -92,8 +92,8 @@ class ResourceStore {
     })
   }
 
-  loadScriptOptions() {
-    return this._api('script_importer').then(results => {
+  parseScript(options) {
+    return this._api('script_importer/parse', 'POST', options).then(results => {
       this.scriptOptions = results
     })
   }
