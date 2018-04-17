@@ -9,12 +9,17 @@ import CandidateSelection from "containers/ScriptImport/CandidateSelection";
 @inject("resourceStore", "uiStore") @observer
 export class ScriptImport extends React.Component {
 
+  @observable loading =  false
+  @observable scriptInput = null
+
   processUpload(e) {
     let reader = new FileReader();
     let file = e.target.files[0];
 
     reader.onloadend = () => {
-      this.props.resourceStore.parseScript({payload: reader.result, format: 'pdf'})
+      this.loading = true
+      this.scriptInput = {payload: reader.result, format: 'pdf'}
+      this.props.resourceStore.parseScript(this.scriptInput).then(() => this.loading = false)
     }
 
     reader.readAsDataURL(file)
@@ -49,8 +54,8 @@ export class ScriptImport extends React.Component {
               </Button>
             </Form.Field>
           </Form>
-
-          {scriptOptions && <CandidateSelection />}
+          {this.loading && <ContentLoader/>}
+          {scriptOptions && <CandidateSelection scriptInput={this.scriptInput}/>}
 
         </Grid.Column>
       </Grid>

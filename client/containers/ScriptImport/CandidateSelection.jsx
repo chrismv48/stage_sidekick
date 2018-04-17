@@ -8,8 +8,8 @@ import {pull} from 'lodash'
 @inject("resourceStore", "uiStore") @observer
 export class ScriptImport extends React.Component {
 
-  @observable loading = true
-  @observable selectedTypeGroup = {'scenes': [], 'characters': []}
+  @observable loading = false
+  @observable selectedTypeGroup = {'scenes': null, 'characters': null}
   @observable selectedTypeByGroup = null
 
   componentWillMount() {
@@ -38,8 +38,10 @@ export class ScriptImport extends React.Component {
     }
   }
 
+
   renderOptions(optionType, options) {
     return Object.entries(options).map(([pattern, patternOptions]) => {
+      const isAllSelected = this.selectedTypeByGroup[optionType][pattern].length === Object.keys(patternOptions).length
       return (
         <div className='radio-container'>
           <div className='radio-select'>
@@ -52,7 +54,14 @@ export class ScriptImport extends React.Component {
             />
           </div>
           <div className='radio-content'>
-            <strong>{pattern}</strong>
+            <Checkbox
+              label={pattern}
+              disabled={this.selectedTypeGroup[optionType] !== pattern}
+              checked={isAllSelected}
+              onChange={() => isAllSelected ?
+                this.selectedTypeByGroup[optionType][pattern] = [] : this.selectedTypeByGroup[optionType][pattern] = Object.keys(patternOptions)}
+            />
+
             <div className='radio-options-container'>
               {Object.entries(patternOptions).map(([candidate, frequency]) => {
                 return (
@@ -84,10 +93,15 @@ export class ScriptImport extends React.Component {
       characters: {
         characters: (this.selectedTypeByGroup['characters'][this.selectedTypeGroup['characters']] || []).slice(),
         pattern: this.selectedTypeGroup['characters']
-      }
+      },
     }
-    console.log(selections)
-    this.props.resourceStore.submitScriptOptions(selections)
+    const payload = this.props.scriptInput
+    payload.selections = selections
+    this.loading = true
+    this.props.resourceStore.submitScriptOptions(payload).then(() => {
+      this.loading = false
+      window.location.href = '/script'
+    })
   }
 
   render() {
@@ -110,7 +124,9 @@ export class ScriptImport extends React.Component {
           </Form>
 
           <Button
+            primary
             content='Submit'
+            loading={this.loading}
             onClick={() => this.submitSelections()}
           >
 

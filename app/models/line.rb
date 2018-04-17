@@ -20,7 +20,7 @@
 #
 
 class Line < ApplicationRecord
-  belongs_to :scene
+  belongs_to :scene, optional: true
   belongs_to :production
 
   # the has many relationship with characters is necessary because some lines are spoken (sang) in unison.

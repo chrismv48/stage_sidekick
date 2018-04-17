@@ -99,9 +99,7 @@ class ResourceStore {
   }
 
   submitScriptOptions(options) {
-    return this._api('script_importer', 'POST', options).then(results => {
-      this.scriptOptions = results
-    })
+    return this._api('script_importer/generate', 'POST', options)
   }
 
   dropdownOptions(resource) {

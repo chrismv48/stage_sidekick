@@ -18,7 +18,9 @@ const Api = (endpoint, method = 'get', payload = null, params = null) => {
   }
   return fetch(`/api/${endpoint}`, fetchOptions)
     .then(response => {
-      return response.json()
+      if (response.status === 200) {
+        return response.json()
+      }
     })
     .catch(error => {
       throw error;

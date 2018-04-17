@@ -81,7 +81,7 @@ class ScriptReader
 
     script = []
     line_number = 1
-    script_has_scenes = !scene_pattern.nil?
+    script_has_scenes = scene_pattern.present?
 
     @lines_patterns.each do |line|
 
@@ -96,12 +96,13 @@ class ScriptReader
 
       if line[:patterns] >= character_pattern
         current_character = find_character_or_scene(line[:line_content], characters)
-        current_character = current_character if current_character
+        puts "Setting new character: #{current_character}"
       end
-
+      binding.pry
       cleaned_line_content = remove_character_and_scene_from_line(line[:line_content], current_character, current_scene)
 
       next if cleaned_line_content.empty?
+      puts cleaned_line_content
 
       if (prev_character == current_character) && script.any?
         script.last[:line] += cleaned_line_content == "\n" ? cleaned_line_content : " #{cleaned_line_content}"
@@ -190,7 +191,6 @@ class ScriptReader
 
   # iterates through the script and applies each pattern to a line building a hash <Set(matched patterns)> : [matched lines]
   def apply_patterns
-
     cached_result = Rails.cache.read(digest)
     if cached_result
       @lines_patterns = cached_result[:lines_patterns]
@@ -238,7 +238,7 @@ class ScriptReader
 
       end
     end
-    Rails.cache.write(digest, {lines_patterns: @lines_patterns, matched_patterns_to_lines: @matched_patterns_to_lines})
+    Rails.cache.write(digest, {lines_patterns: @lines_patterns, matched_patterns_to_lines: @matched_patterns_to_lines.to_a.to_h})
   end
 
 
@@ -304,7 +304,7 @@ end
 #           "Act II",
 #           "Act I"]
 # scene_pattern = Set.new(["titlecased", "begins with Act or Scene"])
-# pdf_reader = ScriptReader.new(web_input)
+# pdf_reader = ScriptReader.new(open(web_input, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}))
 # pdf_reader.generate_script(
 #   character_pattern,
 #   characters,
