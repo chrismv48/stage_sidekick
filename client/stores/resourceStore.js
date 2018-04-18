@@ -27,6 +27,7 @@ class ResourceStore {
 
   @observable setupAlerts = []
   @observable scriptOptions = null
+  @observable scriptSuccessCounts = {}
 
   get resources() {
     return this.constructor.resources
@@ -99,7 +100,9 @@ class ResourceStore {
   }
 
   submitScriptOptions(options) {
-    return this._api('script_importer/generate', 'POST', options)
+    return this._api('script_importer/generate', 'POST', options).then(results => {
+      this.scriptSuccessCounts = results
+    })
   }
 
   dropdownOptions(resource) {

@@ -10,6 +10,9 @@ require './config/environment.rb'
 class ScriptReader
 
   attr_reader :reader
+  attr_reader :line_count
+  attr_reader :characters
+  attr_reader :scenes
 
   DELIMITER_REGEX = /(\.\s{2,}|\s{2,}|\:|\n)/
 
@@ -69,6 +72,8 @@ class ScriptReader
   end
 
   def generate_script(character_pattern, characters, scene_pattern = nil, scenes = [], persist: true)
+    @scenes = scenes
+    @characters = characters
 
     if @lines_patterns.nil?
       apply_patterns
@@ -98,7 +103,7 @@ class ScriptReader
         current_character = find_character_or_scene(line[:line_content], characters)
         puts "Setting new character: #{current_character}"
       end
-      binding.pry
+
       cleaned_line_content = remove_character_and_scene_from_line(line[:line_content], current_character, current_scene)
 
       next if cleaned_line_content.empty?
@@ -140,7 +145,7 @@ class ScriptReader
         scenes.each do |scene|
           Scene.create!(title: scene, production_id: 1)
         end
-
+        @line_count = 0
         script.group_by {|x| x[:character]}.each do |character, lines|
           puts "Processing lines for #{character}"
           character_scenes = lines.map {|line| line[:scene]}.uniq.compact
@@ -155,6 +160,7 @@ class ScriptReader
               content: line[:line],
               production_id: 1
             )
+            @line_count += 1
           end
         end
         Line.set_callback(:destroy, :after, :update_sort_order)

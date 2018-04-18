@@ -29,7 +29,11 @@ class ScriptImporterController < ApplicationController
     )
 
 
-    head :no_content
+    render json: {
+      characterCount: @script_reader.characters.size,
+      sceneCount: @script_reader.scenes.size,
+      lineCount: @script_reader.line_count,
+    }
   end
 
   private

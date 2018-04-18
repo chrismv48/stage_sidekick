@@ -4,13 +4,15 @@ import {Button, Checkbox, Form, Grid, Radio,} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import {pull} from 'lodash'
+import SuccessModal from "./SuccessModal";
 
 @inject("resourceStore", "uiStore") @observer
-export class ScriptImport extends React.Component {
+export class CandidateSelection extends React.Component {
 
   @observable loading = false
   @observable selectedTypeGroup = {'scenes': null, 'characters': null}
   @observable selectedTypeByGroup = null
+  @observable showSuccessModal = false
 
   componentWillMount() {
     this.initializeSelectedTypeByGroup()
@@ -43,7 +45,7 @@ export class ScriptImport extends React.Component {
     return Object.entries(options).map(([pattern, patternOptions]) => {
       const isAllSelected = this.selectedTypeByGroup[optionType][pattern].length === Object.keys(patternOptions).length
       return (
-        <div className='radio-container'>
+        <div className='radio-container' key={pattern}>
           <div className='radio-select'>
             <Radio
               value={pattern}
@@ -65,7 +67,7 @@ export class ScriptImport extends React.Component {
             <div className='radio-options-container'>
               {Object.entries(patternOptions).map(([candidate, frequency]) => {
                 return (
-                  <div>
+                  <div key={candidate}>
                     <Checkbox
                       label={`${candidate} (occurred ${frequency} times)`}
                       disabled={this.selectedTypeGroup[optionType] !== pattern}
@@ -100,13 +102,14 @@ export class ScriptImport extends React.Component {
     this.loading = true
     this.props.resourceStore.submitScriptOptions(payload).then(() => {
       this.loading = false
-      window.location.href = '/script'
+      this.showSuccessModal = true
     })
   }
 
   render() {
 
-    const {scriptOptions} = this.props.resourceStore
+    const {scriptOptions, scriptSuccessCounts} = this.props.resourceStore
+
     return (
       <Grid className="ScriptImport">
         <Grid.Column>
@@ -131,10 +134,11 @@ export class ScriptImport extends React.Component {
           >
 
           </Button>
+          {this.showSuccessModal && <SuccessModal {...scriptSuccessCounts} />}
         </Grid.Column>
       </Grid>
     );
   }
 }
 
-export default ScriptImport;
+export default CandidateSelection;
