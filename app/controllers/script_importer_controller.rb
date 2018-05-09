@@ -1,5 +1,4 @@
 require 'script_reader'
-require 'pry'
 
 class ScriptImporterController < ApplicationController
 
