@@ -37,10 +37,10 @@ class Line < ApplicationRecord
   # Adjust line numbers since user can insert/swap lines etc. Naive implementation for now
   def update_sort_order
     return unless self.number_was != self.number || self.destroyed? || self.number.nil?
-    records_to_update = Line.where('number >= ?', self.number).where.not(id: self.id)
+    records_to_update = Line.where('number >= ?', self.number).where.not(id: self.id).order(:number)
     if self.destroyed?
       line_number = self.number
-      records_to_update.find_each do |record|
+      records_to_update.each do |record|
         record.number = line_number
         record.save!(validate: false) # avoid infinite loop!
 
@@ -48,7 +48,7 @@ class Line < ApplicationRecord
       end
     else
       line_number = self.number + 1
-      records_to_update.find_each do |record|
+      records_to_update.each do |record|
         record.number = line_number
         record.save!(validate: false) # avoid infinite loop!
 

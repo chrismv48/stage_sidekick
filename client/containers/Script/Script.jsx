@@ -4,16 +4,18 @@ import {Button, Container, Dropdown, Grid, Header, Segment} from 'semantic-ui-re
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import Line from "components/Line/Line";
-import classNames from 'classnames'
-import {compact, throttle, uniq} from 'lodash'
+import {compact, uniq} from 'lodash'
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
-function findNearest(target, numbers) {
-  for (let key in Object.keys(numbers).sort()) {
-    if (target <= numbers[key]) {
-      return key
-    }
-  }
+function isElementInViewport(el) {
+
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 }
 
 @inject("resourceStore", "uiStore") @observer
@@ -24,6 +26,31 @@ export class Script extends React.Component {
     this.handleScroll = this.handleScroll.bind(this)
   }
 
+  @observable loading = true
+  @observable editingLineId = null
+  @observable showNewLineAbove = null
+  @observable enableStickyHeader = false
+  @observable sliderValue = null
+  @observable currentLine = null
+
+  topElement = null
+  bottomElement = null
+
+  topLine = null
+  bottomLine = null
+
+  @observable knownLineHeights = []
+
+  defaultAvgLineHeight = 96
+
+  @computed get visibleLines() {
+    return this.lines.slice(Math.max(0, this.currentLine - 20), this.currentLine + 20)
+  }
+
+  @computed get lines() {
+    return this.props.resourceStore.lines
+  }
+
   @computed get minLineNo() {
     return this.props.resourceStore.lines.length > 0 ? 1 : null
   }
@@ -32,22 +59,29 @@ export class Script extends React.Component {
     return this.props.resourceStore.lines.length
   }
 
-  @computed get lines() {
-    return this.props.resourceStore.lines
+  @computed get avgLineHeight() {
+    const compactLineHeights = compact(this.knownLineHeights)
+    return (Math.floor(compactLineHeights.reduce((a, b) => a + b, 0) / compactLineHeights.length)) || this.defaultAvgLineHeight
   }
 
-  @observable loading = true
-  @observable editingLineId = null
-  @observable showNewLineAbove = null
-  @observable enableStickyHeader = false
-  @observable sliderValue = null
-  @observable currentLine = null
-  linePositions = {}
-  scenePositions = {}
+  @computed get interpolatedLineHeights() {
+    return this.knownLineHeights.map(lineHeight => lineHeight || this.avgLineHeight)
+  }
+
+  @computed get sceneNumbers() {
+    const sceneNumbers = {}
+    let currentSceneId = null
+    for (let line of this.lines) {
+      if (currentSceneId !== line.scene_id) {
+        sceneNumbers[line.scene_id] = line.number
+        currentSceneId = line.scene_id
+      }
+    }
+    return sceneNumbers
+  }
 
   componentDidMount() {
-    window.addEventListener('scroll', throttle(this.handleScroll, 100))
-    // window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.handleScroll)
     this.loading = true
     Promise.all([
       this.props.resourceStore.loadLines(),
@@ -55,7 +89,8 @@ export class Script extends React.Component {
       this.props.resourceStore.loadCharacters(),
     ]).then(() => {
       this.loading = false
-      this.currentLine = this.minLineNo
+      this.knownLineHeights = Array(this.lines.length).fill(null)
+      this.currentLine = this.lines.length > 0 && this.lines[0].number
     })
   }
 
@@ -64,11 +99,21 @@ export class Script extends React.Component {
   }
 
   handleScroll(event) {
-    if (!this.autoScrolling) {
-      this.currentLine = findNearest(window.pageYOffset, this.linePositions)
-      this.sliderValue = null
+    if (this.scrollingToLine) {
+      return
     }
-    this.enableStickyHeader = window.pageYOffset >= this.headerYOffset;
+    if (this.bottomElement && isElementInViewport(this.bottomElement) && this.visibleLines[this.visibleLines.length - 1].number !== this.lines[this.lines.length - 1].number) {
+      this.bottomElement = null
+      this.currentLine = this.bottomLine
+    } else if (this.topElement && isElementInViewport(this.topElement)) {
+      this.topElement = null
+      this.currentLine = this.topLine
+    }
+  }
+
+  handleScrollToLine(lineNumber) {
+    this.currentLine = lineNumber
+    this.scrollingToLine = lineNumber
   }
 
   handleSave(lineId) {
@@ -110,26 +155,6 @@ export class Script extends React.Component {
     line.destroy()
   }
 
-  handleScrollToLine() {
-    this.currentLine = this.sliderValue
-    this.autoScrolling = true
-    window.scroll({
-      left: 0,
-      top: this.linePositions[this.currentLine] - window.outerHeight / 2 + 150, // Trial and error to approximate center scroll
-      behavior: 'smooth'
-    })
-    // hack to account for the time it takes to scroll
-    setTimeout(() => this.autoScrolling = false, 2000)
-  }
-
-  handleScrollToScene(sceneId) {
-    window.scroll({
-      left: 0,
-      top: this.scenePositions[sceneId] - 110,
-      behavior: 'smooth'
-    })
-  }
-
   generateSceneOptions() {
     const {lines, scenes} = this.props.resourceStore
     const sceneIds = uniq(compact(lines.map(line => line.sceneId)))
@@ -144,11 +169,20 @@ export class Script extends React.Component {
   }
 
   getCurrentSceneId() {
-    const {lines} = this.props.resourceStore
-    const currentLine = lines.find(line => line.number === parseInt(this.currentLine))
-    if (currentLine) {
-      return currentLine.sceneId
-    }
+    const currentLine = this.lines.find(line => line.number === parseInt(this.currentLine))
+    return currentLine && currentLine.scene_id
+  }
+
+  calculateTopSpacer() {
+    const topIndex = this.visibleLines[0].number - 1
+    const filteredHeights = this.interpolatedLineHeights.slice(0, topIndex)
+    return filteredHeights.reduce((a, b) => a + b, 0)
+  }
+
+  calculateBottomSpacer() {
+    const bottomIndex = this.visibleLines[this.visibleLines.length - 1].number - 1
+    const filteredHeights = this.interpolatedLineHeights.slice(bottomIndex + 1)
+    return filteredHeights.reduce((a, b) => a + b, 0)
   }
 
   render() {
@@ -158,7 +192,6 @@ export class Script extends React.Component {
       )
     }
 
-    const {lines} = this.props.resourceStore
     return (
       <Grid className="Script">
         <Grid.Row>
@@ -166,18 +199,11 @@ export class Script extends React.Component {
             <Header as="h2" dividing>
               Script
             </Header>
-            <div
-              ref={(node) => {
-                if (node && !this.headerYOffset) {
-                  this.headerYOffset = node.offsetTop + 8
-                }
-              }}
-              className={classNames('line-navbar', {'sticky': this.enableStickyHeader})}
-            >
+            <div className='script-navbar'>
               <div className='add-line-button'>
                 <Button primary icon='plus' onClick={this.handleAddLine} content='Add line'/>
               </div>
-              <div className={'line-slider-container'}>
+              <div className='line-slider-container'>
                 <strong>Line No</strong>
                 <input
                   className='line-slider'
@@ -186,7 +212,7 @@ export class Script extends React.Component {
                   max={this.maxLineNo}
                   value={this.sliderValue || this.currentLine || 1}
                   onChange={(e) => this.sliderValue = e.target.value}
-                  onMouseUp={(e) => this.handleScrollToLine()}
+                  onMouseUp={(e) => this.handleScrollToLine(parseInt(e.target.value))}
                 />
                 <span className='line-slider-value'>
                 {this.sliderValue || this.currentLine}
@@ -197,31 +223,17 @@ export class Script extends React.Component {
                   <Dropdown
                     options={this.generateSceneOptions()}
                     value={this.getCurrentSceneId()}
-                    onChange={(e, data) => this.handleScrollToScene(data.value)}
+                    onChange={(e, data) => this.handleScrollToLine(this.sceneNumbers[data.value])}
                   />
                 </strong>
                 <div className='current-scene-label'>Current scene</div>
               </div>
             </div>
             <Container text className='lines-container'>
-              {lines.sort((a, b) => a.number - b.number).map((line, i) => {
-                const shouldRenderSceneHeader = () => {
-                  if (i === 0) {
-                    return true
-                  }
-                  return (lines[i - 1].sceneId !== line.sceneId)
-                }
+              <div style={{height: this.calculateTopSpacer()}}/>
+              {this.visibleLines.sort((a, b) => a.number - b.number).map((line, i) => {
                 return (
-                  <React.Fragment key={i}>
-                    {shouldRenderSceneHeader() &&
-                    <div ref={(elem) => {
-                      if (elem) {
-                        this.scenePositions[line.sceneId] = elem.offsetTop
-                      }
-                      }}>
-                      <Header as='h2' content={line.scene.title}/>
-                    </div>
-                    }
+                  <React.Fragment key={line.number}>
                     {this.showNewLineAbove === line.number &&
                     <div>
                       <Line
@@ -232,11 +244,27 @@ export class Script extends React.Component {
                       />
                     </div>
                     }
-                    <div ref={(elem) => {
-                      if (elem) {
-                        this.linePositions[line.number] = elem.offsetTop
+                    <div ref={(elem => {
+                      if (!elem) {
+                        return
                       }
-                    }}>
+                      this.knownLineHeights[line.number - 1] = elem.offsetHeight
+
+                      if (trackVisibility) {
+                        if (i === 0) {
+                          this.topElement = elem
+                          this.topLine = line.number
+                        } else {
+                          this.bottomElement = elem
+                          this.bottomLine = line.number
+                        }
+                      }
+
+                      if (this.scrollingToLine === line.number) {
+                        elem.scrollIntoView({block: 'center'})
+                        this.scrollingToLine = null
+                      }
+                    })}>
                       <Line
                         lineId={line.id}
                         editMode={this.editingLineId === line.id}
@@ -251,6 +279,7 @@ export class Script extends React.Component {
                 )
               })
               }
+              <div style={{height: this.calculateBottomSpacer()}}/>
               {this.showNewLineAbove === -1 &&
               <Line
                 lineId={null}

@@ -19,7 +19,12 @@
     margin-left: 3px;
   }
 
-  .line-navbar {
+  .script-navbar {
+    position: sticky;
+    z-index: 2;
+    top: 44px;
+    background-color: white;
+    padding: 15px 0;
     display: flex;
     align-items: center;
 

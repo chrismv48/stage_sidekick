@@ -18,7 +18,7 @@ const Api = (endpoint, method = 'get', payload = null, params = null) => {
   }
   return fetch(`/api/${endpoint}`, fetchOptions)
     .then(response => {
-      if (response.status === 200) {
+      if (response.ok) {
         return response.json()
       }
     })
