@@ -3,7 +3,6 @@ require 'open-uri'
 require 'rtesseract'
 require 'active_support/core_ext/string/inflections'
 require 'openssl'
-require 'pry'
 require 'digest/sha1'
 require './config/environment.rb'
 
