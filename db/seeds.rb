@@ -199,7 +199,7 @@ end
 
 CostumesCharactersScene.create(
   costume_id: 1,
-  characters_scene_id: 1,
+  scene_id: 1,
   character_id: 1
 )
 
@@ -231,7 +231,7 @@ incomplete_notes = Note.create(10.times.collect {|i| {
   actor: actors.sample,
   scene: scenes.sample,
   noteable: [costumes.sample, costume_item].sample,
-  note: Faker::Lorem.sentence(3, true, 25),
+  description: Faker::Lorem.sentence(3, true, 25),
   priority: [1,2,3].sample,
   status: ['Assigned', 'In Progress'].sample,
   assignees: roles.sample([1,2].sample)
@@ -242,7 +242,7 @@ complete_notes = Note.create(5.times.collect {|i| {
   scene: scenes.sample,
   actor: actors.sample,
   noteable: [costumes.sample, costume_item].sample,
-  note: Faker::Lorem.sentence(3, true, 25),
+  description: Faker::Lorem.sentence(3, true, 25),
   priority: [1,2,3].sample,
   status: 'Complete',
   assignees: roles.sample([1,2].sample),
