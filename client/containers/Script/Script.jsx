@@ -232,6 +232,7 @@ export class Script extends React.Component {
             <Container text className='lines-container'>
               <div style={{height: this.calculateTopSpacer()}}/>
               {this.visibleLines.sort((a, b) => a.number - b.number).map((line, i) => {
+                const trackVisibility = (i === 0 && line.number > 1) || (i === this.visibleLines.length - 3)
                 return (
                   <React.Fragment key={line.number}>
                     {this.showNewLineAbove === line.number &&
