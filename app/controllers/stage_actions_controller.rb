@@ -53,7 +53,7 @@ class StageActionsController < ApplicationController
   end
 
   def set_stage_actions
-    @stage_actions = StageAction.where(nil)
+    @stage_actions = StageAction.includes(:characters).where(nil)
     @stage_actions = @stage_actions.where(production_id: params[:production_id]) if params[:production_id]
     @stage_actions = @stage_actions.order(:number)
   end

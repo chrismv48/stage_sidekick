@@ -10,7 +10,7 @@ import {computed} from "mobx";
 class StageAction extends React.Component {
 
   @computed get stageAction() {
-    return this.props.resourceStore.stageActions.find(stageAction => stageAction.id === this.props.stageActionId)
+    return this.props.resourceStore.stage_actions.find(stageAction => stageAction.id === this.props.stageActionId)
   }
 
   @computed get stageActionStaged() {

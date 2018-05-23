@@ -157,7 +157,7 @@ export class Script extends React.Component {
 
   generateSceneOptions() {
     const {stage_actions, scenes} = this.props.resourceStore
-    const sceneIds = uniq(compact(stage_actions.map(stageAction => stageAction.sceneId)))
+    const sceneIds = uniq(compact(stage_actions.map(stageAction => stageAction.scene_id)))
     return sceneIds.map(sceneId => {
       const scene = scenes.find(scene => scene.id === sceneId)
       return {

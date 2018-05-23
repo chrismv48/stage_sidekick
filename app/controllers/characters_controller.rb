@@ -6,7 +6,7 @@ class CharactersController < ApplicationController
 
   # GET /characters
   def index
-    @characters = Character.where(nil)
+    @characters = Character.includes(:roles, :scenes, :costumes, :characters_scenes, :costumes_characters_scenes, :images).where(nil)
     @characters = @characters.where(production_id: params[:production_id]) if params[:production_id]
     @characters = @characters.order(:order_index)
     render json: build_json_response(@characters, ASSOCIATIONS_TO_INCLUDE)

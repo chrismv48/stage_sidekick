@@ -14,7 +14,7 @@ class CostumesController < ApplicationController
 
   # GET /costumes
   def index
-    @costumes = Costume.all
+    @costumes = Costume.includes(:costume_items, :characters, :scenes, :notes, :comments, :costumes_characters_scenes, :images).all
     render json: build_json_response(@costumes, ASSOCIATIONS_TO_INCLUDE)
   end
 

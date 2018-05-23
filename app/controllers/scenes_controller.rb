@@ -70,7 +70,7 @@ class ScenesController < ApplicationController
   end
 
   def persist_order_index_swap
-    scenes = Scene.where(id: params[:order_index_swap])
+    scenes = Scene.includes(:characters, :costumes, :images).where(id: params[:order_index_swap])
     scenes.each_with_index do |scene|
       scene.order_index = params[:order_index_swap].index(scene.id)
       scene.save
