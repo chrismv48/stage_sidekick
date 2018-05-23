@@ -1,4 +1,4 @@
-.Line {
+.StageAction {
 
   .display-mode {
 
@@ -27,12 +27,12 @@
       color: grey;
     }
 
-    .line-container {
+    .stage-action-container {
       display: flex;
       padding: 15px;
     }
 
-    .line-number {
+    .stage-action-number {
       align-self: center;
       margin-right: 20px;
       font-size: 24px;
@@ -44,11 +44,11 @@
       flex-shrink: 0;
     }
 
-    .character-line-avatar {
+    .character-stage-action-avatar {
       margin-right: 7px;
     }
 
-    .line-type-icon {
+    .stage-action-type-icon {
       opacity: 0.6;
       margin-left: 5px;
 
@@ -57,7 +57,7 @@
       }
     }
 
-    .line-content {
+    .stage-action-content {
       margin-top: -5px;
     }
 

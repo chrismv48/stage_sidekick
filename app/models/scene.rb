@@ -26,6 +26,7 @@ class Scene < ApplicationRecord
   has_many :images, as: :imageable
   has_many :comments, as: :commentable
   has_many :notes
+  has_many :stage_actions
 
   after_create do |scene|
     if scene.order_index.nil?

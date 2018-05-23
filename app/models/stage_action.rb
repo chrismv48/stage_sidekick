@@ -1,31 +1,35 @@
 # == Schema Information
 #
-# Table name: lines
+# Table name: stage_actions
 #
-#  id            :integer          not null, primary key
-#  production_id :integer          not null
-#  scene_id      :integer
-#  number        :integer
-#  page_number   :integer
-#  line_type     :string
-#  content       :string
-#  status        :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                     :integer          not null, primary key
+#  production_id          :integer          not null
+#  scene_id               :integer
+#  number                 :integer
+#  page_number            :integer
+#  stage_action_type      :string
+#  description            :string
+#  status                 :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  is_entrance            :boolean
+#  is_exit                :boolean
+#  entrance_exit_location :string
+#  song                   :string
 #
 # Indexes
 #
-#  index_lines_on_production_id  (production_id)
-#  index_lines_on_scene_id       (scene_id)
+#  index_stage_actions_on_production_id  (production_id)
+#  index_stage_actions_on_scene_id       (scene_id)
 #
 
-class Line < ApplicationRecord
+class StageAction < ApplicationRecord
   belongs_to :scene, optional: true
   belongs_to :production
 
   # the has many relationship with characters is necessary because some lines are spoken (sang) in unison.
-  has_many :characters_lines
-  has_many :characters, through: :characters_lines, dependent: :destroy
+  has_many :characters_stage_actions
+  has_many :characters, through: :characters_stage_actions, dependent: :destroy
 
   after_validation :update_sort_order
   after_destroy :update_sort_order

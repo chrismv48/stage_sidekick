@@ -8,7 +8,7 @@ import RoleModel from "models/roleModel";
 import CostumeModel from "models/costumeModel";
 import CostumeItemModel from "models/costumeItemModel";
 import ActorModel from "models/actorModel";
-import LineModel from "models/lineModel";
+import StageActionModel from "models/StageActionModel";
 import NoteModel from "models/noteModel";
 
 
@@ -20,7 +20,7 @@ class ResourceStore {
   @observable actors = []
   @observable costumes = []
   @observable costume_items = []
-  @observable lines = []
+  @observable stage_actions = []
   @observable notes = []
 
   @observable isLoading = false
@@ -83,8 +83,8 @@ class ResourceStore {
     return this.loadResource('costume_items', idOrIds)
   }
 
-  loadLines(idOrIds = null) {
-    return this.loadResource('lines', idOrIds)
+  loadStageActions(idOrIds = null) {
+    return this.loadResource('stage_actions', idOrIds)
   }
 
   loadSetupAlerts() {
@@ -178,7 +178,7 @@ ResourceStore.resources = {
   'costumes': CostumeModel,
   'actors': ActorModel,
   'roles': RoleModel,
-  'lines': LineModel,
+  'stage_actions': StageActionModel,
   'costume_items': CostumeItemModel,
   'notes': NoteModel
 }

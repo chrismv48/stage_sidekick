@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post '/script_importer/parse', to: 'script_importer#parse_script'
   post '/script_importer/generate', to: 'script_importer#generate_script'
   resources :notes
-  resources :lines
+  resources :stage_actions
   resources :actors
   resources :roles
   resources :members

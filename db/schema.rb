@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180220180435) do
+ActiveRecord::Schema.define(version: 20180523122046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,15 +45,6 @@ ActiveRecord::Schema.define(version: 20180220180435) do
     t.integer  "order_index"
   end
 
-  create_table "characters_lines", force: :cascade do |t|
-    t.integer  "line_id",      null: false
-    t.integer  "character_id", null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["character_id"], name: "index_characters_lines_on_character_id", using: :btree
-    t.index ["line_id"], name: "index_characters_lines_on_line_id", using: :btree
-  end
-
   create_table "characters_roles", force: :cascade do |t|
     t.integer  "role_id",      null: false
     t.integer  "character_id", null: false
@@ -70,6 +61,15 @@ ActiveRecord::Schema.define(version: 20180220180435) do
     t.datetime "updated_at",   null: false
     t.index ["character_id"], name: "index_characters_scenes_on_character_id", using: :btree
     t.index ["scene_id"], name: "index_characters_scenes_on_scene_id", using: :btree
+  end
+
+  create_table "characters_stage_actions", force: :cascade do |t|
+    t.integer  "stage_action_id", null: false
+    t.integer  "character_id",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["character_id"], name: "index_characters_stage_actions_on_character_id", using: :btree
+    t.index ["stage_action_id"], name: "index_characters_stage_actions_on_stage_action_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
@@ -129,20 +129,6 @@ ActiveRecord::Schema.define(version: 20180220180435) do
     t.datetime "updated_at",                     null: false
     t.integer  "order_index"
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
-  end
-
-  create_table "lines", force: :cascade do |t|
-    t.integer  "production_id", null: false
-    t.integer  "scene_id"
-    t.integer  "number"
-    t.integer  "page_number"
-    t.string   "line_type"
-    t.string   "content"
-    t.string   "status"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["production_id"], name: "index_lines_on_production_id", using: :btree
-    t.index ["scene_id"], name: "index_lines_on_scene_id", using: :btree
   end
 
   create_table "notes", force: :cascade do |t|
@@ -213,6 +199,24 @@ ActiveRecord::Schema.define(version: 20180220180435) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.index ["production_id"], name: "index_scenes_on_production_id", using: :btree
+  end
+
+  create_table "stage_actions", force: :cascade do |t|
+    t.integer  "production_id",          null: false
+    t.integer  "scene_id"
+    t.integer  "number"
+    t.integer  "page_number"
+    t.string   "stage_action_type"
+    t.string   "description"
+    t.string   "status"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.boolean  "is_entrance"
+    t.boolean  "is_exit"
+    t.string   "entrance_exit_location"
+    t.string   "song"
+    t.index ["production_id"], name: "index_stage_actions_on_production_id", using: :btree
+    t.index ["scene_id"], name: "index_stage_actions_on_scene_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

@@ -27,6 +27,7 @@ class Character < ApplicationRecord
   has_many :images, as: :imageable
   has_many :comments, as: :commentable
 
+  has_many :stage_actions, through: :characters_stage_actions
 
   # TODO there's probably a way to just create a relationship with actors directly
   alias_attribute :actors, :roles

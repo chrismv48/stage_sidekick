@@ -1,26 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import './Line.scss'
+import './StageAction.scss'
 import {Button, Dropdown, Form, Header, Icon, Image, Segment} from "semantic-ui-react";
 import {inject, observer} from "mobx-react/index";
 import {computed} from "mobx";
 
 
 @inject("resourceStore", "uiStore") @observer
-class Line extends React.Component {
+class StageAction extends React.Component {
 
-  @computed get line() {
-    return this.props.resourceStore.lines.find(line => line.id === this.props.lineId)
+  @computed get stageAction() {
+    return this.props.resourceStore.stageActions.find(stageAction => stageAction.id === this.props.stageActionId)
   }
 
-  @computed get lineStaged() {
-    return this.props.resourceStore.getStagedResource('lines', this.props.lineId)
+  @computed get stageActionStaged() {
+    return this.props.resourceStore.getStagedResource('stage_actions', this.props.stageActionId)
   }
 
   renderCharacter(character) {
     return (
       <React.Fragment>
-      <span className='character-line-avatar'>
+      <span className='character-stage-action-avatar'>
         <Image circular inline height={25} width={25} src={character.avatar}/>
       </span>
         <a onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}</a>
@@ -30,7 +30,7 @@ class Line extends React.Component {
 
   renderCharacters(characters) {
     return (
-      <span className='character-line-avatar'>
+      <span className='character-stage-action-avatar'>
         {characters.map((character, i) => {
           const last = i === characters.length - 1
           return (
@@ -42,35 +42,35 @@ class Line extends React.Component {
   }
 
 
-  renderLineTypeIcon(lineType) {
+  renderStageActionTypeIcon(stageActionType) {
     let iconName = ''
     let iconTitle = ''
-    if (lineType === 'line') {
+    if (stageActionType === 'line') {
       iconName = 'talk'
-      iconTitle = 'Character Line'
-    } else if (lineType === 'song') {
+      iconTitle = 'Character StageAction'
+    } else if (stageActionType === 'song') {
       iconName = 'music'
       iconTitle = 'Song'
-    } else if (lineType === 'action') {
+    } else if (stageActionType === 'action') {
       iconName = 'microphone slash'
       iconTitle = 'Action'
     }
 
     return (
-      <span className='line-type-icon'>
+      <span className='stage-action-type-icon'>
         <Icon name={iconName} color='grey' size='small' title={iconTitle}/>
       </span>
     )
   }
 
-  renderLineHeader() {
+  renderStageActionHeader() {
     return (
       <Header as='h4'>
-        {this.lineStaged.characters.length === 1 ?
-          this.renderCharacter(this.lineStaged.characters[0]) :
-          this.renderCharacters(this.lineStaged.characters)
+        {this.stageActionStaged.characters.length === 1 ?
+          this.renderCharacter(this.stageActionStaged.characters[0]) :
+          this.renderCharacters(this.stageActionStaged.characters)
         }
-        {this.renderLineTypeIcon(this.lineStaged.line_type)}
+        {this.renderStageActionTypeIcon(this.stageActionStaged.stage_action_type)}
       </Header>
     )
   }
@@ -83,19 +83,19 @@ class Line extends React.Component {
           <Dropdown icon='ellipsis horizontal' pointing='right'>
             <Dropdown.Menu>
               <Dropdown.Item icon='share' text='Insert above' onClick={() => handleInsertAbove()}/>
-              <Dropdown.Item icon='edit' text='Edit' onClick={() => handleEdit(this.line.id)} />
+              <Dropdown.Item icon='edit' text='Edit' onClick={() => handleEdit(this.stageAction.id)} />
               <Dropdown.Item icon='trash' text='Delete' onClick={() => handleDelete()} />
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div className='line-container'>
-          <div className='line-number'>
-            {this.lineStaged.number}
+        <div className='stage-action-container'>
+          <div className='stage-action-number'>
+            {this.stageActionStaged.number}
           </div>
-          <div className='line-body'>
-            {this.renderLineHeader(this.lineStaged)}
-            <div className={'line-content'}>
-              {this.lineStaged.content}
+          <div className='stage-action-body'>
+            {this.renderStageActionHeader(this.stageActionStaged)}
+            <div className={'stage_action-content'}>
+              {this.stageActionStaged.description}
             </div>
           </div>
         </div>
@@ -117,8 +117,8 @@ class Line extends React.Component {
   generateSceneCharacterOptions() {
     let characters
 
-    if (this.lineStaged.sceneId) {
-      const scene = this.props.resourceStore.scenes.find(scene => scene.id === this.lineStaged.sceneId)
+    if (this.stageActionStaged.sceneId) {
+      const scene = this.props.resourceStore.scenes.find(scene => scene.id === this.stageActionStaged.sceneId)
       characters = this.props.resourceStore.characters.filter(character => scene.characterIds.includes(character.id))
     } else {
       characters = this.props.resourceStore.characters
@@ -132,17 +132,17 @@ class Line extends React.Component {
     })
   }
 
-  generateLineTypeOptions() {
-    const lineTypes = [
+  generateStageActionTypeOptions() {
+    const stageActionTypes = [
       'line',
       'song',
       'action'
     ]
-    return lineTypes.map((lineType, i) => {
+    return stageActionTypes.map((stageActionType, i) => {
       return {
         key: i,
-        text: lineType,
-        value: lineType
+        text: stageActionType,
+        value: stageActionType
       }
     })
   }
@@ -156,27 +156,27 @@ class Line extends React.Component {
             <Form.Select
               label='Scene'
               options={this.generateSceneOptions()}
-              value={this.lineStaged.sceneId}
-              onChange={(event, data) => this.lineStaged.sceneId = data.value}
+              value={this.stageActionStaged.sceneId}
+              onChange={(event, data) => this.stageActionStaged.sceneId = data.value}
             />
             <Form.Select
               label='Character(s)'
               multiple
               options={this.generateSceneCharacterOptions()}
-              value={this.lineStaged.characterIds.toJS()}
-              onChange={(event, data) => {this.lineStaged.characterIds = data.value}}
+              value={this.stageActionStaged.characterIds.toJS()}
+              onChange={(event, data) => {this.stageActionStaged.characterIds = data.value}}
             />
             <Form.Select
-              label='Line Type'
-              options={this.generateLineTypeOptions()}
-              value={this.lineStaged.line_type}
-              onChange={(event, data) => this.lineStaged.line_type = data.value}
+              label='StageAction Type'
+              options={this.generateStageActionTypeOptions()}
+              value={this.stageActionStaged.stage_action_type}
+              onChange={(event, data) => this.stageActionStaged.stage_action_type = data.value}
             />
           </Form.Group>
           <Form.TextArea
             label='Line'
-            value={this.lineStaged.content || ''}
-            onChange={(e) => this.lineStaged.content = e.target.value}
+            value={this.stageActionStaged.content || ''}
+            onChange={(e) => this.stageActionStaged.content = e.target.value}
           />
           <Button size='mini' compact icon='checkmark' onClick={(e) => {
             e.preventDefault();
@@ -195,7 +195,7 @@ class Line extends React.Component {
     const {editMode} = this.props
 
     return (
-      <div className='Line'>
+      <div className='StageAction'>
         {editMode ? this.renderEditMode() : this.renderDisplayMode()}
       </div>
     )
@@ -203,8 +203,8 @@ class Line extends React.Component {
 }
 
 
-Line.propTypes = {
-  lineId: PropTypes.number,
+StageAction.propTypes = {
+  stageActionId: PropTypes.number,
   editMode: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
@@ -213,4 +213,4 @@ Line.propTypes = {
   handleDelete: PropTypes.func
 };
 
-export default Line
+export default StageAction
