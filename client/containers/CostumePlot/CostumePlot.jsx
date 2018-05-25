@@ -1,6 +1,5 @@
 import React from 'react';
 import './CostumePlot.scss'
-import {Grid,} from 'semantic-ui-react'
 import 'react-table/react-table.css'
 import ReactTable from "react-table";
 import SceneFragment from "components/Fragment/SceneFragment";
@@ -84,17 +83,15 @@ export class CostumePlot extends React.Component {
     const columns = characterColumn.concat(sceneColumns)
 
     return (
-      <Grid className="CostumePlot">
-        <Grid.Column className="CostumePlot">
-          <ReactTable
-            data={data}
-            columns={columns}
-            showPagination={false}
-            resizable={false}
-            minRows={0}
-          />
-        </Grid.Column>
-      </Grid>
+      <div className="CostumePlot main-content">
+        <ReactTable
+          data={data}
+          columns={columns}
+          showPagination={false}
+          resizable={false}
+          minRows={0}
+        />
+      </div>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import './Actors.scss'
-import {Grid, Header} from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 import {computed, observable} from "mobx";
 import {observer} from "mobx-react/index";
 
@@ -12,23 +12,19 @@ export class Actors extends React.Component {
 
   render() {
     return (
-      <Grid className="Actors">
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h2" dividing>
-              <span style={{float: 'right'}}>
-                <DisplayModeIcons/>
-              </span>
-              Cast
-            </Header>
-            <MultipleItemLayout
-              resource='actors'
-              resourceLabel='Actors'
-              hideAddResourceButton
-            />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <div className="Actors main-content">
+        <Header as="h2" dividing>
+          <span style={{float: 'right'}}>
+            <DisplayModeIcons/>
+          </span>
+          Cast
+        </Header>
+        <MultipleItemLayout
+          resource='actors'
+          resourceLabel='Actors'
+          hideAddResourceButton
+        />
+      </div>
     );
   }
 }

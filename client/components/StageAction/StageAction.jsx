@@ -34,7 +34,7 @@ class StageAction extends React.Component {
         {characters.map((character, i) => {
           const last = i === characters.length - 1
           return (
-            <a key={i} onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}{!last && ', '}</a>
+            <a key={`${character.name}-${i}`} onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}{!last && ', '}</a>
           )
         })}
       </span>
@@ -193,7 +193,6 @@ class StageAction extends React.Component {
 
   render() {
     const {editMode} = this.props
-
     return (
       <div className='StageAction'>
         {editMode ? this.renderEditMode() : this.renderDisplayMode()}

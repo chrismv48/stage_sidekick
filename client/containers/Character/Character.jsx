@@ -1,6 +1,6 @@
 import React from 'react';
 import './Character.scss'
-import {Grid, Header, Image, Tab,} from 'semantic-ui-react'
+import {Header, Image, Tab,} from 'semantic-ui-react'
 import {isEmpty} from "lodash";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
@@ -70,62 +70,60 @@ export class Character extends React.Component {
     const characterRole = isEmpty(this.character.actorIds) ? {} : roles.find(role => role.id === this.character.actorIds[0])
 
     return (
-      <Grid className="Character">
-        <Grid.Column>
-          <Image
-            src={this.character.primaryImage}
-            onClick={() => this.showLightbox = true}
-            size='medium'
-            className='header-image'
-          />
-          <a
-            className='edit-images-link'
-            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
-              resourceName: 'characters',
-              resourceId: this.character.id
-            })}
+      <div className="Character main-content">
+        <Image
+          src={this.character.primaryImage}
+          onClick={() => this.showLightbox = true}
+          size='medium'
+          className='header-image'
+        />
+        <a
+          className='edit-images-link'
+          onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+            resourceName: 'characters',
+            resourceId: this.character.id
+          })}
+        >
+          Edit
+        </a>
+        <ImgLightbox
+          images={this.character.images.toJS()}
+          isOpen={this.showLightbox}
+          handleOnClose={() => this.showLightbox = false}
+        />
+        <Header as="h1">
+          {this.character.name}
+          <Header.Subheader>
+            Played by <a
+            style={{cursor: 'pointer'}}
+            onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.character.id, this.character.resource)}
           >
-            Edit
+            {`${characterRole.first_name} ${characterRole.last_name}`}
           </a>
-          <ImgLightbox
-            images={this.character.images.toJS()}
-            isOpen={this.showLightbox}
-            handleOnClose={() => this.showLightbox = false}
-          />
-          <Header as="h1">
-            {this.character.name}
-            <Header.Subheader>
-              Played by <a
-              style={{cursor: 'pointer'}}
-              onClick={() => this.store.rootStore.uiStore.showResourceSidebar(this.character.id, this.character.resource)}
-            >
-              {`${characterRole.first_name} ${characterRole.last_name}`}
-            </a>
-            </Header.Subheader>
-          </Header>
-          <Header as='h3' dividing>
-            Description
-          </Header>
-          <EditableField resource='characters' resourceId={this.characterId} field='description' fieldType='textarea'/>
+          </Header.Subheader>
+        </Header>
+        <Header as='h3' dividing>
+          Description
+        </Header>
+        <EditableField resource='characters' resourceId={this.characterId} field='description' fieldType='textarea'/>
 
-          <Header as='h3' dividing>
-            Scenes
-            {this.character.sceneIds.length > 0 &&
-            <span style={{float: 'right'}}>
-              <EditIcon resource='characters' resourceId={this.characterId}/>
-            </span>
-            }
-          </Header>
-          {this.character.sceneIds.length > 0 ?
-            <SceneCardGroup sceneIds={this.character.sceneIds}/>
-            : this.renderEmptyContent()
+        <Header as='h3' dividing>
+          Scenes
+          {this.character.sceneIds.length > 0 &&
+          <span style={{float: 'right'}}>
+            <EditIcon resource='characters' resourceId={this.characterId}/>
+          </span>
           }
-          <Header as='h3' dividing>
-            Activity
-          </Header>
-          {this.renderActivitySection()}
-        </Grid.Column>
-      </Grid>
+        </Header>
+        {this.character.sceneIds.length > 0 ?
+          <SceneCardGroup sceneIds={this.character.sceneIds}/>
+          : this.renderEmptyContent()
+        }
+        <Header as='h3' dividing>
+          Activity
+        </Header>
+        {this.renderActivitySection()}
+      </div>
     );
   }
 }

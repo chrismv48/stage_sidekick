@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './Dashboard.scss'
-import {Accordion, Grid, Progress} from 'semantic-ui-react'
+import {Accordion, Progress} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react";
 import {observable} from 'mobx'
 import ContentLoader from "components/ContentLoader/ContentLoader";
@@ -144,21 +144,19 @@ export default class Dashboard extends Component {
     const panels = setupAlerts.map(alert => this.renderAlert(alert))
     const [affected_count, total_count] = this.calculateProgress(setupAlerts)
     return (
-      <Grid className="Dashboard">
-        <Grid.Column>
-          <h4>Setup Progress</h4>
-          <div>
-            <Progress
-              percent={parseInt((total_count - affected_count) / total_count * 100)}
-              color='blue'
-              progress='percent'
-            />
-          </div>
-          <div>
-            <Accordion panels={panels} exclusive={false} />
-          </div>
-        </Grid.Column>
-      </Grid>
+      <div className="Dashboard main-content">
+        <h4>Setup Progress</h4>
+        <div>
+          <Progress
+            percent={parseInt((total_count - affected_count) / total_count * 100)}
+            color='blue'
+            progress='percent'
+          />
+        </div>
+        <div>
+          <Accordion panels={panels} exclusive={false} />
+        </div>
+      </div>
     );
   }
 }

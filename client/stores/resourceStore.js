@@ -83,8 +83,8 @@ class ResourceStore {
     return this.loadResource('costume_items', idOrIds)
   }
 
-  loadStageActions(idOrIds = null) {
-    return this.loadResource('stage_actions', idOrIds)
+  loadStageActions(idOrIds = null, options = {}) {
+    return this.loadResource('stage_actions', idOrIds, options)
   }
 
   loadSetupAlerts() {
@@ -122,7 +122,7 @@ class ResourceStore {
     return this[stagedResource].viewModel
   }
 
-  loadResource(resource, idOrIds = null, params = null) {
+  loadResource(resource, idOrIds = null, params = {}) {
     let apiEndpoint = resource
 
     if (Array.isArray(idOrIds)) {
@@ -133,11 +133,14 @@ class ResourceStore {
 
     this.isLoading = true
     return this._api(apiEndpoint, 'GET', null, params).then(
-      entities => {
+      response => {
         transaction(() => {
-          entities[resource].forEach(json => {
+          response[resource].forEach(json => {
             this._updateResourceFromServer(json, resource)
           });
+          if (resource === 'stage_actions') {
+            this.stageActionsTotalCount = response.total_count
+          }
           this[resource] = sortBy(this[resource], n => n.order_index)
         })
         this.isLoading = false

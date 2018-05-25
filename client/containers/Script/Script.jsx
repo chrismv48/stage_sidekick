@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Button, Container, Dropdown, Grid, Header, Segment} from 'semantic-ui-react'
+import {Button, Container, Dropdown, Header, Segment} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import StageAction from "components/StageAction/StageAction";
@@ -90,7 +90,7 @@ export class Script extends React.Component {
     ]).then(() => {
       this.loading = false
       this.knownLineHeights = Array(this.stageActions.length).fill(null)
-      this.currentStageAction = this.stageActions.length > 0 && this.stageActions[0].number
+      this.currentStageActionNumber = this.stageActions.length > 0 && this.stageActions[0].number
     })
   }
 
@@ -102,17 +102,18 @@ export class Script extends React.Component {
     if (this.scrollingToLine) {
       return
     }
-    if (this.bottomElement && isElementInViewport(this.bottomElement) && this.visibleStageActions[this.visibleStageActions.length - 1].number !== this.stageActions[this.stageActions.length - 1].number) {
+    const isLastStageAction = this.visibleStageActions[this.visibleStageActions.length - 1].number === this.stageActions[this.stageActions.length - 1].number
+    if (this.bottomElement && isElementInViewport(this.bottomElement) && !isLastStageAction) {
       this.bottomElement = null
-      this.currentStageAction = this.bottomLine
+      this.currentStageActionNumber = this.bottomLine
     } else if (this.topElement && isElementInViewport(this.topElement)) {
       this.topElement = null
-      this.currentStageAction = this.topLine
+      this.currentStageActionNumber = this.topLine
     }
   }
 
   handleScrollToLine(stageActionNumber) {
-    this.currentStageAction = stageActionNumber
+    this.currentStageActionNumber = stageActionNumber
     this.scrollingToLine = stageActionNumber
   }
 
@@ -169,7 +170,6 @@ export class Script extends React.Component {
   }
 
   getCurrentSceneId() {
-    debugger
     const currentStageAction = this.stageActions.find(stageAction => stageAction.number === parseInt(this.currentStageAction))
     return currentStageAction && currentStageAction.scene_id
   }
@@ -192,113 +192,108 @@ export class Script extends React.Component {
         <ContentLoader/>
       )
     }
-
     return (
-      <Grid className="Script">
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h2" dividing>
-              Script
-            </Header>
-            <div className='script-navbar'>
-              <div className='add-line-button'>
-                <Button primary icon='plus' onClick={this.handleAddLine} content='Add line'/>
-              </div>
-              <div className='line-slider-container'>
-                <strong>Line No</strong>
-                <input
-                  className='line-slider'
-                  type='range'
-                  min={this.minStageActionNo}
-                  max={this.maxStageActionNo}
-                  value={this.sliderValue || this.currentStageAction || 1}
-                  onChange={(e) => this.sliderValue = e.target.value}
-                  onMouseUp={(e) => this.handleScrollToLine(parseInt(e.target.value))}
-                />
-                <span className='line-slider-value'>
-                {this.sliderValue || this.currentStageAction}
-              </span>
-              </div>
-              <div className='scene-selection-container'>
-                <strong>
-                  <Dropdown
-                    options={this.generateSceneOptions()}
-                    value={this.getCurrentSceneId()}
-                    onChange={(e, data) => this.handleScrollToLine(this.sceneNumbers[data.value])}
-                  />
-                </strong>
-                <div className='current-scene-label'>Current scene</div>
-              </div>
-            </div>
-            <Container text className='lines-container'>
-              <div style={{height: this.calculateTopSpacer()}}/>
-              {this.visibleStageActions.sort((a, b) => a.number - b.number).map((stageAction, i) => {
-                const trackVisibility = (i === 0 && stageAction.number > 1) || (i === this.visibleStageActions.length - 3)
-                return (
-                  <React.Fragment key={stageAction.number}>
-                    {this.showNewLineAbove === stageAction.number &&
-                    <div>
-                      <StageAction
-                        stageActionId={null}
-                        editMode={true}
-                        handleSave={() => this.handleSave(null)}
-                        handleCancel={() => this.handleCancel(null)}
-                      />
-                    </div>
-                    }
-                    <div ref={(elem => {
-                      if (!elem) {
-                        return
-                      }
-                      this.knownLineHeights[stageAction.number - 1] = elem.offsetHeight
-
-                      if (trackVisibility) {
-                        if (i === 0) {
-                          this.topElement = elem
-                          this.topLine = stageAction.number
-                        } else {
-                          this.bottomElement = elem
-                          this.bottomLine = stageAction.number
-                        }
-                      }
-
-                      if (this.scrollingToLine === stageAction.number) {
-                        elem.scrollIntoView({block: 'center'})
-                        this.scrollingToLine = null
-                      }
-                    })}>
-                      <StageAction
-                        stageActionId={stageAction.id}
-                        editMode={this.editingLineId === stageAction.id}
-                        handleEdit={() => this.editingLineId = stageAction.id}
-                        handleSave={() => this.handleSave(stageAction.id)}
-                        handleCancel={() => this.handleCancel(stageAction.id)}
-                        handleInsertAbove={() => this.handleInsertAbove(stageAction.number)}
-                        handleDelete={() => this.handleDelete(stageAction.id)}
-                      />
-                    </div>
-                  </React.Fragment>
-                )
-              })
-              }
-              <div style={{height: this.calculateBottomSpacer()}}/>
-              {this.showNewLineAbove === -1 &&
-              <StageAction
-                stageActionId={null}
-                editMode={true}
-                handleSave={() => this.handleSave(null)}
-                handleCancel={() => this.handleCancel(null)}
+      <div className="Script main-content">
+        <Header as="h2" dividing>
+          Script
+        </Header>
+        <div className='script-navbar'>
+          <div className='add-line-button'>
+            <Button primary icon='plus' onClick={this.handleAddLine} content='Add line'/>
+          </div>
+          <div className='line-slider-container'>
+            <strong>Line No</strong>
+            <input
+              className='line-slider'
+              type='range'
+              min={this.minStageActionNo}
+              max={this.maxStageActionNo}
+              value={this.sliderValue || this.currentStageAction || 1}
+              onChange={(e) => this.sliderValue = e.target.value}
+              onMouseUp={(e) => this.handleScrollToLine(parseInt(e.target.value))}
+            />
+            <span className='line-slider-value'>
+            {this.sliderValue || this.currentStageAction}
+          </span>
+          </div>
+          <div className='scene-selection-container'>
+            <strong>
+              <Dropdown
+                options={this.generateSceneOptions()}
+                value={this.getCurrentSceneId()}
+                onChange={(e, data) => this.handleScrollToLine(this.sceneNumbers[data.value])}
               />
-              }
-              {this.showNewLineAbove !== -1 &&
-              <Segment className='add-line-text' onClick={() => this.showNewLineAbove = -1}>
-                <p>Click to add new line</p>
-              </Segment>
-              }
-            </Container>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+            </strong>
+            <div className='current-scene-label'>Current scene</div>
+          </div>
+        </div>
+        <Container text className='lines-container'>
+          <div style={{height: this.calculateTopSpacer()}}/>
+          {this.visibleStageActions.sort((a, b) => a.number - b.number).map((stageAction, i) => {
+            const trackVisibility = (i === 0 && stageAction.number > 1) || (i === this.visibleStageActions.length - 3)
+            return (
+              <React.Fragment key={stageAction.number}>
+                {this.showNewLineAbove === stageAction.number &&
+                <div>
+                  <StageAction
+                    stageActionId={null}
+                    editMode={true}
+                    handleSave={() => this.handleSave(null)}
+                    handleCancel={() => this.handleCancel(null)}
+                  />
+                </div>
+                }
+                <div ref={(elem => {
+                  if (!elem) {
+                    return
+                  }
+                  this.knownLineHeights[stageAction.number - 1] = elem.offsetHeight
+
+                  if (trackVisibility) {
+                    if (i === 0) {
+                      this.topElement = elem
+                      this.topLine = stageAction.number
+                    } else {
+                      this.bottomElement = elem
+                      this.bottomLine = stageAction.number
+                    }
+                  }
+
+                  if (this.scrollingToLine === stageAction.number) {
+                    elem.scrollIntoView({block: 'center'})
+                    this.scrollingToLine = null
+                  }
+                })}>
+                  <StageAction
+                    stageActionId={stageAction.id}
+                    editMode={this.editingLineId === stageAction.id}
+                    handleEdit={() => this.editingLineId = stageAction.id}
+                    handleSave={() => this.handleSave(stageAction.id)}
+                    handleCancel={() => this.handleCancel(stageAction.id)}
+                    handleInsertAbove={() => this.handleInsertAbove(stageAction.number)}
+                    handleDelete={() => this.handleDelete(stageAction.id)}
+                  />
+                </div>
+              </React.Fragment>
+            )
+          })
+          }
+          <div style={{height: this.calculateBottomSpacer()}}/>
+          {this.showNewLineAbove === -1 &&
+          <StageAction
+            stageActionId={null}
+            editMode={true}
+            handleSave={() => this.handleSave(null)}
+            handleCancel={() => this.handleCancel(null)}
+          />
+          }
+          {this.showNewLineAbove !== -1 &&
+          <Segment className='add-line-text' onClick={() => this.showNewLineAbove = -1}>
+            <p>Click to add new line</p>
+          </Segment>
+          }
+        </Container>
+      </div>
     );
   }
 }

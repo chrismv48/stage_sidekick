@@ -1,6 +1,6 @@
 import React from 'react';
 import './CostumeItem.scss'
-import {Form, Grid, Header, Image, Tab,} from 'semantic-ui-react'
+import {Form, Header, Image, Tab,} from 'semantic-ui-react'
 import CardGroup from "components/CardGroup/CardGroup";
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
@@ -74,113 +74,111 @@ export class CostumeItem extends React.Component {
       )
     }
     return (
-      <Grid className="Costume">
-        <Grid.Column>
-          <Image
-            src={this.costumeItem.primaryImage}
-            onClick={() => this.showLightbox = true}
-            size='medium'
-            className='header-image'
-          />
-          <a
-            className='edit-images-link'
-            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
-              resourceName: 'costumes',
-              resourceId: this.costumeItem.id
-            })}
-          >
-            Edit
-          </a>
-          <ImgLightbox
-            images={this.costumeItem.images.toJS()}
-            isOpen={this.showLightbox}
-            handleOnClose={() => this.showLightbox = false}
-          />
-          <Header as="h1">
-            {this.costumeItem.title}
-          </Header>
+      <div className="Costume main-content">
+        <Image
+          src={this.costumeItem.primaryImage}
+          onClick={() => this.showLightbox = true}
+          size='medium'
+          className='header-image'
+        />
+        <a
+          className='edit-images-link'
+          onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+            resourceName: 'costumes',
+            resourceId: this.costumeItem.id
+          })}
+        >
+          Edit
+        </a>
+        <ImgLightbox
+          images={this.costumeItem.images.toJS()}
+          isOpen={this.showLightbox}
+          handleOnClose={() => this.showLightbox = false}
+        />
+        <Header as="h1">
+          {this.costumeItem.title}
+        </Header>
 
-          <Header as='h3' dividing>
-            Description
-          </Header>
-          <EditableField resource='costume_items' resourceId={this.costumeItemId} field='description'
-                         fieldType='textarea'/>
+        <Header as='h3' dividing>
+          Description
+        </Header>
+        <EditableField resource='costume_items' resourceId={this.costumeItemId} field='description'
+                       fieldType='textarea'/>
 
-          <Header as='h3' dividing>
-            Details
-          </Header>
-          <Form>
-            <Form.Field>
-              <label>Item Type</label>
-              <EditableField
-                resource='costume_items'
-                resourceId={this.costumeItemId}
-                field='item_type'
-                fieldType='dropdown'
-                dropdownOptions={{options: this.costumeItem.constructor.itemTypeDropdownOptions}}
-              />
-            </Form.Field>
+        <Header as='h3' dividing>
+          Details
+        </Header>
+        <Form>
+          <Form.Field>
+            <label>Item Type</label>
+            <EditableField
+              resource='costume_items'
+              resourceId={this.costumeItemId}
+              field='item_type'
+              fieldType='dropdown'
+              dropdownOptions={{options: this.costumeItem.constructor.itemTypeDropdownOptions}}
+            />
+          </Form.Field>
 
-            <Form.Field width={4}>
-              <label>Source</label>
-              <EditableField
-                resource='costume_items'
-                resourceId={this.costumeItemId}
-                field='source'
-                fieldType='text'
-              />
-            </Form.Field>
+          <Form.Field width={4}>
+            <label>Source</label>
+            <EditableField
+              resource='costume_items'
+              resourceId={this.costumeItemId}
+              field='source'
+              fieldType='text'
+            />
+          </Form.Field>
 
-            <Form.Field width={4}>
-              <label>Brand</label>
-              <EditableField
-                resource='costume_items'
-                resourceId={this.costumeItemId}
-                field='brand'
-                fieldType='text'
-              />
-            </Form.Field>
+          <Form.Field width={4}>
+            <label>Brand</label>
+            <EditableField
+              resource='costume_items'
+              resourceId={this.costumeItemId}
+              field='brand'
+              fieldType='text'
+            />
+          </Form.Field>
 
-            <Form.Field width={2}>
-              <label>Cost</label>
-              <EditableField
-                resource='costume_items'
-                resourceId={this.costumeItemId}
-                field='cost'
-                fieldType='text'
-              />
-            </Form.Field>
+          <Form.Field width={2}>
+            <label>Cost</label>
+            <EditableField
+              resource='costume_items'
+              resourceId={this.costumeItemId}
+              field='cost'
+              fieldType='text'
+            />
+          </Form.Field>
 
-            <Form.Field width={8}>
-              <label>Care Instructions</label>
-              <EditableField
-                resource='costume_items'
-                resourceId={this.costumeItemId}
-                field='care_instructions'
-                fieldType='textarea'
-              />
-            </Form.Field>
-          </Form>
+          <Form.Field width={8}>
+            <label>Care Instructions</label>
+            <EditableField
+              resource='costume_items'
+              resourceId={this.costumeItemId}
+              field='care_instructions'
+              fieldType='textarea'
+            />
+          </Form.Field>
+        </Form>
 
-          <Header as='h3' dividing>
-            Costumes
-            <span style={{float: 'right'}}>
-              <EditIcon resource='costume_items' resourceId={this.costumeItemId}/>
-            </span>
-          </Header>
-          <CardGroup resource='costumes'>
-            {this.costumeItem.costume ?
-              <CostumeCardGroup costumeIds={[this.costumeItem.costume_id]}/>
-              : this.renderEmptyContent()
-            }
-          </CardGroup>
+        <Header as='h3' dividing>
+          Costumes
+          <span style={{float: 'right'}}>
+            <EditIcon resource='costume_items' resourceId={this.costumeItemId}/>
+          </span>
+        </Header>
+        <CardGroup resource='costumes'>
+          {this.costumeItem.costume ?
+            <CostumeCardGroup costumeIds={[this.costumeItem.costume_id]}/>
+            : this.renderEmptyContent()
+          }
+        </CardGroup>
 
-          <Header as='h3' dividing>
-            Activity
-          </Header>
-          {this.renderActivitySection()}
-        </Grid.Column>
-      </Grid>
+        <Header as='h3' dividing>
+          Activity
+        </Header>
+        {this.renderActivitySection()}
+      </div>
     );
   }
 }

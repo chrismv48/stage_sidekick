@@ -6,6 +6,7 @@ export class UiStore {
   @observable modalProps
   @observable selectedResourceId = null
   @observable selectedResource = null
+  @observable topNavWidth = 1400
 
   @observable displayMode = 'cards'
 

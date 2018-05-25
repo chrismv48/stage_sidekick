@@ -1,6 +1,6 @@
 import React from 'react';
 import './Costumes.scss'
-import {Grid, Header, Menu} from 'semantic-ui-react'
+import {Header, Menu} from 'semantic-ui-react'
 import MultipleItemLayout from "components/MultipleItemLayout/MultipleItemLayout";
 import CostumePlot from "containers/CostumePlot/CostumePlot";
 import PieceList from 'containers/PieceList/PieceList'
@@ -50,35 +50,30 @@ export class Costumes extends React.Component {
 
   render() {
     return (
-      <Grid className="Costumes">
-        <Grid.Row>
-          <Grid.Column>
-            <Header as="h2" dividing>
-              Costumes
-            </Header>
-            <div className='tab-menu-container'>
-            <Menu tabular
-                  defaultActiveIndex={0}
-                  onItemClick={(e, {name}) => this.activeTabName = name}
-                  items={[
-                    {name: 'Costumes', key: 1},
-                    {name: 'Costume Items', key: 2},
-                    {name: 'Costume Plot', key: 3},
-                    {name: 'Piece List', key: 4},
-                    {name: 'Dressing List', key: 5},
-                  ]}
-            />
-              {this.shouldDisplayIcons() &&
-              < span className='display-mode-icons'>
-                <DisplayModeIcons/>
-                </span>
-              }
-            </div>
-            {this.renderContent()}
-
-            </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <div className="Costumes main-content">
+        <Header as="h2" dividing>
+          Costumes
+        </Header>
+        <div className='tab-menu-container'>
+          <Menu tabular
+                defaultActiveIndex={0}
+                onItemClick={(e, {name}) => this.activeTabName = name}
+                items={[
+                  {name: 'Costumes', key: 1},
+                  {name: 'Costume Items', key: 2},
+                  {name: 'Costume Plot', key: 3},
+                  {name: 'Piece List', key: 4},
+                  {name: 'Dressing List', key: 5},
+                ]}
+          />
+          {this.shouldDisplayIcons() &&
+          < span className='display-mode-icons'>
+              <DisplayModeIcons/>
+              </span>
+          }
+        </div>
+        {this.renderContent()}
+      </div>
     );
   }
 }

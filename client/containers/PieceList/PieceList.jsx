@@ -1,6 +1,6 @@
 import React from 'react';
 import './PieceList.scss'
-import {Grid, Image} from 'semantic-ui-react'
+import {Image} from 'semantic-ui-react'
 import {sortBy, uniq} from "lodash";
 import 'react-table/react-table.css'
 import {inject, observer} from "mobx-react";
@@ -87,24 +87,22 @@ export class PieceList extends React.Component {
 
     const pieceList = this.buildPieceList()
     return (
-      <Grid className='PieceList'>
-        <Grid.Column>
-          {
-            sortBy(pieceList, piece => piece.actor.id).map(({costume, character, actor, sceneIds, costumeItemIds}, i) => {
-              return (
-                <div key={i} className='piece-container'>
-                  <div className='costume-column column'>
-                    {this.renderCostumeColumn(costume, sceneIds, character, actor)}
-                  </div>
-                  <div className='table-column column'>
-                    <CostumeItemTable costumeId={costume.id} />
-                  </div>
+      <div className='PieceList main-content'>
+        {
+          sortBy(pieceList, piece => piece.actor.id).map(({costume, character, actor, sceneIds, costumeItemIds}, i) => {
+            return (
+              <div key={i} className='piece-container'>
+                <div className='costume-column column'>
+                  {this.renderCostumeColumn(costume, sceneIds, character, actor)}
                 </div>
-              )
-            })
-          }
-        </Grid.Column>
-      </Grid>
+                <div className='table-column column'>
+                  <CostumeItemTable costumeId={costume.id} />
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
     )
   }
 }

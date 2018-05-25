@@ -7,7 +7,9 @@ class StageActionsController < ApplicationController
 
   # GET /stage_actions
   def index
-    render json: build_json_response(@stage_actions, ASSOCIATIONS_TO_INCLUDE)
+    json_response = build_json_response(@stage_actions, ASSOCIATIONS_TO_INCLUDE)
+    json_response[:total_count] = StageAction.count
+    render json: json_response
   end
 
   # GET /stage_actions/1
@@ -55,6 +57,9 @@ class StageActionsController < ApplicationController
   def set_stage_actions
     @stage_actions = StageAction.includes(:characters).where(nil)
     @stage_actions = @stage_actions.where(production_id: params[:production_id]) if params[:production_id]
+    if params[:start] && params[:end]
+      @stage_actions = @stage_actions.where(number: params[:start].to_i..params[:end].to_i)
+    end
     @stage_actions = @stage_actions.order(:number)
   end
 

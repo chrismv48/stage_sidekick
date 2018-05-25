@@ -1,6 +1,6 @@
 import React from 'react';
 import './ScriptImport.scss'
-import {Button, Checkbox, Form, Grid, Radio,} from 'semantic-ui-react'
+import {Button, Checkbox, Form, Radio,} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
 import {computed, observable} from "mobx";
 import {pull} from 'lodash'
@@ -111,32 +111,30 @@ export class CandidateSelection extends React.Component {
     const {scriptOptions, scriptSuccessCounts} = this.props.resourceStore
 
     return (
-      <Grid className="ScriptImport">
-        <Grid.Column>
-          <h3>
-            Character Options
-          </h3>
-          <Form>
-            {this.renderOptions('characters', scriptOptions.character_options)}
-          </Form>
-          <h3>
-            Scene Options
-          </h3>
-          <Form>
-            {this.renderOptions('scenes', scriptOptions.scene_options)}
-          </Form>
+      <div className="ScriptImport main-content">
+        <h3>
+          Character Options
+        </h3>
+        <Form>
+          {this.renderOptions('characters', scriptOptions.character_options)}
+        </Form>
+        <h3>
+          Scene Options
+        </h3>
+        <Form>
+          {this.renderOptions('scenes', scriptOptions.scene_options)}
+        </Form>
 
-          <Button
-            primary
-            content='Submit'
-            loading={this.loading}
-            onClick={() => this.submitSelections()}
-          >
+        <Button
+          primary
+          content='Submit'
+          loading={this.loading}
+          onClick={() => this.submitSelections()}
+        >
 
-          </Button>
-          {this.showSuccessModal && <SuccessModal {...scriptSuccessCounts} />}
-        </Grid.Column>
-      </Grid>
+        </Button>
+        {this.showSuccessModal && <SuccessModal {...scriptSuccessCounts} />}
+      </div>
     );
   }
 }

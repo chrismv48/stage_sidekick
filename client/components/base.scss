@@ -1,0 +1,103 @@
+
+
+// --------------------------------------------------------------------------------
+// SPACING (i.e. margin, padding, top, right, left, etc.)
+// --------------------------------------------------------------------------------
+
+$spacing-xsmall: 5px;
+$spacing-small: 10px;
+$spacing-medium: 20px;
+$spacing-large: 40px;
+$spacing-xlarge: 60px;
+
+
+// --------------------------------------------------------------------------------
+// TYPOGRAPHY
+// https://justworks.atlassian.net/wiki/display/DS/Typography
+// --------------------------------------------------------------------------------
+
+$font-size-xsmall: 10px;
+$font-size-small: 12px;
+$font-size-medium: 14px;
+$font-size-large: 16px;
+$font-size-xlarge: 20px;
+
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+$line-height-medium: 1.4;
+
+$letter-spacing-medium: 1px;
+
+
+// --------------------------------------------------------------------------------
+// COLORS
+// --------------------------------------------------------------------------------
+
+@function tint($color, $percentage) {
+  @return mix(#fff, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(#000, $color, $percentage);
+}
+
+$primary-color: #4d4563;
+
+// Grayscale
+$midnight: #303640; // "black"
+$snow: #fff; // "white"
+
+$concrete: #8199a3;
+$shadow: shade($concrete, 10%); // #748a93
+$manatee: tint($concrete, 20%); // #9aadb5
+$silver: tint($concrete, 40%); // #b3c2c8
+$timberwolf: tint($concrete, 60%); // #cdd6da
+
+$ice: #ecf1f5;
+$diamond: tint($ice, 40%); // #f4f7f9
+
+// Reds
+$strawberry: #ec5453;
+$watermelon: shade($strawberry, 10%); // #d44c4b
+$flamingo: tint($strawberry, 60%); // #f7bbba
+$blush: tint($strawberry, 75%); // #fad4d4
+$blossom: tint($strawberry, 90%); // #fdeeee
+
+// Yellows
+$banana: #fbfdbf;
+
+$goldenrod: #b8b24f;
+
+// Greens
+$shamrock: #37b375;
+$fern: shade($shamrock, 10%); // #32a169
+$pear: tint($shamrock, 60%); // #afe1c8
+$honeydew: tint($shamrock, 75%); // #cdecdd
+$mint: tint($shamrock, 90%); // #ebf7f1
+
+// Blues
+$cerulean: #39b6e9;
+$teal: shade($cerulean, 10%); // #33a4d2
+$sky: tint($cerulean, 20%); // #61c5ed
+$tropical: tint($cerulean, 75%); // #ceedfa
+$mist: tint($cerulean, 90%); // #ebf8fd
+
+$denim: #243f69;
+
+$navy: #1a2c47;
+
+// Violets
+$plum: #645187;
+
+
+// --------------------------------------------------------------------------------
+// OTHER
+// --------------------------------------------------------------------------------
+
+$border-radius-medium: 4px;
+
+$transition-duration-medium: .2s;
+$transition-easing-default: ease;
+
+$page-max-width: 1400;

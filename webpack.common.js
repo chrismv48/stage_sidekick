@@ -32,7 +32,12 @@ module.exports = {
             loader: "css-loader", options: {sourceMap: false}
           },
           {
-            loader: "sass-loader", options: {sourceMap: false}
+            loader: "sass-loader", options: {
+              sourceMap: false,
+              includePaths: [
+                path.resolve("./client/components"),
+              ]
+            }
           }]
       },
       {
@@ -54,7 +59,7 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.scss'],
     modules: [
       path.resolve("./client"),
       path.resolve("./node_modules")

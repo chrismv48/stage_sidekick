@@ -1,6 +1,6 @@
 import React from 'react';
 import './DressingList.scss'
-import {Accordion, Form, Grid, Icon, Segment} from 'semantic-ui-react'
+import {Accordion, Form, Icon, Segment} from 'semantic-ui-react'
 import 'react-table/react-table.css'
 import {inject, observer} from "mobx-react";
 import {computed, observable} from "mobx";
@@ -141,78 +141,76 @@ export class DressingList extends React.Component {
     }
     const {costumes, scenes, characters} = this.props.resourceStore
     return (
-      <Grid className='DressingList'>
-        <Grid.Column>
-          <Accordion exclusive={false}>
-            <Accordion.Title as='h4' active={this.editorExpanded} index={0}
-                             onClick={() => this.editorExpanded = !this.editorExpanded}>
-              <Icon name='dropdown'/>
-              {this.editorExpanded ? 'Hide' : 'Show'} Editor
-            </Accordion.Title>
-            <Accordion.Content active={this.editorExpanded}>
-              <div style={{padding: 20}}>
-                {this.costumeCharactersScenes.map(ccs => {
-                  const costume = costumes.find(costume => costume.id === ccs.costume_id)
+      <div className='DressingList main-content'>
+        <Accordion exclusive={false}>
+          <Accordion.Title as='h4' active={this.editorExpanded} index={0}
+                           onClick={() => this.editorExpanded = !this.editorExpanded}>
+            <Icon name='dropdown'/>
+            {this.editorExpanded ? 'Hide' : 'Show'} Editor
+          </Accordion.Title>
+          <Accordion.Content active={this.editorExpanded}>
+            <div style={{padding: 20}}>
+              {this.costumeCharactersScenes.map(ccs => {
+                const costume = costumes.find(costume => costume.id === ccs.costume_id)
 
-                  const scene = scenes.find(scene => scene.id === ccs.scene_id) || {}
-                  const character = characters.find(character => character.id === ccs.character_id)
+                const scene = scenes.find(scene => scene.id === ccs.scene_id) || {}
+                const character = characters.find(character => character.id === ccs.character_id)
 
-                  return (
-                    <Form key={ccs.id}>
-                      <Form.Group widths='equal'>
-                        <Form.Select
-                          label='Scene'
-                          options={scenes.map(scene => scene.dropdownItem({image: null}))}
-                          value={scene.id}
-                          onChange={(event, data) => this.handleChange(ccs, 'scene_id', data.value)}
-                          placeholder='Scene'/>
+                return (
+                  <Form key={ccs.id}>
+                    <Form.Group widths='equal'>
+                      <Form.Select
+                        label='Scene'
+                        options={scenes.map(scene => scene.dropdownItem({image: null}))}
+                        value={scene.id}
+                        onChange={(event, data) => this.handleChange(ccs, 'scene_id', data.value)}
+                        placeholder='Scene'/>
 
-                        <Form.Select
-                          label='Character'
-                          options={characters.map(character => character.dropdownItem({image: null}))}
-                          value={character.id}
-                          onChange={(event, data) => ccs.character_id = data.value}
-                          placeholder='Character'/>
+                      <Form.Select
+                        label='Character'
+                        options={characters.map(character => character.dropdownItem({image: null}))}
+                        value={character.id}
+                        onChange={(event, data) => ccs.character_id = data.value}
+                        placeholder='Character'/>
 
-                        <Form.Select
-                          label='Costume'
-                          options={costumes.map(costume => costume.dropdownItem({image: null}))}
-                          value={costume.id}
-                          onChange={(event, data) => ccs.costume_id = data.value}
-                          placeholder='Costume'/>
-                      </Form.Group>
-                    </Form>
-                  )
+                      <Form.Select
+                        label='Costume'
+                        options={costumes.map(costume => costume.dropdownItem({image: null}))}
+                        value={costume.id}
+                        onChange={(event, data) => ccs.costume_id = data.value}
+                        placeholder='Costume'/>
+                    </Form.Group>
+                  </Form>
+                )
+              })}
+            </div>
+          </Accordion.Content>
+        </Accordion>
+        <div>
+          {characters.map(character => {
+            const costumes_characters_scenes = sortBy(character.costumes_characters_scenes, 'order_index')
+            if (costumes_characters_scenes.length === 0) {
+              return
+            }
+            return (
+              <Segment>
+                <h3>{character.name}</h3>
+                {costumes_characters_scenes.map((ccs, i) => {
+                  let prev_ccs
+                  if (i === 0) {
+                    prev_ccs = {}
+                  } else {
+                    prev_ccs = costumes_characters_scenes[i - 1]
+                  }
+                  if (prev_ccs.costume_id !== ccs.costume_id) {
+                    return this.generateDiff(prev_ccs, ccs)
+                  }
                 })}
-              </div>
-            </Accordion.Content>
-          </Accordion>
-          <div>
-            {characters.map(character => {
-              const costumes_characters_scenes = sortBy(character.costumes_characters_scenes, 'order_index')
-              if (costumes_characters_scenes.length === 0) {
-                return
-              }
-              return (
-                <Segment>
-                  <h3>{character.name}</h3>
-                  {costumes_characters_scenes.map((ccs, i) => {
-                    let prev_ccs
-                    if (i === 0) {
-                      prev_ccs = {}
-                    } else {
-                      prev_ccs = costumes_characters_scenes[i - 1]
-                    }
-                    if (prev_ccs.costume_id !== ccs.costume_id) {
-                      return this.generateDiff(prev_ccs, ccs)
-                    }
-                  })}
-                </Segment>
-              )
-            })}
-          </div>
-        </Grid.Column>
-      </Grid>
+              </Segment>
+            )
+          })}
+        </div>
+      </div>
     )
   }
 }

@@ -85,115 +85,113 @@ export class Costume extends React.Component {
       )
     }
     return (
-      <Grid className="Costume">
-        <Grid.Column>
-          <Image
-            src={this.costume.primaryImage}
-            onClick={() => this.showLightbox = true}
-            size='medium'
-            className='header-image'
-          />
-          <a
-            className='edit-images-link'
-            onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
-              resourceName: 'costumes',
-              resourceId: this.costume.id
-            })}
-          >
-            Edit
-          </a>
-          <ImgLightbox
-            images={this.costume.images.toJS()}
-            isOpen={this.showLightbox}
-            handleOnClose={() => this.showLightbox = false}
-          />
-          <Header as="h1">
-            {this.costume.title}
-          </Header>
-          <Header as='h3' dividing>
-            Description
-          </Header>
-          <EditableField resource='costumes' resourceId={this.costumeId} field='description' fieldType='textarea'/>
-          <Header as='h3' dividing>
-            Costume Items
-            {this.costume.costume_item_ids.length > 0 &&
-            <span style={{float: 'right'}}>
-              <EditIcon resource='costumes' resourceId={this.costumeId}/>
-            </span>
-            }
-          </Header>
+      <div className="Costume main-content">
+        <Image
+          src={this.costume.primaryImage}
+          onClick={() => this.showLightbox = true}
+          size='medium'
+          className='header-image'
+        />
+        <a
+          className='edit-images-link'
+          onClick={() => this.props.uiStore.showModal('RESOURCE_MODAL', {
+            resourceName: 'costumes',
+            resourceId: this.costume.id
+          })}
+        >
+          Edit
+        </a>
+        <ImgLightbox
+          images={this.costume.images.toJS()}
+          isOpen={this.showLightbox}
+          handleOnClose={() => this.showLightbox = false}
+        />
+        <Header as="h1">
+          {this.costume.title}
+        </Header>
+        <Header as='h3' dividing>
+          Description
+        </Header>
+        <EditableField resource='costumes' resourceId={this.costumeId} field='description' fieldType='textarea'/>
+        <Header as='h3' dividing>
+          Costume Items
+          {this.costume.costume_item_ids.length > 0 &&
+          <span style={{float: 'right'}}>
+            <EditIcon resource='costumes' resourceId={this.costumeId}/>
+          </span>
+          }
+        </Header>
 
-          <CardGroup resource={'costume_items'}>
-            {this.costume.costume_item_ids.length > 0 ?
-              <CostumeItemCardGroup costumeItemIds={this.costume.costume_item_ids}/>
-              : this.renderEmptyContent()
-            }
-          </CardGroup>
-          <Header as='h3' dividing>
-            Character Scenes
-            {this.scenesByCharacter.length > 0 &&
-            <span style={{float: 'right'}}>
-              <EditIcon resource='costumes' resourceId={this.costumeId}/>
-            </span>
-            }
-          </Header>
-          <Item.Group divided>
-            {this.scenesByCharacter.length > 0 && this.renderEmptyContent()}
+        <CardGroup resource={'costume_items'}>
+          {this.costume.costume_item_ids.length > 0 ?
+            <CostumeItemCardGroup costumeItemIds={this.costume.costume_item_ids}/>
+            : this.renderEmptyContent()
+          }
+        </CardGroup>
+        <Header as='h3' dividing>
+          Character Scenes
+          {this.scenesByCharacter.length > 0 &&
+          <span style={{float: 'right'}}>
+            <EditIcon resource='costumes' resourceId={this.costumeId}/>
+          </span>
+          }
+        </Header>
+        <Item.Group divided>
+          {this.scenesByCharacter.length > 0 && this.renderEmptyContent()}
 
-            {Object.keys(this.scenesByCharacter).map(characterId => {
-              characterId = parseInt(characterId)
-              const character = characters.find(character => character.id === characterId)
-              const characterRole = roles.find(role => role.id === character.actorIds[0])
-              const sceneIds = this.scenesByCharacter[characterId]
-              return (
-                <Item key={characterId}>
-                  <Item.Image src={character.cardImage}/>
-                  <Item.Content>
-                    <Item.Header as='a'>{character.name}</Item.Header>
-                    <Item.Meta>
-                      Played by <a
-                      href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
-                    </Item.Meta>
-                    <Item.Description>
-                      <Grid columns={2} divided>
-                        <Grid.Column>
-                          {character.description}
-                        </Grid.Column>
-                        <Grid.Column>
-                          <h5>Scenes</h5>
-                          {sceneIds.map(sceneId => {
-                            const scene = scenes.find(scene => scene.id === sceneId)
-                            return (
-                              <List key={sceneId}>
-                                <List.Item>
-                                  <Image avatar src={scene.cardImage}/>
-                                  <List.Content>
-                                    <List.Header as='a'>{scene.title}</List.Header>
-                                    <List.Description>{scene.description}</List.Description>
-                                  </List.Content>
-                                </List.Item>
-                              </List>
-                            )
-                          })}
-                        </Grid.Column>
-                      </Grid>
-                    </Item.Description>
-                    <Item.Extra>
-                      <Label>IMAX</Label>
-                      <Label icon='globe' content='Additional Languages'/>
-                    </Item.Extra>
-                  </Item.Content>
-                </Item>
-              )
-            })}
-          </Item.Group>
+          {Object.keys(this.scenesByCharacter).map(characterId => {
+            characterId = parseInt(characterId)
+            const character = characters.find(character => character.id === characterId)
+            const characterRole = roles.find(role => role.id === character.actorIds[0])
+            const sceneIds = this.scenesByCharacter[characterId]
+            return (
+              <Item key={characterId}>
+                <Item.Image src={character.cardImage}/>
+                <Item.Content>
+                  <Item.Header as='a'>{character.name}</Item.Header>
+                  <Item.Meta>
+                    Played by <a
+                    href="#">{`${characterRole.first_name} ${characterRole.last_name}`}</a>
+                  </Item.Meta>
+                  <Item.Description>
+                    <Grid columns={2} divided>
+                      <Grid.Column>
+                        {character.description}
+                      </Grid.Column>
+                      <Grid.Column>
+                        <h5>Scenes</h5>
+                        {sceneIds.map(sceneId => {
+                          const scene = scenes.find(scene => scene.id === sceneId)
+                          return (
+                            <List key={sceneId}>
+                              <List.Item>
+                                <Image avatar src={scene.cardImage}/>
+                                <List.Content>
+                                  <List.Header as='a'>{scene.title}</List.Header>
+                                  <List.Description>{scene.description}</List.Description>
+                                </List.Content>
+                              </List.Item>
+                            </List>
+                          )
+                        })}
+                      </Grid.Column>
+                    </Grid>
+                  </Item.Description>
+                  <Item.Extra>
+                    <Label>IMAX</Label>
+                    <Label icon='globe' content='Additional Languages'/>
+                  </Item.Extra>
+                </Item.Content>
+              </Item>
+            )
+          })}
+        </Item.Group>
 
-          <Header as='h3' dividing>
-            Activity
-          </Header>
-          {this.renderActivitySection()}
-        </Grid.Column>
-      </Grid>
+        <Header as='h3' dividing>
+          Activity
+        </Header>
+        {this.renderActivitySection()}
+      </div>
     );
   }
 }

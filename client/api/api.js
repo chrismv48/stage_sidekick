@@ -1,6 +1,6 @@
 import {stringify} from "query-string"
 
-const Api = (endpoint, method = 'get', payload = null, params = null) => {
+const Api = (endpoint, method = 'get', payload = null, params = {}) => {
   const fetchOptions = {
     method,
     headers: {
@@ -13,7 +13,7 @@ const Api = (endpoint, method = 'get', payload = null, params = null) => {
     fetchOptions.body = JSON.stringify(payload)
   }
 
-  if (params) {
+  if (Object.keys(params).length > 0) {
     endpoint += `?${stringify(params)}`
   }
   return fetch(`/api/${endpoint}`, fetchOptions)

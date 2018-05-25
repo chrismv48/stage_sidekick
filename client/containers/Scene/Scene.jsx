@@ -1,6 +1,6 @@
 import React from 'react';
 import './Scene.scss'
-import {Grid, Header, Image, Tab,} from 'semantic-ui-react'
+import {Header, Image, Tab,} from 'semantic-ui-react'
 import ActivityFeed from "components/ActivityFeed/ActivityFeed";
 import CommentFeed from "components/CommentFeed/CommentFeed";
 import {computed, observable} from "mobx";
@@ -67,8 +67,7 @@ export class Scene extends React.Component {
     }
 
     return (
-      <Grid className='Scene'>
-        <Grid.Column>
+      <div className='Scene main-content'>
           <Image
             src={this.scene.cardImage}
             onClick={() => this.showLightbox = true}
@@ -118,8 +117,7 @@ export class Scene extends React.Component {
           Activity
         </Header>
         {this.renderActivitySection()}
-      </Grid.Column>
-      </Grid>
+      </div>
     );
   }
 }
