@@ -1,17 +1,37 @@
 .StageAction {
 
+  .line {
+    border-left: 4px solid orange;
+  }
+
+  .stage-direction {
+    border-left: 4px solid blue;
+  }
+
+  .entrance {
+    border-left: 4px solid green;
+  }
+
+  .exit {
+    border-left: 4px solid red;
+  }
+
+  .song {
+    border-left: 4px solid purple;
+  }
+
   .display-mode {
 
     position: relative;
-    border-left: 4px solid transparent;
+    box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.2);
 
     &:hover {
       cursor: pointer;
-      //box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+      box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.4);
       //border: 1px solid rgba(81, 203, 238, 1);
-      border: 0;
-      border-left: 4px solid purple;
-      box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
+      //border: 0;
+      //border-left: 4px solid purple;
+      //box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
 
       .edit-icon {
         visibility: visible;

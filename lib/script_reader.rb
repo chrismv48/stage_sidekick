@@ -132,9 +132,9 @@ class ScriptReader
         puts "Persisting script"
         Character.destroy_all
         Scene.destroy_all
-        Line.skip_callback(:destroy, :after, :update_sort_order)
-        Line.skip_callback(:validation, :after, :update_sort_order)
-        Line.destroy_all
+        StageAction.skip_callback(:destroy, :after, :update_sort_order)
+        StageAction.skip_callback(:validation, :after, :update_sort_order)
+        StageAction.destroy_all
         puts "Creating characters"
         characters.each do |character|
           Character.create!(name: character, production_id: 1)
@@ -152,18 +152,18 @@ class ScriptReader
           scenes = Scene.where(title: character_scenes)
           character_model.scenes = scenes if character_model
           lines.each do |line|
-            Line.create!(
+            StageAction.create!(
               scene: scenes.find {|scene| scene.title == line[:scene]},
               characters: [character_model].compact,
               number: line[:number],
-              content: line[:line],
+              description: line[:line],
               production_id: 1
             )
             @line_count += 1
           end
         end
-        Line.set_callback(:destroy, :after, :update_sort_order)
-        Line.set_callback(:validation, :after, :update_sort_order)
+        StageAction.set_callback(:destroy, :after, :update_sort_order)
+        StageAction.set_callback(:validation, :after, :update_sort_order)
       end
     end
     return script

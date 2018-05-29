@@ -1,14 +1,22 @@
 class StageActionsController < ApplicationController
   before_action :set_stage_actions
   before_action :set_stage_action, only: [:show, :update, :destroy]
-  before_action :parse_params, only: [:create, :update]
+  before_action :parse_params, only: [:index, :create, :update]
 
   ASSOCIATIONS_TO_INCLUDE = [:scene_id, :character_ids]
 
   # GET /stage_actions
   def index
+    return search_results if @stage_action_params[:query]
+
     json_response = build_json_response(@stage_actions, ASSOCIATIONS_TO_INCLUDE)
     json_response[:total_count] = StageAction.count
+    render json: json_response
+  end
+
+  def search_results
+    search_results = StageAction.search_by_description(@stage_action_params[:query]).limit(5).with_pg_search_highlight
+    json_response = build_json_response(search_results, [:pg_search_highlight, :characters])
     render json: json_response
   end
 
@@ -65,6 +73,6 @@ class StageActionsController < ApplicationController
 
   def parse_params
     params.permit!
-    @stage_action_params = params.slice(*StageAction.attribute_names, :scene_id, :character_ids)
+    @stage_action_params = params.slice(*StageAction.attribute_names, :scene_id, :character_ids, :query)
   end
 end

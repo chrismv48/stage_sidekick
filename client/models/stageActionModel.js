@@ -1,7 +1,6 @@
 import React from 'react'
-import {computed} from 'mobx'
 import BaseModel from "./baseModel";
-
+import {snakeCase} from 'lodash'
 
 class StageActionModel extends BaseModel {
 
@@ -32,6 +31,7 @@ StageActionModel.FIELD_NAMES = {
 
 StageActionModel.RELATIONSHIPS = {
   'characters': 'stage_actions',
+  'scene': 'stage_action'
 }
 
 StageActionModel.RESOURCE = 'stage_actions'
@@ -45,7 +45,7 @@ StageActionModel.ACTION_TYPE_OPTIONS = [
 ]
 
 StageActionModel.actionTypeDropdownOptions = StageActionModel.ACTION_TYPE_OPTIONS.map(n => {
-  return {text: n, value: n}
+  return {text: n, value: snakeCase(n.toLowerCase())}
 })
 
 StageActionModel.API_ENDPOINT = 'stage_actions'

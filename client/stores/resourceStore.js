@@ -1,4 +1,4 @@
-import {computed, observable, toJS, transaction} from 'mobx'
+import {action, observable, transaction} from 'mobx'
 import {difference, sortBy} from "lodash";
 import {arrayMove} from "react-sortable-hoc";
 import {pluralizeResource} from "../helpers";
@@ -29,6 +29,8 @@ class ResourceStore {
   @observable scriptOptions = null
   @observable scriptSuccessCounts = {}
 
+  // @observable scriptSearchResults = []
+
   get resources() {
     return this.constructor.resources
   }
@@ -38,6 +40,9 @@ class ResourceStore {
     this.rootStore = rootStore
 
     this.getStagedResource = this.getStagedResource.bind(this)
+    this.dropdownOptions = this.dropdownOptions.bind(this)
+    this.searchScript = this.searchScript.bind(this)
+
   }
 
   resolveResource(idOrIds, resource) {
@@ -93,6 +98,13 @@ class ResourceStore {
     })
   }
 
+  searchScript(query) {
+    const queryParam = {query}
+    return this._api('stage_actions', 'GET', null, queryParam).then(results => {
+      return results
+    })
+  }
+
   parseScript(options) {
     return this._api('script_importer/parse', 'POST', options).then(results => {
       this.scriptOptions = results
@@ -122,7 +134,7 @@ class ResourceStore {
     return this[stagedResource].viewModel
   }
 
-  loadResource(resource, idOrIds = null, params = {}) {
+  @action loadResource(resource, idOrIds = null, params = {}) {
     let apiEndpoint = resource
 
     if (Array.isArray(idOrIds)) {
@@ -131,23 +143,20 @@ class ResourceStore {
       apiEndpoint = `${apiEndpoint}/${idOrIds}`
     }
 
-    this.isLoading = true
-    return this._api(apiEndpoint, 'GET', null, params).then(
-      response => {
-        transaction(() => {
-          response[resource].forEach(json => {
-            this._updateResourceFromServer(json, resource)
-          });
-          if (resource === 'stage_actions') {
-            this.stageActionsTotalCount = response.total_count
-          }
-          this[resource] = sortBy(this[resource], n => n.order_index)
-        })
-        this.isLoading = false
+    return this._api(apiEndpoint, 'GET', null, params).then(response => {
+      if (resource === 'stage_actions') {
+        this.stageActionsTotalCount = response.total_count
+        this[resource] = [] // we want to overwrite, not append to stage actions
+      }
+      response[resource].forEach(json => {
+        this._updateResourceFromServer(json, resource)
+      });
+
+      this[resource] = sortBy(this[resource], n => n.order_index)
       })
   }
 
-  _updateResourceFromServer(json, resource) {
+  @action _updateResourceFromServer(json, resource) {
     const pluralizedResource = pluralizeResource(resource)
     const resourceModel = this.resources[pluralizedResource]
     let entity = this[pluralizedResource].find(entity => entity.id === json.id)
@@ -160,7 +169,7 @@ class ResourceStore {
     }
   }
 
-  updateOrderIndex(resource, oldIndex, newIndex) {
+  @action updateOrderIndex(resource, oldIndex, newIndex) {
     const pluralizedResource = pluralizeResource(resource)
     const newOrder = arrayMove(this[pluralizedResource].map(resource => resource.id), oldIndex, newIndex)
     transaction(() => {

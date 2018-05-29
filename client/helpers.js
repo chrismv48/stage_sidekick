@@ -13,8 +13,8 @@ const PLURALITY_RESOURCE_MAPPING = {
   'role_id': 'role_ids',
   'costume_id': 'costume_ids',
   'costume_item_id': 'costume_item_ids',
-  'line': 'lines',
-  'line_id': 'line_ids',
+  'stage_action': 'stage_actions',
+  'stage_action_id': 'stage_action_ids',
   'actor': 'actors',
   'actor_id': 'actor_ids'
 }

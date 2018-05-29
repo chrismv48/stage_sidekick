@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Button, Container, Dropdown, Header, Segment, Visibility} from 'semantic-ui-react'
-import {inject, observer} from "mobx-react/index";
-import {computed, observable} from "mobx";
+import {Container, Divider, Dropdown, Header, Search, Segment, Visibility} from 'semantic-ui-react'
+import {inject, observer} from "mobx-react";
+import {action, computed, observable} from "mobx";
 import StageAction from "components/StageAction/StageAction";
-import {compact, uniq} from 'lodash'
+import {capitalize, compact, replace, uniq} from 'lodash'
 import ContentLoader from "components/ContentLoader/ContentLoader";
 
 @observer
@@ -21,7 +21,7 @@ class Slider extends React.Component {
           type='range'
           min={1}
           max={maxValue}
-          value={this.sliderValue || currentStageActionNumber}
+          value={this.sliderValue || currentStageActionNumber || 1}
           onChange={(e) => this.sliderValue = e.target.value}
           onMouseUp={(e) => handleOnMouseUp(parseInt(e.target.value))}
         />
@@ -29,6 +29,65 @@ class Slider extends React.Component {
           {this.sliderValue || currentStageActionNumber}
         </span>
       </div>
+    )
+  }
+}
+
+@inject("resourceStore", "uiStore") @observer
+class SearchScript extends React.Component {
+  @observable isLoading = false
+  @observable query = ''
+  @observable queryResults = []
+
+  handleOnSearchChange(query) {
+    const {searchScript} = this.props.resourceStore
+    this.query = query
+    if (this.query.length >= 2) {
+      this.isLoading = true
+      searchScript(this.query).then(results => {
+        this.queryResults = this.parseResults(results)
+        this.isLoading = false
+      })
+    }
+  }
+
+  parseResults(results) {
+    return results.stage_actions
+  }
+
+  handleOnClick(stageActionNumber) {
+    return this.props.handleResultClicked(stageActionNumber)
+  }
+
+  resultRenderer(result) {
+    return (
+      <div className='search-result-container'>
+        <div className='result-body' onClick={() => this.handleOnClick(result.number)}>
+          <strong>{result.number}: {result.characters.map(character => character.name).join(', ')}</strong> - <span
+          className='stage-action'>{this.prettifyStageAction(result.stage_action_type)}</span>
+          <Divider fitted/>
+          <p className='search-result-description' dangerouslySetInnerHTML={{__html: result.pg_search_highlight}}/>
+        </div>
+      </div>
+    )
+  }
+
+  prettifyStageAction(stageActionType) {
+    return capitalize(replace(stageActionType, '_', ' '))
+  }
+
+
+  render() {
+    return (
+      <Search
+        className='SearchScript'
+        loading={this.isLoading}
+        onSearchChange={(e, data) => this.handleOnSearchChange(data.value)}
+        results={this.queryResults.toJS()}
+        value={this.query}
+        minCharacters={2}
+        resultRenderer={(result) => this.resultRenderer(result)}
+      />
     )
   }
 }
@@ -57,6 +116,7 @@ export class Script extends React.Component {
   }
 
   @computed get sceneNumbers() {
+    // TODO: need to get this from server now
     const sceneNumbers = {}
     let currentSceneId = null
     for (let line of this.stageActions) {
@@ -99,7 +159,7 @@ export class Script extends React.Component {
     this.sliderValue = null
   }
 
-  handleSave(stageActionId) {
+  @action handleSave(stageActionId) {
     const stageAction = this.props.resourceStore.getStagedResource('stage_actions', stageActionId)
     if (!stageActionId && this.showNewLineAbove) {
       if (this.showNewLineAbove === -1) {
@@ -113,7 +173,7 @@ export class Script extends React.Component {
     this.showNewLineAbove = null
   }
 
-  handleCancel(stageActionId) {
+  @action handleCancel(stageActionId) {
     const stageAction = this.props.resourceStore.getStagedResource('stage_actions', stageActionId)
     stageAction.revert()
     this.editingLineId = null
@@ -129,11 +189,11 @@ export class Script extends React.Component {
     })
   }
 
-  handleInsertAbove(stageActionNumber) {
+  @action handleInsertAbove(stageActionNumber) {
     this.showNewLineAbove = stageActionNumber
   }
 
-  handleDelete(stageActionId) {
+  @action handleDelete(stageActionId) {
     const stageAction = this.props.resourceStore.getStagedResource('stage_actions', stageActionId)
     stageAction.destroy()
   }
@@ -151,8 +211,8 @@ export class Script extends React.Component {
     })
   }
 
-  handleLoadMoreStageActions(stageActionNumber, fromSlider = false) {
-    const start = Math.max(0, stageActionNumber - 33)
+  @action handleLoadMoreStageActions(stageActionNumber, fromSlider = false) {
+    const start = Math.max(0, stageActionNumber - 37)
     const end = start + 75
 
     if (fromSlider) {
@@ -161,13 +221,13 @@ export class Script extends React.Component {
       this.loadingMore = true
     }
     this.props.resourceStore.loadStageActions(null, {start, end}).then(() => {
-      this.props.resourceStore.stage_actions = this.stageActions.filter(action => (action.number >= start && action.number <= end))
       if (fromSlider) {
         this.loading = false
       } else {
         this.loadingMore = false
       }
       this.currentStageActionNumber = stageActionNumber
+      this.scrollingToLine = stageActionNumber
     })
   }
 
@@ -198,7 +258,7 @@ export class Script extends React.Component {
         </Header>
         <div className='script-navbar'>
           <div className='add-line-button'>
-            <Button primary icon='plus' onClick={this.handleAddLine} content='Add line'/>
+            <SearchScript handleResultClicked={(stageActionNumber) => this.handleScrollToLine(stageActionNumber)}/>
           </div>
           <Slider
             currentStageActionNumber={this.currentStageActionNumber}
@@ -223,10 +283,10 @@ export class Script extends React.Component {
             }
             {this.stageActions.map((stageAction, i) => {
               return (
-                <React.Fragment key={`stage-action-${stageAction.number}`}>
+                <div key={`stage-action-${stageAction.number}`}>
 
                   {this.showNewLineAbove === stageAction.number &&
-                  <div>
+                  <div className='stage-action-container'>
                     <StageAction
                       stageActionId={null}
                       editMode={true}
@@ -235,12 +295,15 @@ export class Script extends React.Component {
                     />
                   </div>
                   }
-                  <div ref={elem => {
-                    if (elem && this.scrollingToLine === stageAction.number) {
-                      elem.scrollIntoView({block: 'center'})
-                      this.scrollingToLine = null
-                    }
-                  }}>
+                  <div
+                    className='stage-action-container'
+                    ref={(elem => {
+                      if (elem && this.scrollingToLine === stageAction.number) {
+                        elem.scrollIntoView({block: 'center'})
+                        this.scrollingToLine = null
+                      }
+                    })}
+                  >
                     <StageAction
                       stageActionId={stageAction.id}
                       editMode={this.editingLineId === stageAction.id}
@@ -251,17 +314,19 @@ export class Script extends React.Component {
                       handleDelete={() => this.handleDelete(stageAction.id)}
                     />
                   </div>
-                </React.Fragment>
+                </div>
               )
             })
             }
             {this.showNewLineAbove === -1 &&
-            <StageAction
-              stageActionId={null}
-              editMode={true}
-              handleSave={() => this.handleSave(null)}
-              handleCancel={() => this.handleCancel(null)}
-            />
+            <div className='stage-action-container'>
+              <StageAction
+                stageActionId={null}
+                editMode={true}
+                handleSave={() => this.handleSave(null)}
+                handleCancel={() => this.handleCancel(null)}
+              />
+            </div>
             }
             {(this.showNewLineAbove !== -1 && !this.canLoadMoreBelow) &&
             <Segment className='add-line-text' onClick={() => this.showNewLineAbove = -1}>

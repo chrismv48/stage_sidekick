@@ -24,6 +24,16 @@
 #
 
 class StageAction < ApplicationRecord
+  include PgSearch
+  pg_search_scope :search_by_description, against: :description, using: {
+    tsearch: {
+      prefix: true,
+      highlight: {
+        MaxFragments: 3
+      }
+    },
+  }
+
   belongs_to :scene, optional: true
   belongs_to :production
 

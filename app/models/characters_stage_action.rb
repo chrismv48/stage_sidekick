@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: characters_stage_action
+# Table name: characters_stage_actions
 #
 #  id              :integer          not null, primary key
 #  stage_action_id :integer          not null

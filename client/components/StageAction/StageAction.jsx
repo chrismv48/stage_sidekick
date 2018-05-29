@@ -47,11 +47,11 @@ class StageAction extends React.Component {
     let iconTitle = ''
     if (stageActionType === 'line') {
       iconName = 'talk'
-      iconTitle = 'Character StageAction'
+      iconTitle = 'Line'
     } else if (stageActionType === 'song') {
       iconName = 'music'
       iconTitle = 'Song'
-    } else if (stageActionType === 'action') {
+    } else if (stageActionType === 'stage_direction') {
       iconName = 'microphone slash'
       iconTitle = 'Action'
     }
@@ -66,11 +66,11 @@ class StageAction extends React.Component {
   renderStageActionHeader() {
     return (
       <Header as='h4'>
-        {this.stageActionStaged.characters.length === 1 ?
-          this.renderCharacter(this.stageActionStaged.characters[0]) :
-          this.renderCharacters(this.stageActionStaged.characters)
+        {this.stageAction.characters.length === 1 ?
+          this.renderCharacter(this.stageAction.characters[0]) :
+          this.renderCharacters(this.stageAction.characters)
         }
-        {this.renderStageActionTypeIcon(this.stageActionStaged.stage_action_type)}
+        {this.renderStageActionTypeIcon(this.stageAction.stage_action_type)}
       </Header>
     )
   }
@@ -78,7 +78,7 @@ class StageAction extends React.Component {
   renderDisplayMode() {
     const {handleEdit, handleInsertAbove, handleDelete} = this.props
     return (
-      <div className='display-mode'>
+      <div className={`display-mode ${this.stageAction.stage_action_type}`}>
         <div className='edit-icon'>
           <Dropdown icon='ellipsis horizontal' pointing='right'>
             <Dropdown.Menu>
@@ -90,93 +90,52 @@ class StageAction extends React.Component {
         </div>
         <div className='stage-action-container'>
           <div className='stage-action-number'>
-            {this.stageActionStaged.number}
+            {this.stageAction.number}
           </div>
           <div className='stage-action-body'>
-            {this.renderStageActionHeader(this.stageActionStaged)}
+            {this.renderStageActionHeader(this.stageAction)}
             <div className={'stage_action-content'}>
-              {this.stageActionStaged.description}
+              {this.stageAction.description}
             </div>
           </div>
         </div>
       </div>
     )
   }
-
-  generateSceneOptions() {
-    const {scenes} = this.props.resourceStore
-    return scenes.map(scene => {
-      return {
-        key: scene.id,
-        text: scene.title,
-        value: scene.id
-      }
-    })
-  }
-
-  generateSceneCharacterOptions() {
-    let characters
-
-    if (this.stageActionStaged.sceneId) {
-      const scene = this.props.resourceStore.scenes.find(scene => scene.id === this.stageActionStaged.sceneId)
-      characters = this.props.resourceStore.characters.filter(character => scene.characterIds.includes(character.id))
-    } else {
-      characters = this.props.resourceStore.characters
-    }
-    return characters.map(character => {
-      return {
-        key: character.id,
-        text: character.name,
-        value: character.id
-      }
-    })
-  }
-
-  generateStageActionTypeOptions() {
-    const stageActionTypes = [
-      'line',
-      'song',
-      'action'
-    ]
-    return stageActionTypes.map((stageActionType, i) => {
-      return {
-        key: i,
-        text: stageActionType,
-        value: stageActionType
-      }
-    })
-  }
-
+  
   renderEditMode() {
-    const {handleSave, handleCancel} = this.props
+    const {handleSave, handleCancel, resourceStore: {dropdownOptions}} = this.props
+    debugger
     return (
       <Segment>
         <Form>
           <Form.Group>
             <Form.Select
               label='Scene'
-              options={this.generateSceneOptions()}
-              value={this.stageActionStaged.sceneId}
-              onChange={(event, data) => this.stageActionStaged.sceneId = data.value}
+              options={dropdownOptions('scenes')}
+              value={this.stageAction.sceneId}
+              onChange={(event, data) => this.stageAction.sceneId = data.value}
             />
             <Form.Select
               label='Character(s)'
               multiple
-              options={this.generateSceneCharacterOptions()}
-              value={this.stageActionStaged.characterIds.toJS()}
-              onChange={(event, data) => {this.stageActionStaged.characterIds = data.value}}
+              options={dropdownOptions('characters')}
+              value={this.stageAction.characterIds.toJS()}
+              onChange={(event, data) => {
+                this.stageAction.characterIds = data.value
+              }}
             />
             <Form.Select
-              label='StageAction Type'
-              options={this.generateStageActionTypeOptions()}
-              value={this.stageActionStaged.stage_action_type}
-              onChange={(event, data) => this.stageActionStaged.stage_action_type = data.value}
+              label='Stage Action Type'
+              options={this.stageAction.constructor.actionTypeDropdownOptions}
+              value={this.stageAction.stage_action_type}
+              onChange={(event, data) => this.stageAction.stage_action_type = data.value}
             />
           </Form.Group>
           <Form.TextArea
             label='Line'
-            value={this.stageActionStaged.content || ''}
-            onChange={(e) => this.stageActionStaged.content = e.target.value}
+            value={this.stageAction.description || ''}
+            onChange={(e) => this.stageAction.description = e.target.value}
           />
           <Button size='mini' compact icon='checkmark' onClick={(e) => {
             e.preventDefault();
