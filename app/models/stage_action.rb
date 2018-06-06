@@ -3,19 +3,19 @@
 # Table name: stage_actions
 #
 #  id                     :integer          not null, primary key
-#  production_id          :integer          not null
+#  production_id          :integer
 #  scene_id               :integer
 #  number                 :integer
 #  page_number            :integer
 #  stage_action_type      :string
 #  description            :string
 #  status                 :string
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
 #  is_entrance            :boolean
 #  is_exit                :boolean
 #  entrance_exit_location :string
 #  song                   :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 # Indexes
 #

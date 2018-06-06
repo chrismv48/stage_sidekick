@@ -9,13 +9,13 @@
 #  title         :string
 #  department    :string
 #  status        :string
+#  role_type     :string
 #  start_date    :date
 #  end_date      :date
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  first_name    :string
 #  last_name     :string
-#  type          :string
 #  order_index   :integer
 #  description   :string
 #

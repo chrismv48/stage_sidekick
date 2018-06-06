@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180527022456) do
+ActiveRecord::Schema.define(version: 20180606161144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,15 +148,6 @@ ActiveRecord::Schema.define(version: 20180527022456) do
     t.index ["actor_id"], name: "index_notes_on_actor_id", using: :btree
   end
 
-  create_table "pg_search_documents", force: :cascade do |t|
-    t.text     "content"
-    t.string   "searchable_type"
-    t.integer  "searchable_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id", using: :btree
-  end
-
   create_table "productions", force: :cascade do |t|
     t.string   "title",      limit: 50, null: false
     t.integer  "venue_id",              null: false
@@ -175,13 +166,13 @@ ActiveRecord::Schema.define(version: 20180527022456) do
     t.string   "title"
     t.string   "department"
     t.string   "status"
+    t.string   "role_type"
     t.date     "start_date"
     t.date     "end_date"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "type"
     t.integer  "order_index"
     t.string   "description"
     t.index ["production_id"], name: "index_roles_on_production_id", using: :btree
@@ -211,19 +202,19 @@ ActiveRecord::Schema.define(version: 20180527022456) do
   end
 
   create_table "stage_actions", force: :cascade do |t|
-    t.integer  "production_id",          null: false
+    t.integer  "production_id"
     t.integer  "scene_id"
     t.integer  "number"
     t.integer  "page_number"
     t.string   "stage_action_type"
     t.string   "description"
     t.string   "status"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
     t.boolean  "is_entrance"
     t.boolean  "is_exit"
     t.string   "entrance_exit_location"
     t.string   "song"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.index ["production_id"], name: "index_stage_actions_on_production_id", using: :btree
     t.index ["scene_id"], name: "index_stage_actions_on_scene_id", using: :btree
   end
