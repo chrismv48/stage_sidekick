@@ -11,6 +11,7 @@ class StageActionsController < ApplicationController
 
     json_response = build_json_response(@stage_actions, ASSOCIATIONS_TO_INCLUDE)
     json_response[:total_count] = StageAction.count
+    json_response[:scenes_with_stage_action] = StageAction.order(:number).pluck(:scene_id, :number).uniq {|result| result[0]}
     render json: json_response
   end
 

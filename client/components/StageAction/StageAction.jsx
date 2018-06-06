@@ -20,9 +20,11 @@ class StageAction extends React.Component {
   renderCharacter(character) {
     return (
       <React.Fragment>
-      <span className='character-stage-action-avatar'>
-        <Image circular inline height={25} width={25} src={character.avatar}/>
-      </span>
+        {character.avatar &&
+        <span className='character-stage-action-avatar'>
+          <Image circular inline height={25} width={25} src={character.avatar}/>
+        </span>
+        }
         <a onClick={() => character.showSidebar} style={{cursor: 'pointer'}}>{character.name}</a>
       </React.Fragment>
     )
@@ -102,10 +104,9 @@ class StageAction extends React.Component {
       </div>
     )
   }
-  
+
   renderEditMode() {
     const {handleSave, handleCancel, resourceStore: {dropdownOptions}} = this.props
-    debugger
     return (
       <Segment>
         <Form>
@@ -113,29 +114,29 @@ class StageAction extends React.Component {
             <Form.Select
               label='Scene'
               options={dropdownOptions('scenes')}
-              value={this.stageAction.sceneId}
-              onChange={(event, data) => this.stageAction.sceneId = data.value}
+              value={this.stageActionStaged.sceneId}
+              onChange={(event, data) => this.stageActionStaged.sceneId = data.value}
             />
             <Form.Select
               label='Character(s)'
               multiple
               options={dropdownOptions('characters')}
-              value={this.stageAction.characterIds.toJS()}
+              value={this.stageActionStaged.characterIds.toJS()}
               onChange={(event, data) => {
-                this.stageAction.characterIds = data.value
+                this.stageActionStaged.characterIds = data.value
               }}
             />
             <Form.Select
               label='Stage Action Type'
-              options={this.stageAction.constructor.actionTypeDropdownOptions}
-              value={this.stageAction.stage_action_type}
-              onChange={(event, data) => this.stageAction.stage_action_type = data.value}
+              options={this.stageActionStaged.model.constructor.actionTypeDropdownOptions}
+              value={this.stageActionStaged.stage_action_type}
+              onChange={(event, data) => this.stageActionStaged.stage_action_type = data.value}
             />
           </Form.Group>
           <Form.TextArea
             label='Line'
-            value={this.stageAction.description || ''}
-            onChange={(e) => this.stageAction.description = e.target.value}
+            value={this.stageActionStaged.description || ''}
+            onChange={(e) => this.stageActionStaged.description = e.target.value}
           />
           <Button size='mini' compact icon='checkmark' onClick={(e) => {
             e.preventDefault();

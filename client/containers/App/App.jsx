@@ -19,7 +19,7 @@ import Scene from "containers/Scene/Scene";
 import Directory from "containers/Directory/Directory";
 import Actors from "containers/Actors/Actors";
 import Actor from "containers/Actor/Actor";
-import Script from "containers/ScriptV2/Script";
+import Script from "containers/Script/Script";
 import Notes from "containers/Notes/Notes";
 import CostumeItem from "containers/CostumeItem/CostumeItem";
 import ScriptImport from "containers/ScriptImport/ScriptImport";

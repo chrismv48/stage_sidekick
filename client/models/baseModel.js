@@ -1,4 +1,4 @@
-import {computed, extendObservable, isObservable, isObservableArray, observable, transaction} from 'mobx'
+import {computed, extendObservable, isObservableArray, observable, transaction} from 'mobx'
 import {camelCase, capitalize, compact, reject, remove, replace, sortBy, upperFirst} from 'lodash'
 import {arrayMove} from "react-sortable-hoc";
 import {addIdToResource, pluralizeResource, singularizeResource} from "../helpers";
@@ -226,7 +226,7 @@ class BaseModel {
     return payload
   }
 
-  save() {
+  save(params = {}) {
     if (!this.viewModel.isDirty) {
       return
     }
@@ -241,7 +241,7 @@ class BaseModel {
       apiEndpoint += `/${this.id}`
     }
 
-    this.store._api(apiEndpoint, method, payload).then(
+    this.store._api(apiEndpoint, method, payload, params).then(
       response => {
         transaction(() => {
           response[this.resource].forEach(json => {
@@ -255,11 +255,11 @@ class BaseModel {
     return this.viewModel
   }
 
-  destroy() {
+  destroy(params = {}) {
     const method = 'delete'
     const apiEndpoint = this.apiEndpoint + `/${this.id}`
 
-    this.store._api(apiEndpoint, method).then(
+    this.store._api(apiEndpoint, method, null, params).then(
       response => {
         transaction(() => {
           if (!response[this.resource]) {

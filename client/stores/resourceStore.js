@@ -143,9 +143,10 @@ class ResourceStore {
       apiEndpoint = `${apiEndpoint}/${idOrIds}`
     }
 
-    return this._api(apiEndpoint, 'GET', null, params).then(response => {
+    return this._api(apiEndpoint, 'GET', null, params).then(action("loadResource", response => {
       if (resource === 'stage_actions') {
         this.stageActionsTotalCount = response.total_count
+        this.scenesWithStageAction = response.scenes_with_stage_action
         this[resource] = [] // we want to overwrite, not append to stage actions
       }
       response[resource].forEach(json => {
@@ -153,7 +154,7 @@ class ResourceStore {
       });
 
       this[resource] = sortBy(this[resource], n => n.order_index)
-      })
+    }))
   }
 
   @action _updateResourceFromServer(json, resource) {

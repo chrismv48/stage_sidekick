@@ -3,7 +3,6 @@ import {Icon, Menu} from "semantic-ui-react";
 import './Layout.scss'
 import {Link} from "react-router-dom";
 import {inject, observer} from "mobx-react/index";
-import {observable} from "mobx";
 import Character from "containers/Character/Character";
 import Scene from "containers/Scene/Scene";
 import Costume from "containers/Costume/Costume";
@@ -26,9 +25,9 @@ class Layout extends Component {
   sidebarNode = null
 
   componentDidMount() {
-    // Since the top nav is fixed and fixed elements do not respect the width of their parent, we need to dynamically resize it based on the size of the grid
-    const { topNavWidth } = this.props.uiStore
     window.addEventListener('resize', this.handleWindowResize.bind(this));
+
+    // Since the top nav is fixed and fixed elements do not respect the width of their parent, we need to dynamically resize it based on the size of the grid
     this.props.uiStore.topNavWidth = this.gridNode.offsetWidth - this.sidebarNode.offsetWidth
   }
 
