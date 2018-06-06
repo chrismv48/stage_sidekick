@@ -8,7 +8,7 @@ import RoleModel from "models/roleModel";
 import CostumeModel from "models/costumeModel";
 import CostumeItemModel from "models/costumeItemModel";
 import ActorModel from "models/actorModel";
-import StageActionModel from "models/StageActionModel";
+import StageActionModel from "models/stageActionModel";
 import NoteModel from "models/noteModel";
 
 
