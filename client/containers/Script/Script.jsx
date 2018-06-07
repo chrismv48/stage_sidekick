@@ -140,11 +140,11 @@ export class Script extends React.Component {
   }
 
   @computed get canLoadMoreBelow() {
-    return this.stageActions[this.stageActions.length - 1].number < this.totalCount
+    return this.stageActions.length > 0 && this.stageActions[this.stageActions.length - 1].number < this.totalCount
   }
 
   @computed get canLoadMoreAbove() {
-    return this.stageActions[0].number > 1
+    return this.stageActions.length > 0 && this.stageActions[0].number > 1
   }
 
   // returns a map of stageActionNumber to sceneTitle so we know when to render a scene header
@@ -329,7 +329,7 @@ export class Script extends React.Component {
 
         <div>
           <Container text className='lines-container'>
-            {this.stageActions[0].number > 1 &&
+            {this.canLoadMoreAbove &&
             this.renderLoadMoreSection(this.stageActions[0].number, 'top')
             }
             {this.stageActions.map((stageAction, i) => {

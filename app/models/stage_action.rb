@@ -50,26 +50,14 @@ class StageAction < ApplicationRecord
 
   private
 
-  # Adjust stage_action numbers since user can insert/swap stage_actions etc. Naive implementation for now
   def update_sort_order
+    # TODO: does not work for swapping yet
+
     return unless self.number_was != self.number || self.destroyed? || self.number.nil?
-    records_to_update = StageAction.where('number >= ?', self.number).where.not(id: self.id).order(:number)
-    if self.destroyed?
-      stage_action_number = self.number
-      records_to_update.each do |record|
-        record.number = stage_action_number
-        record.save!(validate: false) # avoid infinite loop!
-
-        stage_action_number += 1
-      end
-    else
-      stage_action_number = self.number + 1
-      records_to_update.each do |record|
-        record.number = stage_action_number
-        record.save!(validate: false) # avoid infinite loop!
-
-        stage_action_number += 1
-      end
-    end
+    # if a record was removed, we decrement, otherwise we increment
+    offset = self.destroyed? ? -1 : 1
+    # records_to_update = StageAction.where('number >= ?', self.number).where.not(id: self.id).order(:number)
+    StageAction.where('number >= ?', self.number).where.not(id: self.id).update_all("number = number + #{offset}")
   end
+
 end
