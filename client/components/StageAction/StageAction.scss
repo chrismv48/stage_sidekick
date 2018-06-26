@@ -1,4 +1,10 @@
+@import 'base';
+
 .StageAction {
+
+  h4 {
+    margin: 0;
+  }
 
   .line {
     border-left: 4px solid orange;
@@ -28,12 +34,12 @@
     &:hover {
       cursor: pointer;
       box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.4);
-      //border: 1px solid rgba(81, 203, 238, 1);
-      //border: 0;
-      //border-left: 4px solid purple;
-      //box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
 
       .edit-icon {
+        visibility: visible;
+      }
+
+      .span-container {
         visibility: visible;
       }
     }
@@ -45,6 +51,26 @@
       right: 5px;
       z-index: 1;
       color: grey;
+    }
+
+    .span-container {
+      visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 400px;
+      margin: 20px;
+      display: flex;
+      padding: 0 10px;
+      font-size: 13px;
+
+      & > div {
+        margin: 0 10px;
+      }
+
+      .span-label {
+        @extend %secondary-label;
+      }
     }
 
     .stage-action-container {
@@ -80,6 +106,5 @@
     .stage-action-content {
       margin-top: -5px;
     }
-
   }
 }

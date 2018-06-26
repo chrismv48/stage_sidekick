@@ -19,14 +19,10 @@
 
 class Scene < ApplicationRecord
 
-  has_many :characters_scenes, dependent: :destroy
-  has_many :characters, through: :characters_scenes
-  has_many :costumes_characters_scenes
-  has_many :costumes, -> {distinct}, through: :costumes_characters_scenes
   has_many :images, as: :imageable
   has_many :comments, as: :commentable
+  has_one :stage_action_span, as: :spannable
   has_many :notes
-  has_many :stage_actions
 
   after_create do |scene|
     if scene.order_index.nil?

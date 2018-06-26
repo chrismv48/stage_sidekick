@@ -3,7 +3,7 @@ class StageActionsController < ApplicationController
   before_action :set_stage_action, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:index, :create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:scene_id, :character_ids]
+  ASSOCIATIONS_TO_INCLUDE = [:character_ids]
 
   # GET /stage_actions
   def index
@@ -11,9 +11,48 @@ class StageActionsController < ApplicationController
 
     json_response = build_json_response(@stage_actions, ASSOCIATIONS_TO_INCLUDE)
     json_response[:total_count] = StageAction.count
-    json_response[:scenes_with_stage_action] = StageAction.order(:number).pluck(:scene_id, :number).uniq {|result| result[0]}
+    # json_response[:scenes_with_stage_action] = StageActionSpan.where(spannable_type: 'Scene').order(:span_start).pluck(:spannable_id, :span_start)
+
     render json: json_response
   end
+
+  # GET /stage_actions/1
+  def show
+    render json: build_json_response(@stage_action_span, ASSOCIATIONS_TO_INCLUDE)
+  end
+
+  # POST /stage_actions
+  def create
+    @stage_action_span = StageAction.new(@stage_action_params)
+
+    if @stage_action_span.save
+      # we return all stage_actions because its possible that the save affected other stage_action's stage_action numbers and the UI needs
+      # to know if they changed
+      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @stage_action_span
+    else
+      render json: @stage_action_span.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /stage_actions/1
+  def update
+    if @stage_action_span.update(@stage_action_params)
+      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE)
+    else
+      render json: @stage_action_span.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /stage_actions/1
+  def destroy
+    if @stage_action_span.destroy
+      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE)
+    else
+      render json: @stage_action_span.errors, status: :unprocessable_entity
+    end
+  end
+
+  private
 
   def search_results
     search_results = StageAction.search_by_description(@stage_action_params[:query]).limit(5).with_pg_search_highlight
@@ -21,46 +60,8 @@ class StageActionsController < ApplicationController
     render json: json_response
   end
 
-  # GET /stage_actions/1
-  def show
-    render json: build_json_response(@stage_action, ASSOCIATIONS_TO_INCLUDE)
-  end
-
-  # POST /stage_actions
-  def create
-    @stage_action = StageAction.new(@stage_action_params)
-
-    if @stage_action.save
-      # we return all stage_actions because its possible that the save affected other stage_action's stage_action numbers and the UI needs
-      # to know if they changed
-      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE), status: :created, location: @stage_action
-    else
-      render json: @stage_action.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /stage_actions/1
-  def update
-    if @stage_action.update(@stage_action_params)
-      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE)
-    else
-      render json: @stage_action.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /stage_actions/1
-  def destroy
-    if @stage_action.destroy
-      render json: build_json_response(@stage_actions.reload, ASSOCIATIONS_TO_INCLUDE)
-    else
-      render json: @stage_action.errors, status: :unprocessable_entity
-    end
-  end
-
-  private
-
   def set_stage_action
-    @stage_action = StageAction.find(params[:id])
+    @stage_action_span = StageAction.find(params[:id])
   end
 
   def set_stage_actions

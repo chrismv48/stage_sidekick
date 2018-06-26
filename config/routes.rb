@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post '/script_importer/generate', to: 'script_importer#generate_script'
   resources :notes
   resources :stage_actions
+  resources :stage_action_spans
   resources :actors
   resources :roles
   resources :members

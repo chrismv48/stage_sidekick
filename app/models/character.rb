@@ -14,13 +14,6 @@
 
 class Character < ApplicationRecord
 
-  has_many :costumes_characters_scenes, dependent: :destroy
-
-  has_many :characters_scenes, dependent: :destroy
-  has_many :scenes, through: :characters_scenes
-
-  has_many :costumes, -> {distinct}, through: :costumes_characters_scenes
-
   has_many :characters_roles, dependent: :destroy
   has_many :roles, through: :characters_roles
 
@@ -47,5 +40,4 @@ class Character < ApplicationRecord
       self.images.find_by(primary: true)
     end
   end
-
 end

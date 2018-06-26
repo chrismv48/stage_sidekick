@@ -1,11 +1,13 @@
 import React, {PropTypes} from 'react';
 import './Script.scss'
-import {Container, Divider, Dropdown, Header, Search, Segment} from 'semantic-ui-react'
+import {Container, Divider, Dropdown, Search, Segment} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react";
 import {action, computed, observable} from "mobx";
 import StageAction from "components/StageAction/StageAction";
-import {capitalize, replace, throttle} from 'lodash'
+import {capitalize, groupBy, replace, sortBy, throttle} from 'lodash'
 import ContentLoader from "components/ContentLoader/ContentLoader";
+import StageActionSpan from "../../components/StageActionSpan/StageActionSpan";
+import StageActionSpanForm from "../../components/StageActionSpan/StageActionSpanForm";
 
 function isElementInViewport(el) {
   if (!el) {
@@ -114,6 +116,8 @@ export class Script extends React.Component {
   @observable loadingMore = false
   @observable editingLineId = null
   @observable showNewLineAbove = null
+  @observable insertingSpanForNumber = null
+  @observable editingSpanId = null
 
   topLoaderNode = null
   bottomLoaderNode = null
@@ -122,21 +126,16 @@ export class Script extends React.Component {
     return this.props.resourceStore.stage_actions.sort((a, b) => a.number - b.number)
   }
 
-  @computed get totalCount() {
-    return this.props.resourceStore.stageActionsTotalCount
+  @computed get stageActionSpans() {
+    return this.props.resourceStore.stage_action_spans
   }
 
-  @computed get sceneNumbers() {
-    // TODO: need to get this from server now
-    const sceneNumbers = {}
-    let currentSceneId = null
-    for (let line of this.stageActions) {
-      if (currentSceneId !== line.scene_id) {
-        sceneNumbers[line.scene_id] = line.number
-        currentSceneId = line.scene_id
-      }
-    }
-    return sceneNumbers
+  @computed get stageActionSpanStaged() {
+    return this.props.resourceStore.getStagedResource('stage_action_spans', this.editingSpanId)
+  }
+
+  @computed get totalCount() {
+    return this.props.resourceStore.stageActionsTotalCount
   }
 
   @computed get canLoadMoreBelow() {
@@ -147,16 +146,20 @@ export class Script extends React.Component {
     return this.stageActions.length > 0 && this.stageActions[0].number > 1
   }
 
-  // returns a map of stageActionNumber to sceneTitle so we know when to render a scene header
-  @computed get sceneChanges() {
-    const stageActionsToScene = {}
-    this.stageActions.forEach((stageAction, i) => {
-      const prevSceneId = this.stageActions[i - 1] ? this.stageActions[i - 1].sceneId : null
-      if (prevSceneId !== stageAction.sceneId) {
-        stageActionsToScene[stageAction.number] = stageAction.scene.title
-      }
-    })
-    return stageActionsToScene
+  @computed get spansByStartNumber() {
+    return groupBy(this.stageActionSpans, span => span.span_start)
+  }
+
+  @computed get spansByEndNumber() {
+    return groupBy(this.stageActionSpans, span => span.span_end)
+  }
+
+  @computed get sceneToStartNumber() {
+    const sceneToStartNumber = {}
+    for (let span of this.stageActionSpans.filter(span => span.isScene())) {
+      sceneToStartNumber[span.spannable_id] = span.span_start
+    }
+    return sceneToStartNumber
   }
 
   componentDidMount() {
@@ -165,9 +168,10 @@ export class Script extends React.Component {
 
     this.loading = true
     Promise.all([
-      this.props.resourceStore.loadStageActions(null, this.getRangeForStageActionNumber(0)),
       this.props.resourceStore.loadScenes(),
       this.props.resourceStore.loadCharacters(),
+      this.props.resourceStore.loadStageActionSpans(),
+      this.props.resourceStore.loadStageActions(null, this.getRangeForStageActionNumber(0))
     ]).then(() => {
       this.loading = false
     })
@@ -219,22 +223,14 @@ export class Script extends React.Component {
     this.showNewLineAbove = stageActionNumber
   }
 
+  @action handleInsertSpan(stageActionNumber) {
+    this.insertingSpanForNumber = stageActionNumber
+  }
+
   @action handleDelete(stageActionId) {
     const stageAction = this.props.resourceStore.getStagedResource('stage_actions', stageActionId)
     const stageActionQueryRange = this.getRangeForStageActionNumber(stageAction.number)
     stageAction.destroy(stageActionQueryRange)
-  }
-
-  generateSceneOptions() {
-    const {scenes, scenesWithStageAction} = this.props.resourceStore
-    return scenesWithStageAction.map(([sceneId, _]) => {
-      const scene = scenes.find(scene => scene.id === sceneId)
-      return {
-        key: scene.id,
-        text: scene.title,
-        value: scene.id
-      }
-    })
   }
 
   getRangeForStageActionNumber(stageActionNumber) {
@@ -244,9 +240,6 @@ export class Script extends React.Component {
   }
 
   handleLoadMoreStageActions(stageActionNumber, fromSlider = false) {
-    const start = Math.max(0, stageActionNumber - 37)
-    const end = start + 75
-
     const stageActionQueryRange = this.getRangeForStageActionNumber(stageActionNumber)
 
     if (fromSlider) {
@@ -264,6 +257,25 @@ export class Script extends React.Component {
       this.topLoaderNode = null
       this.bottomLoaderNode = null
     }))
+  }
+
+  renderSpanBar() {
+    if (this.insertingSpanForNumber) {
+      this.stageActionSpanStaged.span_start = this.insertingSpanForNumber
+    }
+    return (
+      <div className='span-bar'>
+        <div className='stage-action-span-label'>{this.editingSpanId ? 'Editing' : 'Creating'} Stage Action Span</div>
+        <StageActionSpanForm
+          spanId={this.stageActionSpanStaged.id}
+          handleSave={e => this.handleSaveSpan(e)}
+          handleCancel={e => this.handleCancelSpan(e)}/>
+      </div>
+    )
+  }
+
+  shouldRenderSpanBar() {
+    return this.insertingSpanForNumber || this.editingSpanId
   }
 
   renderLoadMoreSection(stageActionNumber, location) {
@@ -288,19 +300,50 @@ export class Script extends React.Component {
     )
   }
 
+  shouldRenderSpan(span, isStart) {
+    return !(span.spannable_type === 'Scene' && !isStart)
+  }
+
+  renderSpans(spans, isStart) {
+    const sortedSpans = sortBy(spans, span => span.isScene() ? 0 : 1)  // Make sure scenes are rendered first
+    return sortedSpans.filter(span => this.shouldRenderSpan(span, isStart)).map(span => {
+      return (
+        <StageActionSpan
+          key={`span-${span.id}`}
+          spanId={span.id}
+          handleJumpToLine={(number) => this.handleScrollToLine(number)}
+          isStart={isStart}
+          handleEdit={() => this.editingSpanId = span.id}
+          handleDelete={() => span.destroy()}
+        />
+      )
+    })
+  }
+
+  handleSaveSpan(e) {
+    e.preventDefault()
+    this.stageActionSpanStaged.save()
+    this.insertingSpanForNumber = null
+    this.editingSpanId = null
+  }
+
+  handleCancelSpan(e) {
+    e.preventDefault()
+    this.stageActionSpanStaged.revert()
+    this.insertingSpanForNumber = null
+    this.editingSpanId = null
+  }
+
   render() {
     if (this.loading) {
       return (
         <ContentLoader/>
       )
     }
-
-    const {scenesWithStageAction} = this.props.resourceStore
+    console.log("I'm Rendering!")
     return (
       <div className="Script">
-        <Header as="h2" dividing>
-          Script
-        </Header>
+        <div className='header-bar'>
         <div className='script-navbar'>
           <div className='script-search'>
             <SearchScript handleResultClicked={(stageActionNumber) => this.handleScrollToLine(stageActionNumber)}/>
@@ -319,28 +362,38 @@ export class Script extends React.Component {
             <div className='scene-selection-container'>
               <Dropdown
                 text='Scene'
-                options={this.generateSceneOptions()}
-                onChange={(e, data) => this.handleScrollToLine(scenesWithStageAction.find(n => n[0] === data.value)[1])}
+                options={this.props.resourceStore.dropdownOptions('scenes')}
+                onChange={(e, data) => this.handleScrollToLine(this.sceneToStartNumber[data.value])}
                 selectOnBlur={false}
               />
             </div>
           </div>
         </div>
+          {this.shouldRenderSpanBar() &&
+          this.renderSpanBar()
+          }
+        </div>
 
-        <div>
+        <div className='main-body'>
           <Container text className='lines-container'>
             {this.canLoadMoreAbove &&
             this.renderLoadMoreSection(this.stageActions[0].number, 'top')
             }
             {this.stageActions.map((stageAction, i) => {
+              const spanStarts = this.spansByStartNumber[stageAction.number] || []
+              const spanEnds = this.spansByEndNumber[stageAction.number] || []
               return (
                 <div key={`stage-action-${stageAction.number}`}>
-                  {this.sceneChanges[stageAction.number] && <h1>{stageAction.scene.title}</h1>}
+
+                  {this.renderSpans(spanStarts, true)}
+                  {this.renderSpans(spanEnds, false)}
+
                   <div>
                     {this.showNewLineAbove === stageAction.number &&
                     <div className='stage-action-container'>
                       <StageAction
                         stageActionId={null}
+                        sceneId={stageAction.scene.id}
                         editMode={true}
                         handleSave={() => this.handleSave(null)}
                         handleCancel={() => this.handleCancel(null)}
@@ -358,11 +411,13 @@ export class Script extends React.Component {
                     >
                       <StageAction
                         stageActionId={stageAction.id}
+                        sceneId={stageAction.scene.id}
                         editMode={this.editingLineId === stageAction.id}
                         handleEdit={() => this.editingLineId = stageAction.id}
                         handleSave={() => this.handleSave(stageAction.id)}
                         handleCancel={() => this.handleCancel(stageAction.id)}
                         handleInsertAbove={() => this.handleInsertAbove(stageAction.number)}
+                        handleInsertSpan={() => this.handleInsertSpan(stageAction.number)}
                         handleDelete={() => this.handleDelete(stageAction.id)}
                       />
                     </div>

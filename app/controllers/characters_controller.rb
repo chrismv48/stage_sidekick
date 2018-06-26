@@ -2,11 +2,11 @@ class CharactersController < ApplicationController
   before_action :set_character, only: [:show, :update, :destroy]
   before_action :parse_params, only: [:create, :update]
 
-  ASSOCIATIONS_TO_INCLUDE = [:actor_ids, :scene_ids, :costume_ids, :characters_scenes, :costumes_characters_scenes, :images]
+  ASSOCIATIONS_TO_INCLUDE = [:actor_ids, :images]
 
   # GET /characters
   def index
-    @characters = Character.includes(:roles, :scenes, :costumes, :characters_scenes, :costumes_characters_scenes, :images).where(nil)
+    @characters = Character.includes(:roles, :images).where(nil)
     @characters = @characters.where(production_id: params[:production_id]) if params[:production_id]
     @characters = @characters.order(:order_index)
     render json: build_json_response(@characters, ASSOCIATIONS_TO_INCLUDE)

@@ -8,13 +8,12 @@ class CostumesController < ApplicationController
     :costume_item_ids,
     :note_ids,
     :comments,
-    :costumes_characters_scenes,
     :images
   ]
 
   # GET /costumes
   def index
-    @costumes = Costume.includes(:costume_items, :characters, :scenes, :notes, :comments, :costumes_characters_scenes, :images).all
+    @costumes = Costume.includes(:costume_items, :notes, :comments, :images).all
     render json: build_json_response(@costumes, ASSOCIATIONS_TO_INCLUDE)
   end
 
@@ -79,8 +78,8 @@ class CostumesController < ApplicationController
       params.permit!
       @costume_params = params.slice(*model_params, :character_ids, :scene_ids, :costume_item_ids)
 
-      if params[:costumes_characters_scenes]
-        @costume_params[:costumes_characters_scenes] = params[:costumes_characters_scenes].map {|ccs| CostumesCharactersScene.new(ccs.except(:id))}
-      end
+      # if params[:costumes_characters_scenes]
+      #   @costume_params[:costumes_characters_scenes] = params[:costumes_characters_scenes].map {|ccs| CostumesCharactersScene.new(ccs.except(:id))}
+      # end
     end
 end

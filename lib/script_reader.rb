@@ -130,11 +130,20 @@ class ScriptReader
     if persist
       ActiveRecord::Base.transaction do
         puts "Persisting script"
+
+        # temporarily just destroy everything, will eventually want to make this more intelligent / configurable
         Character.destroy_all
         Scene.destroy_all
+
         StageAction.skip_callback(:destroy, :after, :update_sort_order)
         StageAction.skip_callback(:validation, :after, :update_sort_order)
+        StageAction.skip_callback(:validation, :after, :update_stage_action_spans)
         StageAction.destroy_all
+
+
+        StageActionSpan.destroy_all
+        CharactersStageAction.destroy_all
+
         puts "Creating characters"
         characters.each do |character|
           Character.create!(name: character, production_id: 1)
@@ -144,19 +153,28 @@ class ScriptReader
         scenes.each do |scene|
           Scene.create!(title: scene, production_id: 1)
         end
+
+        puts "Assigning scenes to lines"
+        script.group_by {|line| line[:scene]}.each do |scene, lines|
+          scene = Scene.find_by(title: scene)
+          scene_span = StageActionSpan.new
+          scene_span.span_start = lines.first[:number]
+          scene_span.span_end = lines.last[:number]
+          scene_span.spannable = scene
+          scene_span.save!
+        end
+
         @line_count = 0
         script.group_by {|x| x[:character]}.each do |character, lines|
           puts "Processing lines for #{character}"
-          character_scenes = lines.map {|line| line[:scene]}.uniq.compact
           character_model = Character.find_by(name: character)
-          scenes = Scene.where(title: character_scenes)
-          character_model.scenes = scenes if character_model
+          # TODO: some numbers seem to be getting skipped
           lines.each do |line|
             StageAction.create!(
-              scene: scenes.find {|scene| scene.title == line[:scene]},
               characters: [character_model].compact,
               number: line[:number],
               description: line[:line],
+              stage_action_type: 'line',
               production_id: 1
             )
             @line_count += 1
@@ -164,12 +182,12 @@ class ScriptReader
         end
         StageAction.set_callback(:destroy, :after, :update_sort_order)
         StageAction.set_callback(:validation, :after, :update_sort_order)
+        StageAction.set_callback(:validation, :after, :update_stage_action_spans)
       end
     end
     return script
   end
-
-
+``
   private
 
   def full_text

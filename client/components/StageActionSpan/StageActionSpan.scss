@@ -1,0 +1,55 @@
+@import 'base';
+
+.StageActionSpan {
+
+  box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.2);
+  margin: 20px 0;
+  padding: 15px;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+
+    .edit-icon {
+      visibility: visible;
+    }
+  }
+
+  .edit-icon {
+    visibility: hidden;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    z-index: 1;
+    color: grey;
+  }
+
+  .entrance-exit {
+    font-style: italic;
+  }
+
+  .span-label {
+    @extend %secondary-label;
+  }
+
+  .span-link {
+    font-size: 10px;
+    color: $silver;
+    cursor: pointer;
+
+    &:hover {
+      color: blue;
+    }
+  }
+
+  .span-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+    }
+
+  }
+}

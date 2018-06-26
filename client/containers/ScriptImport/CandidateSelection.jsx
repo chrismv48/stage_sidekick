@@ -2,7 +2,7 @@ import React from 'react';
 import './ScriptImport.scss'
 import {Button, Checkbox, Form, Radio,} from 'semantic-ui-react'
 import {inject, observer} from "mobx-react/index";
-import {computed, observable} from "mobx";
+import {observable} from "mobx";
 import {pull} from 'lodash'
 import SuccessModal from "./SuccessModal";
 
@@ -69,7 +69,7 @@ export class CandidateSelection extends React.Component {
                 return (
                   <div key={candidate}>
                     <Checkbox
-                      label={`${candidate} (occurred ${frequency} times)`}
+                      label={`${candidate} (${frequency} lines)`}
                       disabled={this.selectedTypeGroup[optionType] !== pattern}
                       value={candidate}
                       checked={this.selectedTypeByGroup[optionType][pattern].includes(candidate)}

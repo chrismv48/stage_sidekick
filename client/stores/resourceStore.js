@@ -10,6 +10,7 @@ import CostumeItemModel from "models/costumeItemModel";
 import ActorModel from "models/actorModel";
 import StageActionModel from "models/stageActionModel";
 import NoteModel from "models/noteModel";
+import StageActionSpanModel from "../models/stageActionSpanModel";
 
 
 class ResourceStore {
@@ -21,6 +22,7 @@ class ResourceStore {
   @observable costumes = []
   @observable costume_items = []
   @observable stage_actions = []
+  @observable stage_action_spans = []
   @observable notes = []
 
   @observable isLoading = false
@@ -92,6 +94,11 @@ class ResourceStore {
     return this.loadResource('stage_actions', idOrIds, options)
   }
 
+  loadStageActionSpans(idOrIds = null, options = {}) {
+    return this.loadResource('stage_action_spans', idOrIds, options)
+  }
+
+
   loadSetupAlerts() {
     return this._api('setup_alerts').then(results => {
       this.setupAlerts = results
@@ -146,7 +153,6 @@ class ResourceStore {
     return this._api(apiEndpoint, 'GET', null, params).then(action("loadResource", response => {
       if (resource === 'stage_actions') {
         this.stageActionsTotalCount = response.total_count
-        this.scenesWithStageAction = response.scenes_with_stage_action
         this[resource] = [] // we want to overwrite, not append to stage actions
       }
       response[resource].forEach(json => {
@@ -182,7 +188,6 @@ class ResourceStore {
     const payload = {order_index_swap: newOrder}
     this._api(pluralizedResource, 'POST', payload)
   }
-
 }
 
 ResourceStore.resources = {
@@ -192,6 +197,7 @@ ResourceStore.resources = {
   'actors': ActorModel,
   'roles': RoleModel,
   'stage_actions': StageActionModel,
+  'stage_action_spans': StageActionSpanModel,
   'costume_items': CostumeItemModel,
   'notes': NoteModel
 }

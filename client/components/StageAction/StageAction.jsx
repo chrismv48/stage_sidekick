@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import './StageAction.scss'
-import {Button, Dropdown, Form, Header, Icon, Image, Segment} from "semantic-ui-react";
+import {Button, Dropdown, Form, Icon, Image, Segment} from "semantic-ui-react";
 import {inject, observer} from "mobx-react/index";
 import {computed} from "mobx";
 
@@ -15,6 +15,32 @@ class StageAction extends React.Component {
 
   @computed get stageActionStaged() {
     return this.props.resourceStore.getStagedResource('stage_actions', this.props.stageActionId)
+  }
+
+  @computed get scene() {
+    return this.props.resourceStore.scenes.find(scene => scene.id === this.props.sceneId) || {}
+  }
+
+  @computed get stageActionSpans() {
+    return this.props.resourceStore.stage_action_spans.filter(span => span.span_start <= this.stageAction.number && (span.span_end > this.stageAction.number || !span.span_end))
+  }
+
+  @computed get sceneSpans() {
+    return this.stageActionSpans.filter(span => span.spannable_type === 'Scene')
+  }
+
+  @computed get characterSpans() {
+    return this.stageActionSpans.filter(span => span.spannable_type === 'StagePresence')
+  }
+
+  @computed get songSpans() {
+    return this.stageActionSpans.filter(span => span.spannable_type === 'Song')
+  }
+
+  @computed get charactersOnStage() {
+    return this.characterSpans.map(characterSpan => {
+      return this.props.resourceStore.characters.find(character => character.id === characterSpan.spannable.character_id)
+    })
   }
 
   renderCharacter(character) {
@@ -67,24 +93,25 @@ class StageAction extends React.Component {
 
   renderStageActionHeader() {
     return (
-      <Header as='h4'>
+      <h4>
         {this.stageAction.characters.length === 1 ?
           this.renderCharacter(this.stageAction.characters[0]) :
           this.renderCharacters(this.stageAction.characters)
         }
         {this.renderStageActionTypeIcon(this.stageAction.stage_action_type)}
-      </Header>
+      </h4>
     )
   }
 
   renderDisplayMode() {
-    const {handleEdit, handleInsertAbove, handleDelete} = this.props
+    const {handleEdit, handleInsertAbove, handleInsertSpan, handleDelete} = this.props
     return (
       <div className={`display-mode ${this.stageAction.stage_action_type}`}>
         <div className='edit-icon'>
           <Dropdown icon='ellipsis horizontal' pointing='right'>
             <Dropdown.Menu>
               <Dropdown.Item icon='share' text='Insert above' onClick={() => handleInsertAbove()}/>
+              <Dropdown.Item icon='resize vertical' text='Insert span' onClick={() => handleInsertSpan()}/>
               <Dropdown.Item icon='edit' text='Edit' onClick={() => handleEdit(this.stageAction.id)} />
               <Dropdown.Item icon='trash' text='Delete' onClick={() => handleDelete()} />
             </Dropdown.Menu>
@@ -101,6 +128,18 @@ class StageAction extends React.Component {
             </div>
           </div>
         </div>
+        <div className='span-container'>
+          <div className='scene-span'>
+            <div className='span-label'>Scene</div>
+            <strong>{this.scene.title}</strong>
+          </div>
+          {this.charactersOnStage.length > 0 &&
+          <div className='characters-onstage'>
+            <div className='span-label'>Onstage</div>
+            {this.charactersOnStage.map(character => character.name).join(', ')}
+          </div>
+          }
+        </div>
       </div>
     )
   }
@@ -111,12 +150,6 @@ class StageAction extends React.Component {
       <Segment>
         <Form>
           <Form.Group>
-            <Form.Select
-              label='Scene'
-              options={dropdownOptions('scenes')}
-              value={this.stageActionStaged.sceneId}
-              onChange={(event, data) => this.stageActionStaged.sceneId = data.value}
-            />
             <Form.Select
               label='Character(s)'
               multiple
@@ -164,11 +197,13 @@ class StageAction extends React.Component {
 
 StageAction.propTypes = {
   stageActionId: PropTypes.number,
+  sceneId: PropTypes.number,
   editMode: PropTypes.bool.isRequired,
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleEdit: PropTypes.func,
   handleInsertAbove: PropTypes.func,
+  handleInsertSpan: PropTypes.func,
   handleDelete: PropTypes.func
 };
 

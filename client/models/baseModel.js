@@ -36,7 +36,7 @@ class BaseModel {
   }
 
   get relationships() {
-    return this.constructor.RELATIONSHIPS
+    return this.constructor.RELATIONSHIPS || []
   }
 
   get field_names() {
@@ -300,7 +300,5 @@ const handler = {
     }
   }
 };
-
-Object.defineProperty(BaseModel, 'foo', {value: BaseModel.RESOURCE + 'foo'})
 
 export default BaseModel
