@@ -21,6 +21,10 @@ class StageActionSpanModel extends BaseModel {
   isSong() {
     return this.spannable_type === 'Song'
   }
+
+  startsWithin(span) {
+    return (this.span_start >= span.span_start && this.span_start <= span.span_end)
+  }
 }
 
 

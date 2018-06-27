@@ -129,7 +129,7 @@ class StageAction extends React.Component {
           </div>
         </div>
         <div className='span-container'>
-          <div className='scene-span'>
+          <div className='scene-span-cell'>
             <div className='span-label'>Scene</div>
             <strong>{this.scene.title}</strong>
           </div>

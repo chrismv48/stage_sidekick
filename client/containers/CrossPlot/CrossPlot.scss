@@ -1,0 +1,64 @@
+@import 'base';
+
+.CrossPlot {
+  margin: $spacing-medium;
+
+  .spans-main {
+
+    .scenes-header-container {
+      display: flex;
+    }
+
+    .scene-span-cell {
+      border-top: $grid-border;
+      border-left: $grid-border;
+      height: 100%;
+      text-align: center;
+      padding: 10px;
+
+      &:last-child {
+        border: $grid-border;
+        border-bottom: none;
+      }
+    }
+  }
+
+  .character-span-row {
+    display: flex;
+    align-items: center;
+    height: 50px;
+
+    &:last-child {
+      border-bottom: $grid-border;
+    }
+  }
+
+  .characters-sidebar {
+    width: 125px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .span {
+    background: $cerulean;
+    position: absolute;
+    height: 100%;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+  }
+
+  .scene-cell {
+    height: 100%;
+    position: relative;
+    border-top: $grid-border;
+    border-left: $grid-border;
+
+    &:last-child {
+      border: $grid-border;
+      border-bottom: none;
+    }
+  }
+
+}

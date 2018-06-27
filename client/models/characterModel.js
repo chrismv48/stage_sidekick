@@ -1,8 +1,9 @@
 import React from 'react'
-import {computed, extendObservable, observable, transaction} from 'mobx'
+import {computed} from 'mobx'
 import BaseModel from "./baseModel";
 import CharacterFragment from "components/Fragment/CharacterFragment";
 import {Image, Label} from "semantic-ui-react";
+import {sortBy} from 'lodash'
 
 class Character extends BaseModel {
 
@@ -24,6 +25,10 @@ class Character extends BaseModel {
         ...options
       }
     )
+  }
+
+  @computed get stagePresenceSpans() {
+    return sortBy(this.store.stage_action_spans.filter(span => span.spannable.character_id === this.id), span => span.span_start)
   }
 
   @computed get tableData() {
