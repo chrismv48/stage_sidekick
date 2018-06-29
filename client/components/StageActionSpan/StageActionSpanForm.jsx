@@ -50,13 +50,14 @@ class StageActionSpanForm extends React.Component {
   }
 
   render() {
-    const {handleSave, handleCancel} = this.props
+    const {handleSave, handleCancel, handleSearchLineNumber} = this.props
     return (
       <Form>
         <Form.Group>
           <Form.Select
             label='Type'
             options={this.spanStaged.model.constructor.spanTypeDropdownOptions}
+            width={4}
             value={this.spanStaged.spannable_type}
             onChange={(event, data) => this.spanStaged.spannable_type = data.value}
           />
@@ -64,17 +65,22 @@ class StageActionSpanForm extends React.Component {
             label={spanTypeLabels[this.spanStaged.spannable_type] || ''}
             disabled={!this.spanStaged.spannable_type}
             options={this.generateSpanItemOptions}
+            width={4}
             onChange={(event, data) => this.handleChangeSpannableItem(data.value)}
             value={this.spannableTypeFormValue}
           />
           <Form.Input
             label='Start'
             value={this.spanStaged.span_start}
+            action={{icon: 'search', color: 'teal', onClick: () => handleSearchLineNumber(this.spanStaged.span_start)}}
+            width={2}
             onChange={(e) => this.spanStaged.span_start = e.target.value}
           />
           <Form.Input
             label='End'
             value={this.spanStaged.span_end || ''}
+            width={2}
+            action={{icon: 'search', color: 'teal', onClick: () => handleSearchLineNumber(this.spanStaged.span_end)}}
             onChange={(e) => this.spanStaged.span_end = e.target.value}
           />
         </Form.Group>
@@ -104,6 +110,7 @@ StageActionSpanForm.propTypes = {
   spanId: PropTypes.number,
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  handleSearchLineNumber: PropTypes.func
 };
 
 StageActionSpanForm.defaultProps = {

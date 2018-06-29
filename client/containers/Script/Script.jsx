@@ -122,6 +122,10 @@ export class Script extends React.Component {
   topLoaderNode = null
   bottomLoaderNode = null
 
+  get fromCrossPlot() {
+    return this.props.location.state && this.props.location.state.fromCrossPlot
+  }
+
   @computed get stageActions() {
     return this.props.resourceStore.stage_actions.sort((a, b) => a.number - b.number)
   }
@@ -174,6 +178,9 @@ export class Script extends React.Component {
       this.props.resourceStore.loadStageActions(null, this.getRangeForStageActionNumber(0))
     ]).then(() => {
       this.loading = false
+      if (this.props.location.state) {
+        this.editingSpanId = this.props.location.state.editingSpanId
+      }
     })
   }
 
@@ -269,7 +276,9 @@ export class Script extends React.Component {
         <StageActionSpanForm
           spanId={this.stageActionSpanStaged.id}
           handleSave={e => this.handleSaveSpan(e)}
-          handleCancel={e => this.handleCancelSpan(e)}/>
+          handleCancel={e => this.handleCancelSpan(e)}
+          handleSearchLineNumber={lineNumber => this.handleScrollToLine(lineNumber)}
+        />
       </div>
     )
   }
@@ -325,6 +334,9 @@ export class Script extends React.Component {
     this.stageActionSpanStaged.save()
     this.insertingSpanForNumber = null
     this.editingSpanId = null
+    if (this.fromCrossPlot) {
+      this.props.history.push('/cross-plot')
+    }
   }
 
   handleCancelSpan(e) {
@@ -332,6 +344,9 @@ export class Script extends React.Component {
     this.stageActionSpanStaged.revert()
     this.insertingSpanForNumber = null
     this.editingSpanId = null
+    if (this.fromCrossPlot) {
+      this.props.history.push('/cross-plot')
+    }
   }
 
   render() {
@@ -340,7 +355,6 @@ export class Script extends React.Component {
         <ContentLoader/>
       )
     }
-    console.log("I'm Rendering!")
     return (
       <div className="Script">
         <div className='header-bar'>

@@ -3,7 +3,7 @@ import {computed} from 'mobx'
 import BaseModel from "./baseModel";
 import CharacterFragment from "components/Fragment/CharacterFragment";
 import {Image, Label} from "semantic-ui-react";
-import {sortBy} from 'lodash'
+import {minBy, sortBy} from 'lodash'
 
 class Character extends BaseModel {
 
@@ -27,8 +27,12 @@ class Character extends BaseModel {
     )
   }
 
+  firstAppearance(line = 0) {
+    return minBy(this.stagePresenceSpans.filter(span => span.span_start >= line), 'span_start')
+  }
+
   @computed get stagePresenceSpans() {
-    return sortBy(this.store.stage_action_spans.filter(span => span.spannable.character_id === this.id), span => span.span_start)
+    return sortBy(this.store.stage_action_spans.filter(span => span.spannable.character_id === this.id), 'span_start')
   }
 
   @computed get tableData() {
